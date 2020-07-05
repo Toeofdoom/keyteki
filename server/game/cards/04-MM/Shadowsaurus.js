@@ -7,8 +7,8 @@ class Shadowsaurus extends Card {
             effectArgs: (context) => [
                 context.target,
                 context.target.controller,
-                context.target.tokens.amber ? ' and take control of ' : '',
-                context.target.tokens.amber ? context.target : null
+                context.target.amber ? ' and take control of ' : '',
+                context.target.amber ? context.target : null
             ],
             target: {
                 cardType: 'creature',

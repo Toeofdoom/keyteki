@@ -51,7 +51,6 @@ class Card extends EffectSource {
                 effect: AbilityDsl.effects.addKeyword({ [split[0]]: value })
             });
         }
-
         this.printedHouse = cardData.house;
         this.cardPrintedAmber = cardData.amber;
         this.maverick = cardData.maverick;
