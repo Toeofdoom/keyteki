@@ -13,9 +13,14 @@ const optionsDefinition = [
         defaultValue: path.join(__dirname, '..', '..', 'keyteki-json-data')
     },
     {
-        name: 'output-dir',
+        name: 'full-output-dir',
         type: String,
         defaultValue: path.join(__dirname, '..', 'game', 'generatedcards')
+    },
+    {
+        name: 'partial-output-dir',
+        type: String,
+        defaultValue: path.join(__dirname, '..', 'game', 'partialcards')
     }
 ];
 
@@ -32,7 +37,11 @@ let options = commandLineArgs(optionsDefinition);
 
 let dataSource = createDataSource(options);
 
-let cardImport = new CardGenerator(dataSource, options['output-dir']);
+let cardImport = new CardGenerator(
+    dataSource,
+    options['full-output-dir'],
+    options['partial-output-dir']
+);
 
 const doImport = async () => {
     await cardImport.generate();

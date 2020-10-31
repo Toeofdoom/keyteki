@@ -1,34 +1,84 @@
-Start = Line+
-Line = ability:(BoldAbility / PersistentEffect) "\n"? 
-{
-	return ability;
+//Keywords = word:Keyword tail:(", " w:Keyword {return w;})* "." reminder: ReminderText? {
+
+/*Start = line:Line tail:("\n" l:Line {return l;})* {
+	return {lines: [1,2,3, line]}
+}*/
+
+Lines = line:Line tail:(NewLine l:Line {return l;})* NewLine? {
+	return [line, ...tail]
+}
+
+Line = ability:(Keywords / BoldAbility / PersistentEffect / ReminderText / _) {
+	return ability
+}
+
+PersistentEffect = (UnknownEffect "."? _)+ ReminderText?
+
+NewLine = [\n\r\u000b]+ {
+	return { name: "newline"}
 }
 
 BoldAbility = trigger:BoldTrigger ": " effect:TriggeredEffect {
-	return {trigger:trigger, effect:effect} //`Bold Ability - Trigger: ${trigger}, Effect: ${effect}`;
+	return {name: 'bold', trigger:trigger, effect:effect}
 }
 BoldTrigger = SingleBoldTrigger
-SingleBoldTrigger = "Play" / "Reap" / "Fight" / "Destroyed" / "Omni"
-//House = "brobnar" / "dis" / "logos" / "mars" / "sanctum" / "shadows" / "untamed" / "saurian" / "star alliance"
+SingleBoldTrigger = "Play" / "Reap" / "Before Fight" / "Fight" / "Destroyed" / "Omni"
+House = "brobnar" / "dis" / "logos" / "mars" / "sanctum" / "shadows" / "untamed" / "saurian" / "star alliance"
 
-TriggeredEffect = GainAmber / UnknownEffect
-PersistentEffect = UnknownEffect
-
-UnknownEffect = [^\n]+  
-{
-	return {name: 'unknown', text: text()} //`Unknown - ${text()}`;
+TriggeredEffect = effect:(PlayerEffect / UnknownEffect) ReminderText? "."? ReminderText? _ tail:(u:UnknownEffect "." _ ReminderText? {return u;} )* {
+	if(tail.length > 0)
+		return [effect,...tail]
+	return effect
 }
 
-GainAmber = "Gain " number: Number "<A>" {
-	return {name: 'gainAmber', quantity: number} //`GainAmber - quantity ${number}`
+PlayerEffect = target:PlayerTarget? _ effect:(GainAmber / LoseAmber / StealAmber) {
+	let info = {};
+	if (target) info.target = target;
+	return Object.assign(effect, info);
 }
 
-LoseAmber = "Lose " number: Number "<A>" {
+PlayerTarget = ("Your Opponent"i / "You") {
+	return text().toLowerCase().includes("opponent") ? "opponent" : "you";
+}
+
+//NumericalPlayerEffect...
+GainAmber = "Gain" "s"? _ number: Number ("<A>"/"A") _ multiplier:Multiplier? {
+	return {name: 'gainAmber', quantity: number, multiplier: multiplier}
+}
+
+StealAmber = "Steal" "s"? _ number: Number ("<A>"/"A") _ multiplier:Multiplier? {
+	return {name: 'stealAmber', quantity: number, multiplier: multiplier}
+}
+
+Multiplier = UnknownEffect
+
+LoseAmber = "Lose"i "s"? _ number: Number ("<A>"/"A") _ multiplier:Multiplier? {
+	return {name: 'loseAmber', quantity: number, multiplier: multiplier}
+}
+
+/* ForgeAKey = "Gain " number: Number "<A>" {
 	return `GainAmber - quantity ${number}`
+}*/
+
+Keywords = word:Keyword tail:(". " w:Keyword {return w;})* "."? _ ReminderText? {
+	return {name: "keywords", keywords: [word, ...tail]}
 }
 
-ForgeAKey = "Gain " number: Number "<A>" {
-	return `GainAmber - quantity ${number}`
+Keyword = ("Elusive" / "Skirmish" / "Taunt" / "Poison" / "Deploy" / "Alpha" / "Omega" / "Assault " Integer / "Hazardous " Integer) {
+	return text();
 }
 
-Number = [0-9]+
+ReminderText = _ "(" [^)]+ ")" _ {
+	return {name: "reminderText", keywords: [text()]}
+}
+
+Number = Integer
+Integer = [0-9]+ {return parseInt(text())}
+
+_ "whitespace" = [  ﻿\u202f]*
+
+UnknownEffect = [$A-Z]i([^\n\r\u000b.“] / QuotedSection)* {
+	return {name: 'unknown', text: text()}
+}
+
+QuotedSection = "“" [^”“]+ [“”]

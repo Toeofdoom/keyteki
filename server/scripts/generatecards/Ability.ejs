@@ -1,0 +1,48 @@
+<%_ if (ability.name == 'bold') { _%>
+    <%_ if (ability.trigger == 'Reap') { _%>
+this.reap({
+    <%_ } else if (ability.trigger == 'Fight') { _%>
+this.fight({
+    <%_ } else if (ability.trigger == 'Destroyed') { _%>
+this.destroyed({
+    <%_ } else if (ability.trigger == 'Play') { _%>
+this.play({
+    <%_ } else if (ability.trigger == 'Omni') { _%>
+this.omni({
+    <%_ } else if (ability.trigger == 'Before Fight') { _%>
+this.beforefight({
+    <%_ } else if (ability.trigger == 'Action') { _%>
+this.action({
+    <%_ } else { _%>
+this.unknown( //<%- ability.trigger _%>
+    <%_ } _%>
+    gameAction: <%- include('Ability.ejs', {ability: ability.effect}) _%>
+});
+<%_ } else if (ability.name == 'keywords') { _%>
+//Keywords: <%- ability.keywords.join(", ") %>
+<%_ } else if (ability.name == 'gainAmber') { _%>
+ability.actions.gainAmber((context) => ({
+    amount: <%- ability.quantity %>,
+    <%_ if (ability.target === 'opponent') { _%>
+    target: context.player.opponent
+    <%_ } _%>
+}))
+<%_ } else if (ability.name == 'stealAmber') { _%>
+    ability.actions.steal((context) => ({
+        amount: <%- ability.quantity %>,
+        <%_ if (ability.target === 'opponent') { _%>
+        target: context.player.opponent
+        <%_ } _%>
+    }))
+<%_ } else if (ability.name == 'loseAmber') { _%>
+ability.actions.loseAmber((context) => ({
+    amount: <%- ability.quantity %>,
+    <%_ if (ability.target !== 'opponent') { _%>
+    target: context.player //<%- ability.target %>
+    <%_ } _%>
+}))
+<%_ } else { _%>
+    <%_ for(var line of JSON.stringify(ability, null, 1).split(/[\r\n]/)) { _%>
+        <%- `//${line}` %>
+    <%_ } _%>
+<%_ } _%>

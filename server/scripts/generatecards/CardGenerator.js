@@ -7,9 +7,10 @@ const ejs = require('ejs');
 const peg = require('pegjs');
 
 class CardGenerator {
-    constructor(dataSource, outputDir) {
+    constructor(dataSource, fullOutputDir, partialOutputDir) {
         this.dataSource = dataSource;
-        this.outputDir = outputDir;
+        this.fullOutputDir = fullOutputDir;
+        this.partialOutputDir = partialOutputDir;
         this.template = path.join(__dirname, 'Card.ejs');
         try {
             console.log('Starting card parser');
@@ -20,6 +21,10 @@ class CardGenerator {
             console.log('Could not set up parser');
             console.log(err);
         }
+
+        this.complete = 0;
+        this.partial = 0;
+        this.error = 0;
     }
 
     async generate() {
@@ -31,6 +36,9 @@ class CardGenerator {
     }
 
     async generateCards() {
+        console.log('Clearing out previously generated cards');
+        fs.rmdirSync(this.fullOutputDir, { recursive: true });
+        fs.rmdirSync(this.partialOutputDir, { recursive: true });
         console.log('Loading card information');
         let cards = await this.dataSource.getCards();
         cards = cards.sort((a, b) => (a.expansion > b.expansion ? -1 : 1));
@@ -52,35 +60,75 @@ class CardGenerator {
         console.log('Card information loaded');
 
         for (let card of cards) {
+            let simplifiedText = card.text.replace(card.name, '$this');
             let data = {
-                name: card.name.replace(/[,?.!"„“” '’\-[\]]/gi, ''), //TODO: Fix casing
+                name: this.camelCase(card.name),
                 card: card,
-                abilities: this.parseAbilities(card.text)
+                abilities: this.parseAbilities(simplifiedText)
             };
-            let filename = path.join(this.outputDir, card.folder, `${data.name}.js`);
+
+            if (data.abilities == null) {
+                this.error++;
+                continue;
+            }
+
+            let dir = isComplete(data.abilities) ? this.fullOutputDir : this.partialOutputDir;
+            let filename = path.join(dir, card.folder, `${data.name}.js`);
+            let a = this;
 
             ejs.renderFile(this.template, data, {}, function (err, str) {
-                // str => Rendered HTML string
                 if (err) {
-                    console.error(err);
+                    console.log(
+                        `Failure when generating code from parsed abilities for ${card.id}`
+                    );
+                    console.log(JSON.stringify(data.abilities, null, 1));
+                    console.log(`error:${err}`);
+                    this.error++;
+                } else {
+                    ensureDirectoryExistence(filename);
+                    fs.writeFileSync(filename, str);
+                    if (isComplete(data.abilities)) a.complete++;
+                    else a.partial++;
                 }
-
-                ensureDirectoryExistence(filename);
-                fs.writeFileSync(filename, str);
             });
         }
-        console.info(cards.length + ' cards fetched');
+        console.info(this.complete + ' cards completely converted');
+        console.info(this.partial + ' cards partially converted');
+        console.info(this.error + ' cards failed');
     }
 
     parseAbilities(text) {
         try {
             return this.parser.parse(text);
         } catch (err) {
-            return {
-                type: 'error',
-                message: err.message
-            };
+            console.log('Could not parse abilities: ');
+            console.log(text);
+            console.log(err.message);
+            console.log(JSON.stringify(err.location));
+            //console.log(`???: ${JSON.stringify(err)}`);
         }
+    }
+
+    camelCase(name) {
+        let digitStrings = [
+            'zero',
+            'one',
+            'two',
+            'three',
+            'four',
+            'five',
+            'six',
+            'seven',
+            'eight',
+            'nine'
+        ];
+        return name
+            .toLowerCase()
+            .replace(/^[0-9]/, (m) => digitStrings[parseInt(m)])
+            .replace('æ', 'a')
+            .replace(/[']/g, '')
+            .replace(/\b([A-Za-z])/g, (m, chr) => chr.toUpperCase())
+            .replace(/[,?.!"„“” ’\-[\]]/g, '');
     }
 }
 
@@ -91,6 +139,21 @@ function ensureDirectoryExistence(filePath) {
     }
     ensureDirectoryExistence(dirname);
     fs.mkdirSync(dirname);
+}
+
+function isComplete(abilities) {
+    try {
+        return (
+            abilities === null ||
+            typeof abilities === 'string' ||
+            typeof abilities === 'number' ||
+            typeof abilities === 'boolean' ||
+            (abilities.name !== 'unknown' && Object.values(abilities).every(isComplete))
+        );
+    } catch (err) {
+        console.log(abilities);
+        console.log(err);
+    }
 }
 
 module.exports = CardGenerator;

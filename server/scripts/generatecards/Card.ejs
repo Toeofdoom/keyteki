@@ -2,12 +2,8 @@ const Card = require('../../Card.js');
 
 class <%= name %> extends Card {
     setupCardAbilities(ability) {
-        <%_ for(var line of card.text.split(/[\r\n]/)) { _%>
-        <%- `//${line}` %>
-        <%_ } _%>
-
-        <%_ for(var line of JSON.stringify(abilities, null, 1).split(/[\r\n]/)) { _%>
-        <%- `//${line}` %>
+        <%_ for(var ability of abilities) { _%>
+        <%- include('Ability', {ability: ability}); _%>
         <%_ } _%>
     }
 }
