@@ -31,7 +31,7 @@ TriggeredEffect = effect:(PlayerEffect / UnknownEffect) ReminderText? "."? Remin
 	return effect
 }
 
-PlayerEffect = target:PlayerTarget? _ effect:(GainAmber / LoseAmber / StealAmber) {
+PlayerEffect = target:PlayerTarget? _ effect:(GainAmber / LoseAmber / StealAmber / CaptureAmber) {
 	let info = {};
 	if (target) info.target = target;
 	return Object.assign(effect, info);
@@ -48,6 +48,10 @@ GainAmber = "Gain" "s"? _ number: Number ("<A>"/"A") _ multiplier:Multiplier? {
 
 StealAmber = "Steal" "s"? _ number: Number ("<A>"/"A") _ multiplier:Multiplier? {
 	return {name: 'stealAmber', quantity: number, multiplier: multiplier}
+}
+
+CaptureAmber = "Capture" "s"? _ number: Number ("<A>"/"A") _ multiplier:Multiplier? {
+	return {name: 'captureAmber', quantity: number, multiplier: multiplier}
 }
 
 Multiplier = UnknownEffect

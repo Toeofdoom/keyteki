@@ -1,3 +1,17 @@
+{%- macro params(ability, defaultTarget=null) -%}
+    {%- if ability.target and ability.target !== defaultTarget -%}
+(context) => ({
+        {%- if ability.target === 'you' -%}
+    target: context.player,
+        {%- else -%}
+    target: context.player.opponent,
+        {%- endif -%}
+    amount: {{ability.quantity}}
+    {%- else -%}
+{{ability.quantity}}
+    {%- endif -%}
+{%- endmacro -%}
+
 {%- macro abilityMacro(ability) -%}
     {%- if (ability.name == 'bold') -%}
         {%- if ability.trigger == 'Reap' -%}
@@ -22,26 +36,13 @@ this.unknown( //{{ ability.trigger }}
     {%- elif ability.name == 'keywords' -%}
 //Keywords: {{ ability.keywords.join(", ") }}
     {%- elif ability.name == 'gainAmber' -%}
-ability.actions.gainAmber((context) => ({
-        amount: {{ ability.quantity }},
-        {%- if ability.target === 'opponent' -%}
-        target: context.player.opponent
-        {%- endif -%}
-}))
+ability.actions.gainAmber({{ params(ability, defaultTarget='you') }})
+    {%- elif ability.name == 'captureAmber' -%}
+ability.actions.capture({{ params(ability, defaultTarget='you') }})
     {%- elif ability.name == 'stealAmber' -%}
-ability.actions.steal((context) => ({
-        amount: {{ ability.quantity }},
-            {%- if ability.target === 'opponent' -%}
-        target: context.player.opponent
-            {%- endif -%}
-}))
+ability.actions.steal({{ params(ability, defaultTarget='you') }})
     {%- elif ability.name == 'loseAmber' -%}
-ability.actions.loseAmber((context) => ({
-        amount: {{ ability.quantity }},
-        {%- if ability.target !== 'opponent' -%}
-        target: context.player //{{ ability.target }}
-        {%- endif -%}
-}))
+ability.actions.loseAmber({{ params(ability, defaultTarget='opponent') }})
     {%- else -%}
         /*{{ ability | dump(2) | safe}}*/
     {%- endif -%}
