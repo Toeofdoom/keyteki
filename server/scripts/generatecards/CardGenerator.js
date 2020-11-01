@@ -3,7 +3,7 @@
 const path = require('path');
 const fs = require('fs');
 const _ = require('underscore');
-const ejs = require('ejs');
+const nunjucks = require('nunjucks');
 const peg = require('pegjs');
 
 class CardGenerator {
@@ -11,7 +11,8 @@ class CardGenerator {
         this.dataSource = dataSource;
         this.fullOutputDir = fullOutputDir;
         this.partialOutputDir = partialOutputDir;
-        this.template = path.join(__dirname, 'Card.ejs');
+        this.template = path.join(__dirname, 'Card.njk');
+        this.template2 = path.join(__dirname, 'Ability.hbs');
         try {
             console.log('Starting card parser');
             let grammar = fs.readFileSync(path.join(__dirname, 'keyforgeGrammar.pegjs'), 'utf8');
@@ -58,7 +59,6 @@ class CardGenerator {
         );
 
         console.log('Card information loaded');
-
         for (let card of cards) {
             let simplifiedText = card.text.replace(card.name, '$this');
             let data = {
@@ -76,7 +76,20 @@ class CardGenerator {
             let filename = path.join(dir, card.folder, `${data.name}.js`);
             let a = this;
 
-            ejs.renderFile(this.template, data, {}, function (err, str) {
+            try {
+                var str = nunjucks.render(this.template, data);
+                ensureDirectoryExistence(filename);
+                fs.writeFileSync(filename, str);
+                if (isComplete(data.abilities)) a.complete++;
+                else a.partial++;
+            } catch (err) {
+                console.log(`Failure when generating code from parsed abilities for ${card.id}`);
+                console.log(JSON.stringify(data.abilities, null, 1));
+                console.log(`error:${err}`);
+                this.error++;
+            }
+
+            /*ejs.renderFile(this.template, data, {}, function (err, str) {
                 if (err) {
                     console.log(
                         `Failure when generating code from parsed abilities for ${card.id}`
@@ -90,7 +103,7 @@ class CardGenerator {
                     if (isComplete(data.abilities)) a.complete++;
                     else a.partial++;
                 }
-            });
+            });*/
         }
         console.info(this.complete + ' cards completely converted');
         console.info(this.partial + ' cards partially converted');

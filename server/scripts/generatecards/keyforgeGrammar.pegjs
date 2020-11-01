@@ -22,7 +22,7 @@ BoldAbility = trigger:BoldTrigger ": " effect:TriggeredEffect {
 	return {name: 'bold', trigger:trigger, effect:effect}
 }
 BoldTrigger = SingleBoldTrigger
-SingleBoldTrigger = "Play" / "Reap" / "Before Fight" / "Fight" / "Destroyed" / "Omni"
+SingleBoldTrigger = "Play" / "Reap" / "Before Fight" / "Fight" / "Destroyed" / "Action" / "Omni"
 House = "brobnar" / "dis" / "logos" / "mars" / "sanctum" / "shadows" / "untamed" / "saurian" / "star alliance"
 
 TriggeredEffect = effect:(PlayerEffect / UnknownEffect) ReminderText? "."? ReminderText? _ tail:(u:UnknownEffect "." _ ReminderText? {return u;} )* {

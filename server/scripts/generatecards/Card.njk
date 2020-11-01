@@ -1,0 +1,62 @@
+{%- macro abilityMacro(ability) -%}
+    {%- if (ability.name == 'bold') -%}
+        {%- if ability.trigger == 'Reap' -%}
+this.reap({
+        {%- elif ability.trigger == 'Fight' -%}
+this.fight({
+        {%- elif ability.trigger == 'Destroyed' -%}
+this.destroyed({
+        {%- elif ability.trigger == 'Play'-%}
+this.play({
+        {%- elif ability.trigger == 'Omni'-%}
+this.omni({
+        {%- elif ability.trigger == 'Before Fight'-%}
+this.beforefight({
+        {%- elif ability.trigger == 'Action'-%}
+this.action({
+        {%- else -%}
+this.unknown( //{{ ability.trigger }}
+        {%- endif %}
+    gameAction: {{abilityMacro(ability.effect) }}
+});
+    {%- elif ability.name == 'keywords' -%}
+//Keywords: {{ ability.keywords.join(", ") }}
+    {%- elif ability.name == 'gainAmber' -%}
+ability.actions.gainAmber((context) => ({
+        amount: {{ ability.quantity }},
+        {%- if ability.target === 'opponent' -%}
+        target: context.player.opponent
+        {%- endif -%}
+}))
+    {%- elif ability.name == 'stealAmber' -%}
+ability.actions.steal((context) => ({
+        amount: {{ ability.quantity }},
+            {%- if ability.target === 'opponent' -%}
+        target: context.player.opponent
+            {%- endif -%}
+}))
+    {%- elif ability.name == 'loseAmber' -%}
+ability.actions.loseAmber((context) => ({
+        amount: {{ ability.quantity }},
+        {%- if ability.target !== 'opponent' -%}
+        target: context.player //{{ ability.target }}
+        {%- endif -%}
+}))
+    {%- else -%}
+        /*{{ ability | dump(2) | safe}}*/
+    {%- endif -%}
+{%- endmacro -%}
+
+const Card = require('../../Card.js');
+
+class {{ name }} extends Card {
+    setupCardAbilities(ability) {
+        {%- for ability in abilities %}
+        {{abilityMacro(ability) | indent(8)}}
+        {%- endfor %}
+    }
+}
+
+{{name}}.id = '{{card.id}}';
+
+module.exports = {{name}};

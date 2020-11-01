@@ -1,0 +1,13 @@
+const Card = require('../../Card.js');
+
+class {{ name }} extends Card {
+    setupCardAbilities(ability) {
+        {{#each abilities }}
+        {{>ability ability=.}} //include('Ability', {ability: this}); }}
+        {{/each}}
+    }
+}
+
+{{name}}.id = '{{card.id}}';
+
+module.exports = {{name}};
