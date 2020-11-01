@@ -25,6 +25,7 @@ class CardGenerator {
 
         this.complete = 0;
         this.partial = 0;
+        this.skipped = 0;
         this.error = 0;
     }
 
@@ -72,7 +73,13 @@ class CardGenerator {
                 continue;
             }
 
-            let dir = isComplete(data.abilities) ? this.fullOutputDir : this.partialOutputDir;
+            let complete = isComplete(data.abilities);
+            if (complete && data.abilities.every((ability) => ability.name !== 'bold')) {
+                this.skipped++;
+                continue;
+            }
+
+            let dir = complete ? this.fullOutputDir : this.partialOutputDir;
             let filename = path.join(dir, card.folder, `${data.name}.js`);
             let a = this;
 
@@ -107,6 +114,7 @@ class CardGenerator {
         }
         console.info(this.complete + ' cards completely converted');
         console.info(this.partial + ' cards partially converted');
+        console.info(this.skipped + ' cards skipped');
         console.info(this.error + ' cards failed');
     }
 

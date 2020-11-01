@@ -1,7 +1,7 @@
-{%- macro params(ability, defaultTarget=null) -%}
-    {%- if ability.target and ability.target !== defaultTarget -%}
+{%- macro playerAbilityParams(ability, defaultTarget=null) -%}
+    {%- if ability.targetPlayer and ability.targetPlayer !== defaultTarget -%}
 (context) => ({
-        {%- if ability.target === 'you' -%}
+        {%- if ability.targetPlayer === 'self' -%}
     target: context.player,
         {%- else -%}
     target: context.player.opponent,
@@ -10,6 +10,31 @@
     {%- else -%}
 {{ability.quantity}}
     {%- endif -%}
+{%- endmacro -%}
+
+{%- macro effectMacro(effect) -%}
+    {%- if effect.name == 'gainAmber' -%}
+ability.actions.gainAmber({{ playerAbilityParams(effect, defaultTarget='you') }})
+    {%- elif effect.name == 'captureAmber' -%}
+ability.actions.capture({{ playerAbilityParams(effect, defaultTarget='you') }})
+    {%- elif effect.name == 'stealAmber' -%}
+ability.actions.steal({{ playerAbilityParams(effect, defaultTarget='you') }})
+    {%- elif effect.name == 'loseAmber' -%}
+ability.actions.loseAmber({{ playerAbilityParams(effect, defaultTarget='opponent') }})
+    {%- elif effect.name == 'dealDamage' -%}
+ability.actions.dealDamage({ amount: {{effect.quantity}} })
+    {%- else -%}
+        /*{{ effect | dump(2) | safe}}*/
+    {%- endif -%}
+{%- endmacro -%}
+
+{%- macro targetMacro(target) -%}
+{%- if target.type != null -%}
+cardType: '{{target.type}}',
+{% endif -%}
+{%- if target.controller != null -%}
+controller: '{{target.controller}}',
+{% endif -%}
 {%- endmacro -%}
 
 {%- macro abilityMacro(ability) -%}
@@ -31,7 +56,17 @@ this.action({
         {%- else -%}
 this.unknown( //{{ ability.trigger }}
         {%- endif %}
-    gameAction: {{abilityMacro(ability.effect) }}
+        {%- for extraTrigger in ability.extraTriggers %}
+    {{extraTrigger | lower}}: true,
+        {%- endfor %}
+    {%- if ability.effect.target != null %}
+    target: {
+        {{targetMacro(ability.effect.target) | indent(8) -}}
+        gameAction: {{ effectMacro(ability.effect) }}
+    }
+    {%- else %}
+    gameAction: {{ effectMacro(ability.effect) }}
+    {%- endif %}
 });
     {%- elif ability.name == 'keywords' -%}
 //Keywords: {{ ability.keywords.join(", ") }}

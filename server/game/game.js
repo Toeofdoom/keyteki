@@ -915,7 +915,7 @@ class Game extends EventEmitter {
 
             let difference = moment().diff(moment(player.disconnectedAt), 'seconds');
 
-            return difference > 30;
+            return difference > 3600;
         });
     }
 
@@ -950,7 +950,7 @@ class Game extends EventEmitter {
 
         this.addAlert(
             'info',
-            '{0} has disconnected.  The game will wait up to 30 seconds for them to reconnect',
+            '{0} has disconnected.  The game will wait up to 3600 seconds for them to reconnect',
             player
         );
 
