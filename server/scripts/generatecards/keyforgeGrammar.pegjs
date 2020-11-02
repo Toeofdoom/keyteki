@@ -64,16 +64,46 @@ LoseAmber = "Lose"i "s"? _ number: Number ("<A>"/"A") _ multiplier:Multiplier? {
 }*/
 
 //Card effects
-CardEffect = effect:(DealDamage) _ "to" _ target:(CardTarget) {
+CardEffect = effect:(DealDamage / ReadyAndUse / ReadyAndFight / Ready / Use) _ target:(CardTarget) {
 	return Object.assign(effect, {target:target})
 }
 
-DealDamage = "Deal"i _ amount:Number ("<D>"/"D") {
+DealDamage = "Deal"i _ amount:Number ("<D>"/"D") _ "to" {
 	return {name: 'dealDamage', quantity: amount}
 }
 
-CardTarget = ("an"/"a")  _ controller:ControllerSpecifier? _ type:CardType {
-	return {type: type, controller:controller}
+Ready = "Ready"i {
+	return {name: 'ready'}
+}
+
+Use = "Use"i {
+	return {name: 'use'}
+}
+
+ReadyAndUse = "Ready and use"i {
+	return {name: 'readyAndUse'}
+}
+
+ReadyAndFight = "Ready and fight with"i {
+	return {name: 'readyAndFight'}
+}
+
+CardTarget = ("another"/"an"/"a")  _ controller:ControllerSpecifier? _ trait:TraitSpecifier? _ house:HouseSpecifier? _  type:CardType {
+	return {
+    	type: type, 
+        controller: controller, 
+        conditions: [trait, house].filter(x => x !== null)
+    }
+}
+
+TraitSpecifier = negate:"non-"i? trait:Trait {
+	let c = {name: "trait", trait: trait.toLowerCase()}
+    return negate != null ? {name: "not", condition: c} : c;
+}
+
+HouseSpecifier = negate:"non-"i? house:House {
+	let c = {name: "house", house: house.toLowerCase()};
+	return negate != null ? {name: "not", condition: c} : c;
 }
 
 ControllerSpecifier = ("friendly"i / "enemy"i) {
@@ -82,7 +112,7 @@ ControllerSpecifier = ("friendly"i / "enemy"i) {
 
 //Descriptors
 House = "brobnar"i / "dis"i / "logos"i / "mars"i / "sanctum"i / "shadows"i / "untamed" / "saurian"i / "star alliance"i
-Trait = "mutant"i / "shard"i / "cat"i / "beast"i
+Trait = "mutant"i / "shard"i / "cat"i / "beast"i / "agent"i
 CardType = "action"i / "artifact"i / "creature"i / "upgrade"i
 
 //Ignorable text section

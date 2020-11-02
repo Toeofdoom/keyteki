@@ -12,17 +12,57 @@
     {%- endif -%}
 {%- endmacro -%}
 
+{%- macro singleCondition(condition) -%}
+    {%- if condition.name == "not" -%}
+!{{singleCondition(condition.condition)}}
+    {%- elif condition.name == "trait" -%}
+card.hasTrait('{{condition.trait}}')
+    {%- elif condition.name == "house" -%}
+card.hasHouse('{{condition.house}}')
+    {%- else -%}
+/*{{ effect | dump(2) | safe}}*/
+    {%- endif -%}
+{%- endmacro -%}
+
+{%- macro cardCondition(effect) -%}
+{%- set l = [] -%}
+{%- if effect.name == 'use' -%} {# Is this required, or inbuilt anyway? #}
+    {% set l = l.concat(['card.exhausted === false']) %}
+{%- endif -%}
+{%- for c in effect.target.conditions -%}
+    {% set l = l.concat(singleCondition(c)) %}
+{%- endfor -%}
+{%- if l.length > 0 -%}
+    cardCondition: (card) => {{ l | join(' && ') | safe }},
+{% endif -%}
+{%- endmacro -%}
+
 {%- macro effectMacro(effect) -%}
+{{ cardCondition(effect) }}
     {%- if effect.name == 'gainAmber' -%}
-ability.actions.gainAmber({{ playerAbilityParams(effect, defaultTarget='you') }})
+gameAction: ability.actions.gainAmber({{ playerAbilityParams(effect, defaultTarget='you') }})
     {%- elif effect.name == 'captureAmber' -%}
-ability.actions.capture({{ playerAbilityParams(effect, defaultTarget='you') }})
+gameAction: ability.actions.capture({{ playerAbilityParams(effect, defaultTarget='you') }})
     {%- elif effect.name == 'stealAmber' -%}
-ability.actions.steal({{ playerAbilityParams(effect, defaultTarget='you') }})
+gameAction: ability.actions.steal({{ playerAbilityParams(effect, defaultTarget='you') }})
     {%- elif effect.name == 'loseAmber' -%}
-ability.actions.loseAmber({{ playerAbilityParams(effect, defaultTarget='opponent') }})
+gameAction: ability.actions.loseAmber({{ playerAbilityParams(effect, defaultTarget='opponent') }})
     {%- elif effect.name == 'dealDamage' -%}
-ability.actions.dealDamage({ amount: {{effect.quantity}} })
+gameAction: ability.actions.dealDamage({ amount: {{effect.quantity}} })
+    {%- elif effect.name == 'use' -%}
+gameAction: ability.actions.use()
+    {%- elif effect.name == 'ready' -%}
+gameAction: ability.actions.ready()
+    {%- elif effect.name == 'readyAndUse' -%}
+gameAction: ability.actions.sequential([
+    ability.actions.ready(),
+    ability.actions.use()
+])
+    {%- elif effect.name == 'readyAndFight' -%}
+gameAction: ability.actions.sequential([
+    ability.actions.ready(),
+    ability.actions.fight()
+])
     {%- else -%}
         /*{{ effect | dump(2) | safe}}*/
     {%- endif -%}
@@ -62,22 +102,14 @@ this.unknown( //{{ ability.trigger }}
     {%- if ability.effect.target != null %}
     target: {
         {{targetMacro(ability.effect.target) | indent(8) -}}
-        gameAction: {{ effectMacro(ability.effect) }}
+        {{ effectMacro(ability.effect) | indent(8)}}
     }
     {%- else %}
-    gameAction: {{ effectMacro(ability.effect) }}
+    {{ effectMacro(ability.effect) | indent(4)}}
     {%- endif %}
 });
     {%- elif ability.name == 'keywords' -%}
 //Keywords: {{ ability.keywords.join(", ") }}
-    {%- elif ability.name == 'gainAmber' -%}
-ability.actions.gainAmber({{ params(ability, defaultTarget='you') }})
-    {%- elif ability.name == 'captureAmber' -%}
-ability.actions.capture({{ params(ability, defaultTarget='you') }})
-    {%- elif ability.name == 'stealAmber' -%}
-ability.actions.steal({{ params(ability, defaultTarget='you') }})
-    {%- elif ability.name == 'loseAmber' -%}
-ability.actions.loseAmber({{ params(ability, defaultTarget='opponent') }})
     {%- else -%}
         /*{{ ability | dump(2) | safe}}*/
     {%- endif -%}
