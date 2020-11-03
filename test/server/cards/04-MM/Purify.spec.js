@@ -5,11 +5,12 @@ describe('Purify', function () {
                 player1: {
                     house: 'sanctum',
                     inPlay: ['dis-ambassador', 'pismire'],
-                    hand: ['purify'],
+                    hand: ['purify', 'smite', 'smite', 'smite', 'smite', 'smite'],
                     discard: ['sequis', 'munchling', 'commandeer']
                 },
                 player2: {
                     inPlay: ['gamgee', 'trimble'],
+                    hand: ['harland-mindlock', 'hyde', 'hyde', 'hyde', 'hyde', 'hyde', 'hyde'],
                     discard: ['urchin', 'jargogle', 'hock']
                 }
             });
@@ -57,6 +58,33 @@ describe('Purify', function () {
         it('can transform an enemy creature into a non-mutant', function () {
             this.player1.play(this.purify);
             this.player1.clickCard(this.trimble);
+
+            expect(this.player1).toHavePromptButton('Left');
+            expect(this.player1).toHavePromptButton('Right');
+            this.player1.clickPrompt('Left');
+
+            expect(this.jargogle.location).toBe('discard');
+            expect(this.urchin.location).toBe('play area');
+            expect(this.hock.location).toBe('deck');
+
+            expect(this.munchling.location).toBe('deck');
+            expect(this.sequis.location).toBe('deck');
+            expect(this.commandeer.location).toBe('deck');
+
+            expect(this.urchin.controller).toBe(this.player2.player);
+        });
+
+        xit('will transform a creature based on the controller of a card, not the owner', function () {
+            this.player1.endTurn();
+            this.player2.clickPrompt('logos');
+            this.player2.play(this.harlandMindlock);
+            this.player2.clickCard(this.pismire);
+            this.player2.clickPrompt('Left');
+            this.player2.endTurn();
+
+            this.player1.clickPrompt('sanctum');
+            this.player1.play(this.purify);
+            this.player1.clickCard(this.pismire);
 
             expect(this.player1).toHavePromptButton('Left');
             expect(this.player1).toHavePromptButton('Right');

@@ -36,7 +36,7 @@
 
     gameNode: {
         name: 'test1',
-        host: 'localhost',
+        host: 'mmtestserver.ddns.net',
         socketioPort: 9500
 
         /*

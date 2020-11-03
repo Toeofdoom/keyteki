@@ -41,23 +41,28 @@ PlayerTarget = ("Your Opponent"i / "You") {
 }
 
 //NumericalPlayerEffect...
-GainAmber = "Gain" "s"? _ number: Number ("<A>"/"A") _ multiplier:Multiplier? {
+GainAmber = "Gain"i "s"? _ number: Number ("<A>"/"A") _ multiplier:Multiplier? {
 	return {name: 'gainAmber', quantity: number, multiplier: multiplier}
 }
 
-StealAmber = "Steal" "s"? _ number: Number ("<A>"/"A") _ multiplier:Multiplier? {
+StealAmber = "Steal"i "s"? _ number: Number ("<A>"/"A") _ multiplier:Multiplier? {
 	return {name: 'stealAmber', quantity: number, multiplier: multiplier}
 }
 
-CaptureAmber = "Capture" "s"? _ number: Number ("<A>"/"A") _ multiplier:Multiplier? {
+CaptureAmber = "Capture"i "s"? _ number: Number ("<A>"/"A") _ multiplier:Multiplier? {
 	return {name: 'captureAmber', quantity: number, multiplier: multiplier}
 }
-
-Multiplier = UnknownEffect
 
 LoseAmber = "Lose"i "s"? _ number: Number ("<A>"/"A") _ multiplier:Multiplier? {
 	return {name: 'loseAmber', quantity: number, multiplier: multiplier}
 }
+GainChains = "Gain"i "s"? _ number: Number "chains" _ multiplier:Multiplier? {
+	return {name: 'gainChains', quantity: number, multiplier: multiplier}
+}
+
+Multiplier = UnknownEffect
+
+
 
 /* ForgeAKey = "Gain " number: Number "<A>" {
 	return `GainAmber - quantity ${number}`
@@ -96,17 +101,25 @@ Purge = "Purge"i {
 	return {name: 'purge'}
 }
 
-CardTarget = targetCount:CardTargetCount  _ controller:ControllerSpecifier? _ trait:TraitSpecifier? _ house:HouseSpecifier? _  type:CardType {
+CardTarget = targetCount:CardTargetCount  _ other:OtherSpecifier? _ damaged:DamagedSpecifier? _ controller:ControllerSpecifier? _ flank:FlankSpecifier? _ trait:TraitSpecifier? _ house:HouseSpecifier? _  type:CardType _ nonFlank:NonFlankSpecifier? {
 	return Object.assign({
     	type: type,
         controller: controller, 
-        conditions: [trait, house].filter(x => x !== null)
+        conditions: [other, damaged, flank, nonFlank, trait, house].filter(x => x !== null)
     }, targetCount)
 }
 
 CardTargetCount = ("each"/"all"/"another"/"an"/"a") {
 	if (text() == "each" || text() == "all") return {mode: "all"};
     return {mode: "exactly", count: 1};
+}
+OtherSpecifier = "other" {
+	return {name: "other"};
+}
+
+DamagedSpecifier = negate:"un"i? "damaged" {
+	let c = {name: "damaged"};
+	return negate != null ? {name: "not", condition: c} : c;
 }
 
 TraitSpecifier = negate:"non-"i? trait:Trait {
@@ -121,6 +134,14 @@ HouseSpecifier = negate:"non-"i? house:House {
 
 ControllerSpecifier = ("friendly"i / "enemy"i) {
 	return text().toLowerCase() == "friendly" ? "self" : "opponent";
+}
+
+FlankSpecifier = "flank"i {
+	return {name: "flank"}
+}
+
+NonFlankSpecifier = "that is not on a flank"i {
+	return {name: "not", condition: {name: "flank"}}
 }
 
 //Descriptors

@@ -1,11 +1,11 @@
 {%- macro playerAbilityParams(ability, defaultTarget=null) -%}
     {%- if ability.targetPlayer and ability.targetPlayer !== defaultTarget -%}
 (context) => ({
-        {%- if ability.targetPlayer === 'self' -%}
+        {%- if ability.targetPlayer === 'self' %}
     target: context.player,
-        {%- else -%}
+        {%- else %}
     target: context.player.opponent,
-        {%- endif -%}
+        {%- endif %}
     amount: {{ability.quantity}}
 })
     {%- else -%}
@@ -48,6 +48,12 @@ amount: {{ability.quantity}}
 card.hasTrait('{{condition.trait}}')
     {%- elif condition.name == "house" -%}
 card.hasHouse('{{condition.house}}')
+    {%- elif condition.name == "flank" -%}
+card.isOnFlank()
+    {%- elif condition.name == "damaged" -%}
+card.hasToken('damage')
+    {%- elif condition.name == "other" -%}
+card !== context.source
     {%- else -%}
 /*{{ effect | dump(2) | safe}}*/
     {%- endif -%}
@@ -86,7 +92,9 @@ card.controller {{'===' if target.controller === 'you' else '!==' |safe }} conte
 {%- endmacro -%}
 
 {%- macro effectMacro(effect, target=null) -%}
+{%- if target == null -%}
 {{ cardCondition(effect) | safe }}
+{%- endif -%}
     {%- if effect.name == 'gainAmber' -%}
 gameAction: ability.actions.gainAmber({{ playerAbilityParams(effect, defaultTarget='you') }})
     {%- elif effect.name == 'captureAmber' -%}
@@ -95,6 +103,8 @@ gameAction: ability.actions.capture({{ playerAbilityParams(effect, defaultTarget
 gameAction: ability.actions.steal({{ playerAbilityParams(effect, defaultTarget='you') }})
     {%- elif effect.name == 'loseAmber' -%}
 gameAction: ability.actions.loseAmber({{ playerAbilityParams(effect, defaultTarget='opponent') }})
+    {%- elif effect.name == 'gainChains' -%}
+gameAction: ability.actions.gainChains({{ playerAbilityParams(effect, defaultTarget='you') }})
     {%- elif effect.name == 'dealDamage' -%}
 gameAction: ability.actions.dealDamage({{cardAbilityParams(effect, target)}})
     {%- elif effect.name == 'destroy' -%}
