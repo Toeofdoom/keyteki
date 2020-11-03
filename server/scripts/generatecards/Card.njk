@@ -7,8 +7,37 @@
     target: context.player.opponent,
         {%- endif -%}
     amount: {{ability.quantity}}
+})
     {%- else -%}
 {{ability.quantity}}
+    {%- endif -%}
+{%- endmacro -%}
+
+{%- macro allTargetParam(target) -%}
+    {%- if target != null -%}
+target: context.game.{{target.type}}sInPlay{{cardFilter(target)}}
+    {%- endif -%}
+{%- endmacro -%}
+
+{%- macro amountParam(ability) -%}
+    {%- if ability.quantity != null -%}
+amount: {{ability.quantity}}
+    {%- endif -%}
+{%- endmacro -%}
+
+{%- macro cardAbilityParams(ability, target=null) -%}
+{%- set params = ([
+    allTargetParam(target),
+    amountParam(ability)
+] | selectattr("length", "equalto", 0)) -%}{# selectattr/rejectattr seem to do the opposite of what the docs say? #}
+    {%- if params.length > 0 -%}
+        {%- if (params | join()).includes("context") -%}
+(context) => ({
+    {{ params | join(",\n") | indent(4) | safe }}
+})
+        {%- else -%}
+{ {{ params | join(",\n") | indent(4) | safe}} }
+        {%- endif -%}
     {%- endif -%}
 {%- endmacro -%}
 
@@ -27,18 +56,37 @@ card.hasHouse('{{condition.house}}')
 {%- macro cardCondition(effect) -%}
 {%- set l = [] -%}
 {%- if effect.name == 'use' -%} {# Is this required, or inbuilt anyway? #}
-    {% set l = l.concat(['card.exhausted === false']) %}
+    {%- set l = l.concat(['card.exhausted === false']) -%}
 {%- endif -%}
 {%- for c in effect.target.conditions -%}
-    {% set l = l.concat(singleCondition(c)) %}
+    {%- set l = l.concat(singleCondition(c)) -%}
 {%- endfor -%}
 {%- if l.length > 0 -%}
-    cardCondition: (card) => {{ l | join(' && ') | safe }},
+cardCondition: (card) => {{ l | join(' && ') | safe }},
 {% endif -%}
 {%- endmacro -%}
 
-{%- macro effectMacro(effect) -%}
-{{ cardCondition(effect) }}
+{%- macro controllerCondition(target) -%}
+card.controller {{'===' if target.controller === 'you' else '!==' |safe }} context.player
+{%- endmacro -%}
+
+{%- macro cardFilter(target) -%}
+{%- set l = [] -%}
+{%- if target.controller != null -%}
+    {%- set l = l.concat(controllerCondition(target)) -%}
+{%- endif -%}
+{%- for c in target.conditions -%}
+    {%- set l = l.concat(singleCondition(c)) -%}
+{%- endfor -%}
+{%- if l.length > 0 -%}
+.filter(
+    (card) => {{ l | join(' && ') | safe }}
+) 
+{%- endif -%}
+{%- endmacro -%}
+
+{%- macro effectMacro(effect, target=null) -%}
+{{ cardCondition(effect) | safe }}
     {%- if effect.name == 'gainAmber' -%}
 gameAction: ability.actions.gainAmber({{ playerAbilityParams(effect, defaultTarget='you') }})
     {%- elif effect.name == 'captureAmber' -%}
@@ -48,11 +96,15 @@ gameAction: ability.actions.steal({{ playerAbilityParams(effect, defaultTarget='
     {%- elif effect.name == 'loseAmber' -%}
 gameAction: ability.actions.loseAmber({{ playerAbilityParams(effect, defaultTarget='opponent') }})
     {%- elif effect.name == 'dealDamage' -%}
-gameAction: ability.actions.dealDamage({ amount: {{effect.quantity}} })
+gameAction: ability.actions.dealDamage({{cardAbilityParams(effect, target)}})
+    {%- elif effect.name == 'destroy' -%}
+gameAction: ability.actions.destroy({{cardAbilityParams(effect, target)}})
+    {%- elif effect.name == 'purge' -%}
+gameAction: ability.actions.purge({{cardAbilityParams(effect, target)}})
     {%- elif effect.name == 'use' -%}
-gameAction: ability.actions.use()
+gameAction: ability.actions.use({{cardAbilityParams(effect, target)}})
     {%- elif effect.name == 'ready' -%}
-gameAction: ability.actions.ready()
+gameAction: ability.actions.ready({{cardAbilityParams(effect, target)}})
     {%- elif effect.name == 'readyAndUse' -%}
 gameAction: ability.actions.sequential([
     ability.actions.ready(),
@@ -90,7 +142,7 @@ this.play({
         {%- elif ability.trigger == 'Omni'-%}
 this.omni({
         {%- elif ability.trigger == 'Before Fight'-%}
-this.beforefight({
+this.beforeFight({
         {%- elif ability.trigger == 'Action'-%}
 this.action({
         {%- else -%}
@@ -100,10 +152,14 @@ this.unknown( //{{ ability.trigger }}
     {{extraTrigger | lower}}: true,
         {%- endfor %}
     {%- if ability.effect.target != null %}
+        {%- if ability.effect.target.mode == "all" %}
+    {{effectMacro(ability.effect, ability.effect.target) | indent(4)}}
+        {%- else %}
     target: {
         {{targetMacro(ability.effect.target) | indent(8) -}}
-        {{ effectMacro(ability.effect) | indent(8)}}
+        {{effectMacro(ability.effect) | indent(8)}}
     }
+        {%- endif %}
     {%- else %}
     {{ effectMacro(ability.effect) | indent(4)}}
     {%- endif %}

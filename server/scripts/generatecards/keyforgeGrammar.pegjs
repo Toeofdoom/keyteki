@@ -64,7 +64,7 @@ LoseAmber = "Lose"i "s"? _ number: Number ("<A>"/"A") _ multiplier:Multiplier? {
 }*/
 
 //Card effects
-CardEffect = effect:(DealDamage / ReadyAndUse / ReadyAndFight / Ready / Use) _ target:(CardTarget) {
+CardEffect = effect:(DealDamage / ReadyAndUse / ReadyAndFight / Ready / Use / Destroy / Purge) _ target:(CardTarget) {
 	return Object.assign(effect, {target:target})
 }
 
@@ -88,12 +88,25 @@ ReadyAndFight = "Ready and fight with"i {
 	return {name: 'readyAndFight'}
 }
 
-CardTarget = ("another"/"an"/"a")  _ controller:ControllerSpecifier? _ trait:TraitSpecifier? _ house:HouseSpecifier? _  type:CardType {
-	return {
-    	type: type, 
+Destroy = "Destroy"i {
+	return {name: 'destroy'}
+}
+
+Purge = "Purge"i {
+	return {name: 'purge'}
+}
+
+CardTarget = targetCount:CardTargetCount  _ controller:ControllerSpecifier? _ trait:TraitSpecifier? _ house:HouseSpecifier? _  type:CardType {
+	return Object.assign({
+    	type: type,
         controller: controller, 
         conditions: [trait, house].filter(x => x !== null)
-    }
+    }, targetCount)
+}
+
+CardTargetCount = ("each"/"all"/"another"/"an"/"a") {
+	if (text() == "each" || text() == "all") return {mode: "all"};
+    return {mode: "exactly", count: 1};
 }
 
 TraitSpecifier = negate:"non-"i? trait:Trait {
@@ -113,7 +126,9 @@ ControllerSpecifier = ("friendly"i / "enemy"i) {
 //Descriptors
 House = "brobnar"i / "dis"i / "logos"i / "mars"i / "sanctum"i / "shadows"i / "untamed" / "saurian"i / "star alliance"i
 Trait = "mutant"i / "shard"i / "cat"i / "beast"i / "agent"i
-CardType = "action"i / "artifact"i / "creature"i / "upgrade"i
+CardType = type:("action"i / "artifact"i / "creature"i / "upgrade"i) "s"? {
+	return type
+}
 
 //Ignorable text section
 Keywords = word:Keyword tail:(". " w:Keyword {return w;})* "."? _ ReminderText? {
