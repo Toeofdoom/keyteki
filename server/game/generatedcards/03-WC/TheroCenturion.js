@@ -4,7 +4,7 @@ class TheroCenturion extends Card {
     setupCardAbilities(ability) {
         this.play({
             fight: true,
-            gameAction: ability.actions.capture(1)
+            gameAction: ability.actions.capture({ amount: 1 })
         });
     }
 }

@@ -4,7 +4,7 @@ class DarkFaerie extends Card {
     setupCardAbilities(ability) {
         //Keywords: Skirmish
         this.fight({
-            gameAction: ability.actions.gainAmber(2)
+            gameAction: ability.actions.gainAmber({ amount: 2 })
         });
     }
 }

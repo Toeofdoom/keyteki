@@ -4,7 +4,7 @@ class DewFaerie extends Card {
     setupCardAbilities(ability) {
         //Keywords: Elusive
         this.reap({
-            gameAction: ability.actions.gainAmber(1)
+            gameAction: ability.actions.gainAmber({ amount: 1 })
         });
     }
 }

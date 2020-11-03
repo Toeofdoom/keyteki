@@ -3,7 +3,7 @@ const Card = require('../../Card.js');
 class Headhunter extends Card {
     setupCardAbilities(ability) {
         this.fight({
-            gameAction: ability.actions.gainAmber(1)
+            gameAction: ability.actions.gainAmber({ amount: 1 })
         });
     }
 }

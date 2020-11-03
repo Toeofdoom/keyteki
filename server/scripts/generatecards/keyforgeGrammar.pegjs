@@ -19,18 +19,36 @@ PersistentEffect = (UnknownEffect "."? _)+ ReminderText?
 BoldAbility = trigger:BoldTrigger tail:("/" t:BoldTrigger {return t;})* ": " effect:TriggeredEffect {
 	return {name: 'bold', trigger:trigger, effect:effect, extraTriggers: tail}
 }
-BoldTrigger = "Play" / "Reap" / "Before Fight" / "Fight" / "Destroyed" / "Action" / "Omni"
+
+BoldTrigger = ("Play" / "Reap" / "Before Fight" / "Fight" / "Destroyed" / "Action" / "Omni") {
+	if (text() == "Before Fight") return "beforeFight";
+	return text().toLowerCase();
+}
 
 
-TriggeredEffect = effect:(PlayerEffect / CaptureAmber / CardEffect / UnknownEffect) ReminderText? "."? ReminderText? _ tail:(u:UnknownEffect "." _ ReminderText? {return u;} )* {
+TriggeredEffect = effect:(SingleEffect) ReminderText? "."? ReminderText? _ tail:(u:SingleSubsequentEffect "." _ ReminderText? {return u;} )* {
 	if(tail.length > 0)
 		return [effect,...tail]
 	return effect
 }
 
+SingleEffect = optional:"You may"i? _ effect:(PlayerEffect / CaptureAmber / CardEffect / UnknownEffect) {
+	let extras = {
+    	optional: optional != null
+    }
+    return Object.assign(effect, extras)
+}
+
+SingleSubsequentEffect = ifYouDo:"If you do,"i? _ effect:SingleEffect {
+	let extras = {
+    	ifYouDo: ifYouDo != null
+    }
+    return Object.assign(effect, extras)
+}
+
 
 //Player effect section - for abilities that target a single player
-PlayerEffect = target:PlayerTarget? _ effect:(GainAmber / LoseAmber / StealAmber) {
+PlayerEffect = target:PlayerTarget? _ effect:(GainAmber / LoseAmber / StealAmber / GainChains) {
 	let info = {};
 	if (target) info.targetPlayer = target;
 	return Object.assign(effect, info);
@@ -41,40 +59,35 @@ PlayerTarget = ("Your Opponent"i / "You") {
 }
 
 //NumericalPlayerEffect...
-GainAmber = "Gain"i "s"? _ number: Number ("<A>"/"A") _ multiplier:Multiplier? {
-	return {name: 'gainAmber', quantity: number, multiplier: multiplier}
+GainAmber = "Gain"i "s"? _ amount:Number ("<A>"/"A") _ multiplier:Multiplier? {
+	return {name: 'gainAmber', amount: amount, multiplier: multiplier}
 }
 
-StealAmber = "Steal"i "s"? _ number: Number ("<A>"/"A") _ multiplier:Multiplier? {
-	return {name: 'stealAmber', quantity: number, multiplier: multiplier}
+StealAmber = "Steal"i "s"? _ amount:Number ("<A>"/"A") _ multiplier:Multiplier? {
+	return {name: 'steal', amount: amount, multiplier: multiplier}
 }
 
-CaptureAmber = "Capture"i "s"? _ number: Number ("<A>"/"A") _ multiplier:Multiplier? {
-	return {name: 'captureAmber', quantity: number, multiplier: multiplier}
+CaptureAmber = "Capture"i "s"? _ amount:Number ("<A>"/"A") _ multiplier:Multiplier? {
+	return {name: 'capture', amount: amount, multiplier: multiplier}
 }
 
-LoseAmber = "Lose"i "s"? _ number: Number ("<A>"/"A") _ multiplier:Multiplier? {
-	return {name: 'loseAmber', quantity: number, multiplier: multiplier}
+LoseAmber = "Lose"i "s"? _ amount:Number ("<A>"/"A") _ multiplier:Multiplier? {
+	return {name: 'loseAmber', amount: amount, multiplier: multiplier}
 }
-GainChains = "Gain"i "s"? _ number: Number "chains" _ multiplier:Multiplier? {
-	return {name: 'gainChains', quantity: number, multiplier: multiplier}
+
+GainChains = "Gain"i "s"? _ amount:Number _ "chains" _ multiplier:Multiplier? {
+	return {name: 'gainChains', amount: amount, multiplier: multiplier}
 }
 
 Multiplier = UnknownEffect
 
-
-
-/* ForgeAKey = "Gain " number: Number "<A>" {
-	return `GainAmber - quantity ${number}`
-}*/
-
 //Card effects
-CardEffect = effect:(DealDamage / ReadyAndUse / ReadyAndFight / Ready / Use / Destroy / Purge) _ target:(CardTarget) {
+CardEffect = effect:(DealDamage / ReadyAndUse / ReadyAndFight / Ready / Use / Destroy / Purge / Exalt) _ target:(Self/CardTarget) {
 	return Object.assign(effect, {target:target})
 }
 
 DealDamage = "Deal"i _ amount:Number ("<D>"/"D") _ "to" {
-	return {name: 'dealDamage', quantity: amount}
+	return {name: 'dealDamage', amount: amount}
 }
 
 Ready = "Ready"i {
@@ -100,6 +113,12 @@ Destroy = "Destroy"i {
 Purge = "Purge"i {
 	return {name: 'purge'}
 }
+
+Exalt = "Exalt"i {
+	return {name: 'exalt'}
+}
+
+Self = "$this"
 
 CardTarget = targetCount:CardTargetCount  _ other:OtherSpecifier? _ damaged:DamagedSpecifier? _ controller:ControllerSpecifier? _ flank:FlankSpecifier? _ trait:TraitSpecifier? _ house:HouseSpecifier? _  type:CardType _ nonFlank:NonFlankSpecifier? {
 	return Object.assign({

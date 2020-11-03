@@ -3,7 +3,7 @@ const Card = require('../../Card.js');
 class Charette extends Card {
     setupCardAbilities(ability) {
         this.play({
-            gameAction: ability.actions.capture(3)
+            gameAction: ability.actions.capture({ amount: 3 })
         });
     }
 }

@@ -5,12 +5,12 @@ class BrendTheFanatic extends Card {
         //Keywords: Skirmish
         this.play({
             gameAction: ability.actions.gainAmber((context) => ({
-                target: context.player.opponent,
-                amount: 1
+                amount: 1,
+                target: context.player.opponent
             }))
         });
         this.destroyed({
-            gameAction: ability.actions.steal(3)
+            gameAction: ability.actions.steal({ amount: 3 })
         });
     }
 }

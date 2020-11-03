@@ -4,7 +4,7 @@ class BordanTheRedeemed extends Card {
     setupCardAbilities(ability) {
         //Keywords: Elusive
         this.action({
-            gameAction: ability.actions.capture(2)
+            gameAction: ability.actions.capture({ amount: 2 })
         });
     }
 }

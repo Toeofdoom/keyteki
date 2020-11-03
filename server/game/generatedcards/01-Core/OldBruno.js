@@ -4,7 +4,7 @@ class OldBruno extends Card {
     setupCardAbilities(ability) {
         //Keywords: Elusive
         this.play({
-            gameAction: ability.actions.capture(3)
+            gameAction: ability.actions.capture({ amount: 3 })
         });
     }
 }

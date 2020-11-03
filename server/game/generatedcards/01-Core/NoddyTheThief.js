@@ -4,7 +4,7 @@ class NoddyTheThief extends Card {
     setupCardAbilities(ability) {
         //Keywords: Elusive
         this.action({
-            gameAction: ability.actions.steal(1)
+            gameAction: ability.actions.steal({ amount: 1 })
         });
     }
 }

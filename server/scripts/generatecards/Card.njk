@@ -1,34 +1,30 @@
-{%- macro playerAbilityParams(ability, defaultTarget=null) -%}
-    {%- if ability.targetPlayer and ability.targetPlayer !== defaultTarget -%}
-(context) => ({
-        {%- if ability.targetPlayer === 'self' %}
-    target: context.player,
-        {%- else %}
-    target: context.player.opponent,
-        {%- endif %}
-    amount: {{ability.quantity}}
-})
+{%- macro targetPlayerParam(ability, defaultTarget=null) -%}
+{%- if ability.targetPlayer and ability.targetPlayer !== defaultTarget -%}
+    {%- if ability.targetPlayer === 'self' -%}
+target: context.player
     {%- else -%}
-{{ability.quantity}}
+target: context.player.opponent
     {%- endif -%}
+{%- endif -%}
 {%- endmacro -%}
 
 {%- macro allTargetParam(target) -%}
-    {%- if target != null -%}
+{%- if target != null and target.mode == "all" -%}
 target: context.game.{{target.type}}sInPlay{{cardFilter(target)}}
-    {%- endif -%}
+{%- endif -%}
 {%- endmacro -%}
 
 {%- macro amountParam(ability) -%}
-    {%- if ability.quantity != null -%}
-amount: {{ability.quantity}}
-    {%- endif -%}
+{%- if ability.amount != null -%}
+amount: {{ability.amount}}
+{%- endif -%}
 {%- endmacro -%}
 
-{%- macro cardAbilityParams(ability, target=null) -%}
+{%- macro formatParams(ability, defaultPlayerTarget=null) -%}
 {%- set params = ([
-    allTargetParam(target),
-    amountParam(ability)
+    allTargetParam(ability.target),
+    amountParam(ability),
+    targetPlayerParam(ability, defaultPlayerTarget)
 ] | selectattr("length", "equalto", 0)) -%}{# selectattr/rejectattr seem to do the opposite of what the docs say? #}
     {%- if params.length > 0 -%}
         {%- if (params | join()).includes("context") -%}
@@ -91,94 +87,71 @@ card.controller {{'===' if target.controller === 'you' else '!==' |safe }} conte
 {%- endif -%}
 {%- endmacro -%}
 
-{%- macro effectMacro(effect, target=null) -%}
-{%- if target == null -%}
-{{ cardCondition(effect) | safe }}
-{%- endif -%}
-    {%- if effect.name == 'gainAmber' -%}
-gameAction: ability.actions.gainAmber({{ playerAbilityParams(effect, defaultTarget='you') }})
-    {%- elif effect.name == 'captureAmber' -%}
-gameAction: ability.actions.capture({{ playerAbilityParams(effect, defaultTarget='you') }})
-    {%- elif effect.name == 'stealAmber' -%}
-gameAction: ability.actions.steal({{ playerAbilityParams(effect, defaultTarget='you') }})
-    {%- elif effect.name == 'loseAmber' -%}
-gameAction: ability.actions.loseAmber({{ playerAbilityParams(effect, defaultTarget='opponent') }})
-    {%- elif effect.name == 'gainChains' -%}
-gameAction: ability.actions.gainChains({{ playerAbilityParams(effect, defaultTarget='you') }})
-    {%- elif effect.name == 'dealDamage' -%}
-gameAction: ability.actions.dealDamage({{cardAbilityParams(effect, target)}})
-    {%- elif effect.name == 'destroy' -%}
-gameAction: ability.actions.destroy({{cardAbilityParams(effect, target)}})
-    {%- elif effect.name == 'purge' -%}
-gameAction: ability.actions.purge({{cardAbilityParams(effect, target)}})
-    {%- elif effect.name == 'use' -%}
-gameAction: ability.actions.use({{cardAbilityParams(effect, target)}})
-    {%- elif effect.name == 'ready' -%}
-gameAction: ability.actions.ready({{cardAbilityParams(effect, target)}})
+{%- macro formatSingleEffect(effect) -%}
+    {%- if ['gainAmber','stealAmber','gainChains'].includes(effect.name) -%}
+ability.actions.{{effect.name}}({{ formatParams(effect, defaultPlayerTarget='you') }})
+    {%- elif ['loseAmber'].includes(effect.name) -%}{#Convert these to dictionary of default targets by effect #}
+ability.actions.loseAmber({{ formatParams(effect, defaultPlayerTarget='opponent') }})
     {%- elif effect.name == 'readyAndUse' -%}
-gameAction: ability.actions.sequential([
+ability.actions.sequential([
     ability.actions.ready(),
     ability.actions.use()
 ])
     {%- elif effect.name == 'readyAndFight' -%}
-gameAction: ability.actions.sequential([
+ability.actions.sequential([
     ability.actions.ready(),
     ability.actions.fight()
 ])
     {%- else -%}
-        /*{{ effect | dump(2) | safe}}*/
+ability.actions.{{effect.name}}({{formatParams(effect)}})
     {%- endif -%}
 {%- endmacro -%}
 
-{%- macro targetMacro(target) -%}
-{%- if target.type != null -%}
-cardType: '{{target.type}}',
-{% endif -%}
-{%- if target.controller != null -%}
-controller: '{{target.controller}}',
-{% endif -%}
+{%- macro formatEffect(effect) -%}
+{%- if effect.name != null -%}
+gameAction: {{ formatSingleEffect(effect) }}
+{%- else -%}
+gameAction: [
+    {%- for e in effect %}
+    {{ formatSingleEffect(e) | indent(4) }}{% if not loop.last %},{% endif %}
+    {%- endfor %}
+]
+{%- endif %}
 {%- endmacro -%}
 
-{%- macro abilityMacro(ability) -%}
-    {%- if (ability.name == 'bold') -%}
-        {%- if ability.trigger == 'Reap' -%}
-this.reap({
-        {%- elif ability.trigger == 'Fight' -%}
-this.fight({
-        {%- elif ability.trigger == 'Destroyed' -%}
-this.destroyed({
-        {%- elif ability.trigger == 'Play'-%}
-this.play({
-        {%- elif ability.trigger == 'Omni'-%}
-this.omni({
-        {%- elif ability.trigger == 'Before Fight'-%}
-this.beforeFight({
-        {%- elif ability.trigger == 'Action'-%}
-this.action({
-        {%- else -%}
-this.unknown( //{{ ability.trigger }}
-        {%- endif %}
-        {%- for extraTrigger in ability.extraTriggers %}
+{%- macro formatTarget(effect) -%}
+{%- if effect.target.type != null -%}
+cardType: '{{effect.target.type}}',
+{% endif -%}
+{%- if effect.target.controller != null -%}
+controller: '{{effect.target.controller}}',
+{% endif -%}
+{{ cardCondition(effect) | safe }}
+{%- endmacro -%}
+
+{%- macro formatAbility(ability) -%}
+{%- if (ability.name == 'bold') -%}
+this.{{ability.trigger}}({
+
+    {%- for extraTrigger in ability.extraTriggers %}
     {{extraTrigger | lower}}: true,
-        {%- endfor %}
-    {%- if ability.effect.target != null %}
-        {%- if ability.effect.target.mode == "all" %}
-    {{effectMacro(ability.effect, ability.effect.target) | indent(4)}}
-        {%- else %}
+    {%- endfor %}
+
+    {%- if ability.effect.target != null 
+        and ability.effect.target.mode != "all" %}{# Targetted ability #}
     target: {
-        {{targetMacro(ability.effect.target) | indent(8) -}}
-        {{effectMacro(ability.effect) | indent(8)}}
+        {{formatTarget(ability.effect) | indent(8) -}}
+        {{formatEffect(ability.effect) | indent(8)}}
     }
-        {%- endif %}
-    {%- else %}
-    {{ effectMacro(ability.effect) | indent(4)}}
+    {%- else %}{# Untargeted ability #}
+    {{ formatEffect(ability.effect) | indent(4)}}
     {%- endif %}
 });
-    {%- elif ability.name == 'keywords' -%}
+{%- elif ability.name == 'keywords' -%}
 //Keywords: {{ ability.keywords.join(", ") }}
-    {%- else -%}
-        /*{{ ability | dump(2) | safe}}*/
-    {%- endif -%}
+{%- else -%}
+/*{{ ability | dump(2) | safe}}*/
+{%- endif -%}
 {%- endmacro -%}
 
 const Card = require('../../Card.js');
@@ -186,7 +159,7 @@ const Card = require('../../Card.js');
 class {{ name }} extends Card {
     setupCardAbilities(ability) {
         {%- for ability in abilities %}
-        {{abilityMacro(ability) | indent(8)}}
+        {{formatAbility(ability) | indent(8)}}
         {%- endfor %}
     }
 }

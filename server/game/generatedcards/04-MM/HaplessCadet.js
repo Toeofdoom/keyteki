@@ -4,7 +4,7 @@ class HaplessCadet extends Card {
     setupCardAbilities(ability) {
         //Keywords: Taunt
         this.destroyed({
-            gameAction: ability.actions.loseAmber(3)
+            gameAction: ability.actions.loseAmber({ amount: 3 })
         });
     }
 }

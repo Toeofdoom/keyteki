@@ -3,7 +3,7 @@ const Card = require('../../Card.js');
 class SquireAlys extends Card {
     setupCardAbilities(ability) {
         this.play({
-            gameAction: ability.actions.capture(2)
+            gameAction: ability.actions.capture({ amount: 2 })
         });
     }
 }

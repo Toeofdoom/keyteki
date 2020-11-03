@@ -3,7 +3,7 @@ const Card = require('../../Card.js');
 class GrenadeSnib extends Card {
     setupCardAbilities(ability) {
         this.destroyed({
-            gameAction: ability.actions.loseAmber(2)
+            gameAction: ability.actions.loseAmber({ amount: 2 })
         });
     }
 }

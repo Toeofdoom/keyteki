@@ -4,7 +4,7 @@ class Batdrone extends Card {
     setupCardAbilities(ability) {
         //Keywords: Skirmish
         this.fight({
-            gameAction: ability.actions.steal(1)
+            gameAction: ability.actions.steal({ amount: 1 })
         });
     }
 }

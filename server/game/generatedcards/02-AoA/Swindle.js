@@ -5,7 +5,7 @@ class Swindle extends Card {
         //Keywords: Alpha
         //Keywords: Omega
         this.play({
-            gameAction: ability.actions.steal(3)
+            gameAction: ability.actions.steal({ amount: 3 })
         });
     }
 }

@@ -4,8 +4,8 @@ class FertilityChant extends Card {
     setupCardAbilities(ability) {
         this.play({
             gameAction: ability.actions.gainAmber((context) => ({
-                target: context.player.opponent,
-                amount: 2
+                amount: 2,
+                target: context.player.opponent
             }))
         });
     }

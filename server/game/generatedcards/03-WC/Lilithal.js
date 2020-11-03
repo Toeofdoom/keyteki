@@ -4,7 +4,7 @@ class Lilithal extends Card {
     setupCardAbilities(ability) {
         this.fight({
             reap: true,
-            gameAction: ability.actions.capture(1)
+            gameAction: ability.actions.capture({ amount: 1 })
         });
     }
 }

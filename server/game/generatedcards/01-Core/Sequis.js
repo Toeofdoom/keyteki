@@ -3,7 +3,7 @@ const Card = require('../../Card.js');
 class Sequis extends Card {
     setupCardAbilities(ability) {
         this.reap({
-            gameAction: ability.actions.capture(1)
+            gameAction: ability.actions.capture({ amount: 1 })
         });
     }
 }

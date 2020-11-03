@@ -4,7 +4,7 @@ class Mooncurser extends Card {
     setupCardAbilities(ability) {
         //Keywords: Skirmish, Poison
         this.fight({
-            gameAction: ability.actions.steal(1)
+            gameAction: ability.actions.steal({ amount: 1 })
         });
     }
 }

@@ -3,7 +3,7 @@ const Card = require('../../Card.js');
 class YantzeeGang extends Card {
     setupCardAbilities(ability) {
         this.action({
-            gameAction: ability.actions.steal(1)
+            gameAction: ability.actions.steal({ amount: 1 })
         });
     }
 }
