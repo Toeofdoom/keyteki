@@ -26,11 +26,18 @@ amount: {{ability.amount}}
 {%- endif -%}
 {%- endmacro -%}
 
+{%- macro locationParam(ability) -%}
+{%- if ability.location != null -%}
+location: '{{ability.location}}'
+{%- endif -%}
+{%- endmacro -%}
+
 {%- macro formatParams(ability, defaultPlayerTarget=null) -%}
 {%- set params = ([
     allTargetParam(ability.target),
     selfTargetParam(ability.target),
     amountParam(ability),
+    locationParam(ability),
     targetPlayerParam(ability, defaultPlayerTarget)
 ] | selectattr("length", "equalto", 0)) -%}{# selectattr/rejectattr seem to do the opposite of what the docs say? #}
     {%- if params.length > 0 -%}
@@ -38,8 +45,12 @@ amount: {{ability.amount}}
 (context) => ({
     {{ params | join(",\n") | indent(4) | safe }}
 })
+        {%- elif params.length > 1 -%}
+{
+    {{ params | join(",\n") | indent(4) | safe}}
+}
         {%- else -%}
-{ {{ params | join(",\n") | indent(4) | safe}} }
+{ {{ params[0] }} }
         {%- endif -%}
     {%- endif -%}
 {%- endmacro -%}
@@ -98,10 +109,10 @@ card.controller {{'===' if target.controller === 'you' else '!==' |safe }} conte
 
 {#Convert these to dictionary of default targets by effect #}
 {%- macro formatSingleEffect(effect) -%}
-    {%- if ['gainAmber','stealAmber','gainChains'].includes(effect.name) -%}
+    {%- if ['gainAmber','stealAmber','gainChains','draw'].includes(effect.name) -%}
 ability.actions.{{effect.name}}({{ formatParams(effect, defaultPlayerTarget='you') }})
-    {%- elif ['loseAmber'].includes(effect.name) -%}
-ability.actions.loseAmber({{ formatParams(effect, defaultPlayerTarget='opponent') }})
+    {%- elif ['loseAmber','discard','discardAtRandom'].includes(effect.name) -%}
+ability.actions.{{effect.name}}({{ formatParams(effect, defaultPlayerTarget='opponent') }})
     {%- elif effect.name == 'readyAndUse' -%}
 ability.actions.sequential([
     ability.actions.ready(),

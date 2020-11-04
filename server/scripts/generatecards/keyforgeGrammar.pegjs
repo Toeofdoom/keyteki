@@ -46,7 +46,7 @@ SingleSubsequentEffect = ifYouDo:"If you do,"i? _ effect:SingleEffect {
 
 
 //Player effect section - for abilities that target a single player
-PlayerEffect = target:PlayerTarget? _ effect:(GainAmber / LoseAmber / StealAmber / GainChains / DrawCards) {
+PlayerEffect = target:PlayerTarget? _ effect:(GainAmber / LoseAmber / StealAmber / GainChains / DrawCards / DiscardCards) {
 	let info = {};
 	if (target) info.targetPlayer = target;
 	return Object.assign(effect, info);
@@ -77,6 +77,15 @@ DrawCards = "Draw"i "s"? _ amount:Number _ ("cards"/"card") _ multiplier:Multipl
 	return {name: 'draw', amount: amount, multiplier: multiplier}
 }
 
+DiscardCards = "Discard"i "s"? _ amount:Number _ random:"random"i? _ ("cards"/"card") _ "from" _ ("your"i/"their"i) _ location:("hand") {
+	return {
+		name: random != null ? 'discardAtRandom' : 'discard', 
+		amount: amount, 
+		targetPlayer: 'self', 
+		location: location
+	}
+}
+
 GainChains = "Gain"i "s"? _ amount:Number _ "chains" _ multiplier:Multiplier? {
 	return {name: 'gainChains', amount: amount, multiplier: multiplier}
 }
@@ -84,7 +93,7 @@ GainChains = "Gain"i "s"? _ amount:Number _ "chains" _ multiplier:Multiplier? {
 Multiplier = UnknownEffect
 
 //Card effects
-CardEffect = effect:(DealDamage / ReadyAndUse / ReadyAndFight / Ready / Use / Destroy / Purge / Exalt / Ward / Enrage) _ target:(Self/CardTarget) {
+CardEffect = effect:(DealDamage / ReadyAndUse / ReadyAndFight / Ready / Use / Destroy / Sacrifice / Purge / Exalt / Ward / Enrage) _ target:(Self/CardTarget) {
 	return Object.assign(effect, {target:target})
 }
 
@@ -110,6 +119,10 @@ ReadyAndFight = "Ready and fight with"i {
 
 Destroy = "Destroy"i {
 	return {name: 'destroy'}
+}
+
+Sacrifice = "Sacrifice"i {
+	return {name: 'sacrifice'}
 }
 
 Purge = "Purge"i {
@@ -169,7 +182,7 @@ FlankSpecifier = "flank"i {
 	return {name: "flank"}
 }
 
-NonFlankSpecifier = "that is not on a flank"i {
+NonFlankSpecifier = "that is"? _ "not on a flank"i {
 	return {name: "not", condition: {name: "flank"}}
 }
 
