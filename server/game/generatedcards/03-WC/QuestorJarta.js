@@ -4,7 +4,13 @@ class QuestorJarta extends Card {
     setupCardAbilities(ability) {
         //Keywords: Elusive
         this.reap({
-            gameAction: [ability.actions.exalt(), ability.actions.gainAmber({ amount: 1 })]
+            optional: true,
+            gameAction: ability.actions.exalt((context) => ({
+                target: context.source
+            })),
+            then: {
+                gameAction: ability.actions.gainAmber({ amount: 1 })
+            }
         });
     }
 }

@@ -3,7 +3,13 @@ const Card = require('../../Card.js');
 class GormOfOmm extends Card {
     setupCardAbilities(ability) {
         this.omni({
-            gameAction: [ability.actions.destroy(), ability.actions.destroy()]
+            target: {
+                cardType: 'artifact',
+                gameAction: ability.actions.destroy()
+            },
+            gameAction: ability.actions.destroy((context) => ({
+                target: context.source
+            }))
         });
         /*[]*/
     }

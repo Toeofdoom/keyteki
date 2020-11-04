@@ -3,6 +3,7 @@ const Card = require('../../Card.js');
 class TheCommonCold extends Card {
     setupCardAbilities(ability) {
         this.play({
+            optional: true,
             gameAction: [
                 ability.actions.dealDamage((context) => ({
                     target: context.game.creaturesInPlay,

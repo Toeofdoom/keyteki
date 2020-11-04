@@ -4,7 +4,16 @@ class UmbraSaurus extends Card {
     setupCardAbilities(ability) {
         //Keywords: Elusive
         this.play({
-            gameAction: [ability.actions.exalt(), ability.actions.dealDamage({ amount: 3 })]
+            optional: true,
+            gameAction: ability.actions.exalt((context) => ({
+                target: context.source
+            })),
+            then: {
+                target: {
+                    cardType: 'creature',
+                    gameAction: ability.actions.dealDamage({ amount: 3 })
+                }
+            }
         });
     }
 }

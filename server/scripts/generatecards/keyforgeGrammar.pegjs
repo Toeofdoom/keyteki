@@ -27,9 +27,7 @@ BoldTrigger = ("Play" / "Reap" / "Before Fight" / "Fight" / "Destroyed" / "Actio
 
 
 TriggeredEffect = effect:(SingleEffect) ReminderText? "."? ReminderText? _ tail:(u:SingleSubsequentEffect "." _ ReminderText? {return u;} )* {
-	if(tail.length > 0)
-		return [effect,...tail]
-	return effect
+	return [effect,...tail]
 }
 
 SingleEffect = optional:"You may"i? _ effect:(PlayerEffect / CaptureAmber / CardEffect / UnknownEffect) {

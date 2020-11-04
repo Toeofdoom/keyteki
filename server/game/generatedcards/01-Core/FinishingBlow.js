@@ -3,7 +3,14 @@ const Card = require('../../Card.js');
 class FinishingBlow extends Card {
     setupCardAbilities(ability) {
         this.play({
-            gameAction: [ability.actions.destroy(), ability.actions.steal({ amount: 1 })]
+            target: {
+                cardType: 'creature',
+                cardCondition: (card) => card.hasToken('damage'),
+                gameAction: ability.actions.destroy()
+            },
+            then: {
+                gameAction: ability.actions.steal({ amount: 1 })
+            }
         });
     }
 }

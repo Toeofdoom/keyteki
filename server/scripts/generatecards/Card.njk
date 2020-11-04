@@ -14,6 +14,12 @@ target: context.game.{{target.type}}sInPlay{{cardFilter(target)}}
 {%- endif -%}
 {%- endmacro -%}
 
+{%- macro selfTargetParam(target) -%}
+{%- if target == "$this" -%}
+target: context.source
+{%- endif -%}
+{%- endmacro -%}
+
 {%- macro amountParam(ability) -%}
 {%- if ability.amount != null -%}
 amount: {{ability.amount}}
@@ -23,6 +29,7 @@ amount: {{ability.amount}}
 {%- macro formatParams(ability, defaultPlayerTarget=null) -%}
 {%- set params = ([
     allTargetParam(ability.target),
+    selfTargetParam(ability.target),
     amountParam(ability),
     targetPlayerParam(ability, defaultPlayerTarget)
 ] | selectattr("length", "equalto", 0)) -%}{# selectattr/rejectattr seem to do the opposite of what the docs say? #}
@@ -87,10 +94,11 @@ card.controller {{'===' if target.controller === 'you' else '!==' |safe }} conte
 {%- endif -%}
 {%- endmacro -%}
 
+{#Convert these to dictionary of default targets by effect #}
 {%- macro formatSingleEffect(effect) -%}
     {%- if ['gainAmber','stealAmber','gainChains'].includes(effect.name) -%}
 ability.actions.{{effect.name}}({{ formatParams(effect, defaultPlayerTarget='you') }})
-    {%- elif ['loseAmber'].includes(effect.name) -%}{#Convert these to dictionary of default targets by effect #}
+    {%- elif ['loseAmber'].includes(effect.name) -%}
 ability.actions.loseAmber({{ formatParams(effect, defaultPlayerTarget='opponent') }})
     {%- elif effect.name == 'readyAndUse' -%}
 ability.actions.sequential([
@@ -107,16 +115,58 @@ ability.actions.{{effect.name}}({{formatParams(effect)}})
     {%- endif -%}
 {%- endmacro -%}
 
-{%- macro formatEffect(effect) -%}
-{%- if effect.name != null -%}
-gameAction: {{ formatSingleEffect(effect) }}
-{%- else -%}
-gameAction: [
-    {%- for e in effect %}
+{%- macro formatEffectArray(effects) -%}
+{%- if effects.length > 1 -%}
+[
+    {%- for e in effects %}
     {{ formatSingleEffect(e) | indent(4) }}{% if not loop.last %},{% endif %}
     {%- endfor %}
 ]
+{%- elif effects.length == 1 -%}
+{{ formatSingleEffect(effects[0]) }}
 {%- endif %}
+{%- endmacro -%}
+
+{# After reviewing some of how the engine works, this should
+actually group targetted and untargetted actions. A single ability can have both.
+Targetted abilities appear to happen first, regardless of what order they should really occur in. 
+*Theoretically* that probably means you could put other game actions in targeted action lists if you want to control ordering as long as you can reset the targets?? Or list them as needing targets with a null handler?? 
+
+What about "Then" stuff??
+Good question! That just looks at everything in the blob before it... probably.
+Apparently then abilities can indeed have a target (see nerve blast). Gorm of omm should technically work this way too.
+
+So we have cards that want to do things one way, and an engine that works a slightly different way but hopefully it's close enough to work.
+#}
+{%- macro formatEffects(effects, then = false) -%}
+{%- set effectGroups = effects | sortEffects(then) -%}
+{%- set newline = joiner(",\n") -%}
+{# Targetted effects #}
+{%- if effectGroups.optional -%}
+{{newline()}}optional: true
+{%- endif -%}
+{%- if effectGroups.targets.length > 1 -%}
+/*{{effectGroups.targets | dump(2) | safe}}*/
+{%- elif effectGroups.targets.length == 1 -%}
+{{newline()}}target: {
+    {{formatTarget(effectGroups.targets[0]) | indent(4) -}}
+    gameAction: {{formatSingleEffect(effectGroups.targets[0]) | indent(4)}}
+}
+{%- endif -%}
+{# Untargetted effects #}
+{%- if effectGroups.default.length > 0 -%}
+{{newline()}}gameAction: {{formatEffectArray(effectGroups.default)}}
+{%- endif -%}
+{# Dependent effects #}
+{%- if effectGroups.then.length > 0 -%}
+{{newline()}}then: {
+    {{formatEffects(effectGroups.then, true) | indent(4) }}
+}
+{%- endif -%}
+{# Stuff we can't format yet #}
+{%- for unknownEffect in effectGroups.unknown %}
+/*Unsupported combinations: {{unknownEffect | dump(2) | safe}}*/
+{%- endfor -%}
 {%- endmacro -%}
 
 {%- macro formatTarget(effect) -%}
@@ -129,23 +179,18 @@ controller: '{{effect.target.controller}}',
 {{ cardCondition(effect) | safe }}
 {%- endmacro -%}
 
+
+
+
+
+
 {%- macro formatAbility(ability) -%}
 {%- if (ability.name == 'bold') -%}
 this.{{ability.trigger}}({
-
     {%- for extraTrigger in ability.extraTriggers %}
     {{extraTrigger | lower}}: true,
     {%- endfor %}
-
-    {%- if ability.effect.target != null 
-        and ability.effect.target.mode != "all" %}{# Targetted ability #}
-    target: {
-        {{formatTarget(ability.effect) | indent(8) -}}
-        {{formatEffect(ability.effect) | indent(8)}}
-    }
-    {%- else %}{# Untargeted ability #}
-    {{ formatEffect(ability.effect) | indent(4)}}
-    {%- endif %}
+    {{formatEffects(ability.effect) | indent(4)}}
 });
 {%- elif ability.name == 'keywords' -%}
 //Keywords: {{ ability.keywords.join(", ") }}

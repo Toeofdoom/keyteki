@@ -11,8 +11,7 @@ class CardGenerator {
         this.dataSource = dataSource;
         this.fullOutputDir = fullOutputDir;
         this.partialOutputDir = partialOutputDir;
-        this.template = path.join(__dirname, 'Card.njk');
-        this.template2 = path.join(__dirname, 'Ability.hbs');
+        this.template = 'Card.njk';
         try {
             console.log('Starting card parser');
             let grammar = fs.readFileSync(path.join(__dirname, 'keyforgeGrammar.pegjs'), 'utf8');
@@ -58,6 +57,8 @@ class CardGenerator {
                 folder: expansionPaths[duplicates[duplicates.length - 1].packCode]
             })
         );
+        var env = new nunjucks.Environment(new nunjucks.FileSystemLoader(__dirname));
+        env.addFilter('sortEffects', sortEffects);
 
         console.log('Card information loaded');
         for (let card of cards) {
@@ -84,7 +85,7 @@ class CardGenerator {
             let a = this;
 
             try {
-                var str = nunjucks.render(this.template, data);
+                var str = env.render(this.template, data);
                 ensureDirectoryExistence(filename);
                 fs.writeFileSync(filename, str);
                 if (isComplete(data.abilities)) a.complete++;
@@ -175,6 +176,32 @@ function isComplete(abilities) {
         console.log(abilities);
         console.log(err);
     }
+}
+
+function sortEffects(effects, then) {
+    //This function will need to get smarter to support other cards.
+    let sortedEffects = {
+        optional: false,
+        targets: [],
+        default: [],
+        then: [],
+        unknown: []
+    };
+    for (let effect of effects) {
+        let targetted = effect.target && effect.target != '$this' && effect.target.mode !== 'all';
+        if (effect.ifYouDo && !then) {
+            sortedEffects.then.push(effect);
+        } else {
+            if (effect.optional) sortedEffects.optional = true;
+
+            if (targetted) {
+                sortedEffects.targets.push(effect);
+            } else {
+                sortedEffects.default.push(effect);
+            }
+        }
+    }
+    return sortedEffects;
 }
 
 module.exports = CardGenerator;
