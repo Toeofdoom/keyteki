@@ -46,7 +46,7 @@ SingleSubsequentEffect = ifYouDo:"If you do,"i? _ effect:SingleEffect {
 
 
 //Player effect section - for abilities that target a single player
-PlayerEffect = target:PlayerTarget? _ effect:(GainAmber / LoseAmber / StealAmber / GainChains) {
+PlayerEffect = target:PlayerTarget? _ effect:(GainAmber / LoseAmber / StealAmber / GainChains / DrawCards) {
 	let info = {};
 	if (target) info.targetPlayer = target;
 	return Object.assign(effect, info);
@@ -73,6 +73,10 @@ LoseAmber = "Lose"i "s"? _ amount:Number ("<A>"/"A") _ multiplier:Multiplier? {
 	return {name: 'loseAmber', amount: amount, multiplier: multiplier}
 }
 
+DrawCards = "Draw"i "s"? _ amount:Number _ ("cards"/"card") _ multiplier:Multiplier? {
+	return {name: 'draw', amount: amount, multiplier: multiplier}
+}
+
 GainChains = "Gain"i "s"? _ amount:Number _ "chains" _ multiplier:Multiplier? {
 	return {name: 'gainChains', amount: amount, multiplier: multiplier}
 }
@@ -80,7 +84,7 @@ GainChains = "Gain"i "s"? _ amount:Number _ "chains" _ multiplier:Multiplier? {
 Multiplier = UnknownEffect
 
 //Card effects
-CardEffect = effect:(DealDamage / ReadyAndUse / ReadyAndFight / Ready / Use / Destroy / Purge / Exalt) _ target:(Self/CardTarget) {
+CardEffect = effect:(DealDamage / ReadyAndUse / ReadyAndFight / Ready / Use / Destroy / Purge / Exalt / Ward / Enrage) _ target:(Self/CardTarget) {
 	return Object.assign(effect, {target:target})
 }
 
@@ -116,13 +120,21 @@ Exalt = "Exalt"i {
 	return {name: 'exalt'}
 }
 
+Ward = "Ward"i {
+	return {name: 'ward'}
+}
+
+Enrage = "Enrage"i {
+	return {name: 'enrage'}
+}
+
 Self = "$this"
 
-CardTarget = targetCount:CardTargetCount  _ other:OtherSpecifier? _ damaged:DamagedSpecifier? _ controller:ControllerSpecifier? _ flank:FlankSpecifier? _ trait:TraitSpecifier? _ house:HouseSpecifier? _  type:CardType _ nonFlank:NonFlankSpecifier? {
+CardTarget = targetCount:CardTargetCount  _ other:OtherSpecifier? _ damaged:DamagedSpecifier? _ controller:ControllerSpecifier? _ flank:FlankSpecifier? _ trait:TraitSpecifier? _ house:HouseSpecifier? _  type:CardType _ nonFlank:NonFlankSpecifier? _ hasAmber:HasAmberSpecifier? {
 	return Object.assign({
     	type: type,
         controller: controller, 
-        conditions: [other, damaged, flank, nonFlank, trait, house].filter(x => x !== null)
+        conditions: [other, damaged, flank, nonFlank, trait, house, hasAmber].filter(x => x !== null)
     }, targetCount)
 }
 
@@ -161,9 +173,16 @@ NonFlankSpecifier = "that is not on a flank"i {
 	return {name: "not", condition: {name: "flank"}}
 }
 
+// with no A on it
+HasAmberSpecifier = "with" _ negate:"no" _ "A on it"  {
+	let c = {name: "hasAmber"};
+	return negate != null ? {name: "not", condition: c} : c;
+}
+
+
 //Descriptors
 House = "brobnar"i / "dis"i / "logos"i / "mars"i / "sanctum"i / "shadows"i / "untamed" / "saurian"i / "star alliance"i
-Trait = "mutant"i / "shard"i / "cat"i / "beast"i / "agent"i
+Trait = "mutant"i / "shard"i / "cat"i / "beast"i / "agent"i / "human"i / "scientist"i /"giant"i / "demon"i / "knight"i / "dinosaur"i / "thief"i / "martian"i / "robot"i / "sin"i / "horseman"i
 CardType = type:("action"i / "artifact"i / "creature"i / "upgrade"i) "s"? {
 	return type
 }
@@ -182,7 +201,7 @@ ReminderText = _ "(" [^)]+ ")" _ {
 }
 
 //Basics
-Number = Integer
+Number = "a" {return 1;} / Integer 
 Integer = [0-9]+ {return parseInt(text())}
 
 _ "whitespace" = [  ﻿\u202f]*

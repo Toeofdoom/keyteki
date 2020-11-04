@@ -53,6 +53,8 @@ card.hasTrait('{{condition.trait}}')
 card.hasHouse('{{condition.house}}')
     {%- elif condition.name == "flank" -%}
 card.isOnFlank()
+    {%- elif condition.name == "hasAmber" -%}
+card.hasToken('amber')
     {%- elif condition.name == "damaged" -%}
 card.hasToken('damage')
     {%- elif condition.name == "other" -%}
