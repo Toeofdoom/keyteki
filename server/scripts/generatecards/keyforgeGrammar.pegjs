@@ -94,7 +94,7 @@ GainChains = "Gain"i "s"? _ amount:Number _ ("chains"/"chain") _ multiplier:Mult
 Multiplier = UnknownEffect
 
 //Card effects
-CardEffect = effect:(DealDamage / ReadyAndUse / ReadyAndFight / Ready / Use / Destroy / Sacrifice / Purge / Exalt / Ward / Enrage) _ target:(Self/CardTarget) {
+CardEffect = effect:(DealDamage / ReadyAndUse / ReadyAndFight / Ready / Use / Destroy / Sacrifice / Purge / Exalt / Ward / Enrage / Stun / Exhaust / ArchiveTarget) _ target:(Self/CardTarget) {
 	return Object.assign(effect, {target:target})
 }
 
@@ -140,6 +140,18 @@ Ward = "Ward"i {
 
 Enrage = "Enrage"i {
 	return {name: 'enrage'}
+}
+
+Stun = "Stun"i {
+	return {name: 'stun'}
+}
+
+Exhaust = "Exhaust"i {
+	return {name: 'exhaust'}
+}
+
+ArchiveTarget = "Archive"i {
+	return {name: 'archive'}
 }
 
 //Card movement effects - these are worded in more complex ways than other card-related effects.
@@ -230,7 +242,7 @@ Keywords = word:Keyword tail:(". " w:Keyword {return w;})* "."? _ ReminderText? 
 	return {name: "keywords", keywords: [word, ...tail]}
 }
 
-Keyword = name:("Elusive"i / "Skirmish"i / "Taunt"i / "Poison"i / "Deploy"i / "Alpha"i / "Omega"i / "Assault"i / "Hazardous"i / e:"Enhance"i _ [A-Z]i+ {return e;}) _ count:Integer? {
+Keyword = name:("Elusive"i / "Skirmish"i / "Taunt"i / "Poison"i / "Deploy"i / "Alpha"i / "Omega"i / "Assault"i / "Hazardous"i / "Invulnerable"i / e:"Enhance"i _ [A-Z]i+ {return e;}) _ count:Integer? {
 	return {name: name.toLowerCase(), count};
 }
 
