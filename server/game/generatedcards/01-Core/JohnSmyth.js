@@ -2,7 +2,7 @@ const Card = require('../../Card.js');
 
 class JohnSmyth extends Card {
     setupCardAbilities(ability) {
-        //Keywords: Elusive
+        //Keywords: [{"name":"elusive","count":null}]
         this.fight({
             reap: true,
             target: {

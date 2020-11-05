@@ -10,7 +10,6 @@ class DominatorBauble extends Card {
                 gameAction: ability.actions.use()
             }
         });
-        /*[]*/
     }
 }
 

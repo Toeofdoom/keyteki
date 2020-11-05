@@ -9,7 +9,6 @@ class GiantsBane extends Card {
                 gameAction: ability.actions.destroy()
             }
         });
-        /*[]*/
     }
 }
 

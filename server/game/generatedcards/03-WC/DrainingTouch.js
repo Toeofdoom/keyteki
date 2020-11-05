@@ -9,7 +9,6 @@ class DrainingTouch extends Card {
                 gameAction: ability.actions.destroy()
             }
         });
-        /*[]*/
     }
 }
 

@@ -2,7 +2,7 @@ const Card = require('../../Card.js');
 
 class BrendTheFanatic extends Card {
     setupCardAbilities(ability) {
-        //Keywords: Skirmish
+        //Keywords: [{"name":"skirmish","count":null}]
         this.play({
             gameAction: ability.actions.gainAmber((context) => ({
                 amount: 1,

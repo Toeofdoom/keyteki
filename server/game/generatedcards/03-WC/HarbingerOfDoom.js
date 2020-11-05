@@ -7,7 +7,6 @@ class HarbingerOfDoom extends Card {
                 target: context.game.creaturesInPlay
             }))
         });
-        /*[]*/
     }
 }
 

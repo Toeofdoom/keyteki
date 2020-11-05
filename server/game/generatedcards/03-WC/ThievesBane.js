@@ -9,7 +9,6 @@ class ThievesBane extends Card {
                 gameAction: ability.actions.destroy()
             }
         });
-        /*[]*/
     }
 }
 

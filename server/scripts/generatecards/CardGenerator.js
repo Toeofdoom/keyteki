@@ -70,12 +70,14 @@ class CardGenerator {
             };
 
             if (data.abilities == null) {
+                console.log(`Null abilities for ${card.id}`);
                 this.error++;
                 continue;
             }
 
             let complete = isComplete(data.abilities);
-            if (complete && data.abilities.every((ability) => ability.name !== 'bold')) {
+            let skippable = ['reminderText', 'keywords'];
+            if (complete && data.abilities.every((ability) => skippable.includes(ability.name))) {
                 this.skipped++;
                 continue;
             }

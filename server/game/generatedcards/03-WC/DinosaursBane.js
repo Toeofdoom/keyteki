@@ -9,7 +9,6 @@ class DinosaursBane extends Card {
                 gameAction: ability.actions.destroy()
             }
         });
-        /*[]*/
     }
 }
 

@@ -1,9 +1,10 @@
 //Structure
+
 Lines = line:Line tail:(NewLine l:Line {return l;})* NewLine? {
-	return [line, ...tail]
+	return [line, ...tail].filter((l) => !Array.isArray(l) || l.length > 0)
 }
 
-Line = ability:(Keywords / BoldAbility / PersistentEffect / ReminderText / _) {
+Line = ability:(Keywords / BoldAbility / UpgradeEffect / PersistentEffect / ReminderText / _)_ {
 	return ability
 }
 
@@ -86,7 +87,7 @@ DiscardCards = "Discard"i "s"? _ amount:Number _ random:"random"i? _ ("cards"/"c
 	}
 }
 
-GainChains = "Gain"i "s"? _ amount:Number _ "chains" _ multiplier:Multiplier? {
+GainChains = "Gain"i "s"? _ amount:Number _ ("chains"/"chain") _ multiplier:Multiplier? {
 	return {name: 'gainChains', amount: amount, multiplier: multiplier}
 }
 
@@ -141,7 +142,13 @@ Enrage = "Enrage"i {
 	return {name: 'enrage'}
 }
 
+//Card movement effects - these are worded in more complex ways than other card-related effects.
+MoveCardEffect = UnknownEffect
+
+//Card targetting
 Self = "$this"
+
+UpgradedCreature = "this creature"i;
 
 CardTarget = targetCount:CardTargetCount  _ other:OtherSpecifier? _ damaged:DamagedSpecifier? _ controller:ControllerSpecifier? _ flank:FlankSpecifier? _ trait:TraitSpecifier? _ house:HouseSpecifier? _  type:CardType _ nonFlank:NonFlankSpecifier? _ hasAmber:HasAmberSpecifier? {
 	return Object.assign({
@@ -186,15 +193,33 @@ NonFlankSpecifier = "that is"? _ "not on a flank"i {
 	return {name: "not", condition: {name: "flank"}}
 }
 
-// with no A on it
 HasAmberSpecifier = "with" _ negate:"no" _ "A on it"  {
 	let c = {name: "hasAmber"};
 	return negate != null ? {name: "not", condition: c} : c;
 }
 
+//Upgrades
+UpgradeEffect = "This creature"i _ gets:GetsStats? _ "and"i? _ gains:GainsAbility? "."? {
+	return {name: "upgrades", gets, gains}
+}
 
+GainsAbility = "gains"i ","? _ ability:(keywords:Keywords "and,"? _{return keywords;} / Quote bold:BoldAbility Quote {return bold;} )+ {
+	return ability
+}
+
+GetsStats = "gets" _ statChanges:(stat:StatChange _ "and"? _ {return stat;})+ {
+	return statChanges;
+}
+
+StatChange = "+" amount:Number _ stat:("power"i/"armor"i){
+	return {name: "gain"+ stat.charAt(0).toUpperCase() + stat.slice(1), amount};
+}
+
+Quote = [\“"”]
 //Descriptors
-House = "brobnar"i / "dis"i / "logos"i / "mars"i / "sanctum"i / "shadows"i / "untamed" / "saurian"i / "star alliance"i
+House = "brobnar"i / "dis"i / "logos"i / "mars"i / "sanctum"i / "shadows"i / "untamed" / "saurian"i / "star alliance"i {
+	return text().replace(" ", "");
+}
 Trait = "mutant"i / "shard"i / "cat"i / "beast"i / "agent"i / "human"i / "scientist"i /"giant"i / "demon"i / "knight"i / "dinosaur"i / "thief"i / "martian"i / "robot"i / "sin"i / "horseman"i
 CardType = type:("action"i / "artifact"i / "creature"i / "upgrade"i) "s"? {
 	return type
@@ -205,8 +230,8 @@ Keywords = word:Keyword tail:(". " w:Keyword {return w;})* "."? _ ReminderText? 
 	return {name: "keywords", keywords: [word, ...tail]}
 }
 
-Keyword = ("Elusive" / "Skirmish" / "Taunt" / "Poison" / "Deploy" / "Alpha" / "Omega" / "Assault " Integer / "Hazardous " Integer / "Enhance" _ [A-Z]i+) {
-	return text();
+Keyword = name:("Elusive"i / "Skirmish"i / "Taunt"i / "Poison"i / "Deploy"i / "Alpha"i / "Omega"i / "Assault"i / "Hazardous"i / e:"Enhance"i _ [A-Z]i+ {return e;}) _ count:Integer? {
+	return {name: name.toLowerCase(), count};
 }
 
 ReminderText = _ "(" [^)]+ ")" _ {

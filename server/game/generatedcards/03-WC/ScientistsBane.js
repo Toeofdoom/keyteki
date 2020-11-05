@@ -9,7 +9,6 @@ class ScientistsBane extends Card {
                 gameAction: ability.actions.destroy()
             }
         });
-        /*[]*/
     }
 }
 

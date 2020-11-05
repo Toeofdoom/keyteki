@@ -11,7 +11,6 @@ class CommanderChan extends Card {
                 gameAction: ability.actions.use()
             }
         });
-        /*[]*/
     }
 }
 

@@ -8,7 +8,6 @@ class SoulFiddle extends Card {
                 gameAction: ability.actions.enrage()
             }
         });
-        /*[]*/
     }
 }
 

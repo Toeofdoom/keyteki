@@ -2,7 +2,7 @@ const Card = require('../../Card.js');
 
 class SagittariisGaze extends Card {
     setupCardAbilities(ability) {
-        //Keywords: Enhance D
+        //Keywords: [{"name":"enhance","count":null}]
         this.play({
             target: {
                 cardType: 'creature',

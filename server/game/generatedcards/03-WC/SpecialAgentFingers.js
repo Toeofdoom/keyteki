@@ -2,7 +2,7 @@ const Card = require('../../Card.js');
 
 class SpecialAgentFingers extends Card {
     setupCardAbilities(ability) {
-        //Keywords: Elusive
+        //Keywords: [{"name":"elusive","count":null}]
         this.action({
             gameAction: ability.actions.steal({ amount: 1 })
         });

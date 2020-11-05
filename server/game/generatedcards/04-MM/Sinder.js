@@ -2,7 +2,7 @@ const Card = require('../../Card.js');
 
 class Sinder extends Card {
     setupCardAbilities(ability) {
-        //Keywords: Taunt
+        //Keywords: [{"name":"taunt","count":null}]
         this.reap({
             target: {
                 cardType: 'creature',

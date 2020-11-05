@@ -9,7 +9,6 @@ class DemonsBane extends Card {
                 gameAction: ability.actions.destroy()
             }
         });
-        /*[]*/
     }
 }
 

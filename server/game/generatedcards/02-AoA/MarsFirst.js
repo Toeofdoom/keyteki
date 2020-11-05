@@ -13,7 +13,6 @@ class MarsFirst extends Card {
                 ])
             }
         });
-        /*[]*/
     }
 }
 

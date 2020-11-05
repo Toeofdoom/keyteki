@@ -8,7 +8,6 @@ class SubtleChain extends Card {
                 location: 'hand'
             })
         });
-        /*[]*/
     }
 }
 

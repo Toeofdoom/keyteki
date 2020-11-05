@@ -9,7 +9,6 @@ class Skullion extends Card {
                 gameAction: ability.actions.sacrifice()
             }
         });
-        /*[]*/
     }
 }
 

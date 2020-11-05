@@ -8,7 +8,6 @@ class SubtleOtto extends Card {
                 location: 'hand'
             })
         });
-        /*[]*/
     }
 }
 

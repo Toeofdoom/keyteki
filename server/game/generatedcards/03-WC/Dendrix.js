@@ -8,7 +8,6 @@ class Dendrix extends Card {
                 location: 'hand'
             })
         });
-        /*[]*/
     }
 }
 

@@ -5,7 +5,6 @@ class LibraryOfBabble extends Card {
         this.action({
             gameAction: ability.actions.draw({ amount: 1 })
         });
-        /*[]*/
     }
 }
 

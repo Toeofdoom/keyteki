@@ -2,7 +2,7 @@ const Card = require('../../Card.js');
 
 class Umbra extends Card {
     setupCardAbilities(ability) {
-        //Keywords: Skirmish
+        //Keywords: [{"name":"skirmish","count":null}]
         this.fight({
             gameAction: ability.actions.steal({ amount: 1 })
         });

@@ -9,7 +9,6 @@ class HumansBane extends Card {
                 gameAction: ability.actions.destroy()
             }
         });
-        /*[]*/
     }
 }
 

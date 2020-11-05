@@ -11,7 +11,6 @@ class GormOfOmm extends Card {
                 target: context.source
             }))
         });
-        /*[]*/
     }
 }
 

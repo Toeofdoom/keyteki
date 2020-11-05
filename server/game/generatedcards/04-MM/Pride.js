@@ -9,7 +9,6 @@ class Pride extends Card {
                 )
             }))
         });
-        /*[]*/
     }
 }
 

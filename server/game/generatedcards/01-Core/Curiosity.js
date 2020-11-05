@@ -7,7 +7,6 @@ class Curiosity extends Card {
                 target: context.game.creaturesInPlay.filter((card) => card.hasTrait('scientist'))
             }))
         });
-        /*[]*/
     }
 }
 

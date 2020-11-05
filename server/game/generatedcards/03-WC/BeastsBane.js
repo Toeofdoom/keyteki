@@ -9,7 +9,6 @@ class BeastsBane extends Card {
                 gameAction: ability.actions.destroy()
             }
         });
-        /*[]*/
     }
 }
 

@@ -2,8 +2,8 @@ const Card = require('../../Card.js');
 
 class Swindle extends Card {
     setupCardAbilities(ability) {
-        //Keywords: Alpha
-        //Keywords: Omega
+        //Keywords: [{"name":"alpha","count":null}]
+        //Keywords: [{"name":"omega","count":null}]
         this.play({
             gameAction: ability.actions.steal({ amount: 3 })
         });

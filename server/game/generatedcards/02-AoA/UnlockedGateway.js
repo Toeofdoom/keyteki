@@ -2,13 +2,12 @@ const Card = require('../../Card.js');
 
 class UnlockedGateway extends Card {
     setupCardAbilities(ability) {
-        //Keywords: Omega
+        //Keywords: [{"name":"omega","count":null}]
         this.play({
             gameAction: ability.actions.destroy((context) => ({
                 target: context.game.creaturesInPlay
             }))
         });
-        /*[]*/
     }
 }
 

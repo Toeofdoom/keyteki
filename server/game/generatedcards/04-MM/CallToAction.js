@@ -9,7 +9,6 @@ class CallToAction extends Card {
                 )
             }))
         });
-        /*[]*/
     }
 }
 

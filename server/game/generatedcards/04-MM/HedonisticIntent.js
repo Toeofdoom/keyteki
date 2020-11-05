@@ -7,7 +7,6 @@ class HedonisticIntent extends Card {
                 target: context.game.creaturesInPlay.filter((card) => card.isOnFlank())
             }))
         });
-        /*[]*/
     }
 }
 

@@ -2,7 +2,7 @@ const Card = require('../../Card.js');
 
 class LycoSaurus extends Card {
     setupCardAbilities(ability) {
-        //Keywords: Skirmish
+        //Keywords: [{"name":"skirmish","count":null}]
         this.play({
             optional: true,
             gameAction: ability.actions.exalt((context) => ({

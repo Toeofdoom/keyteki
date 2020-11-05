@@ -2,7 +2,7 @@ const Card = require('../../Card.js');
 
 class OldBruno extends Card {
     setupCardAbilities(ability) {
-        //Keywords: Elusive
+        //Keywords: [{"name":"elusive","count":null}]
         this.play({
             gameAction: ability.actions.capture({ amount: 3 })
         });

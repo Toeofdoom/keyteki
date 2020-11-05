@@ -2,7 +2,7 @@ const Card = require('../../Card.js');
 
 class UmbraSaurus extends Card {
     setupCardAbilities(ability) {
-        //Keywords: Elusive
+        //Keywords: [{"name":"elusive","count":null}]
         this.play({
             optional: true,
             gameAction: ability.actions.exalt((context) => ({

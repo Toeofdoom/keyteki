@@ -2,7 +2,7 @@ const Card = require('../../Card.js');
 
 class DarkMinion extends Card {
     setupCardAbilities(ability) {
-        //Keywords: Enhance D
+        //Keywords: [{"name":"enhance","count":null}]
         this.destroyed({
             gameAction: ability.actions.dealDamage((context) => ({
                 target: context.game.creaturesInPlay.filter(

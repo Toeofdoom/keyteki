@@ -8,7 +8,6 @@ class Hologrammophone extends Card {
                 gameAction: ability.actions.ward()
             }
         });
-        /*[]*/
     }
 }
 
