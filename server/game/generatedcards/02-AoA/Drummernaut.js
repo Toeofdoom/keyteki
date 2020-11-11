@@ -8,7 +8,7 @@ class Drummernaut extends Card {
             target: {
                 cardType: 'creature',
                 controller: 'self',
-                cardCondition: (card) => card.hasTrait('giant'),
+                cardCondition: (card, context) => card !== context.source && card.hasTrait('giant'),
                 gameAction: ability.actions.returnToHand()
             }
         });

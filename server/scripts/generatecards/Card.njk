@@ -32,12 +32,19 @@ location: '{{ability.location}}'
 {%- endif -%}
 {%- endmacro -%}
 
+{%- macro fullyParam(ability) -%}
+{%- if ability.fully == true -%}
+fully: true
+{%- endif -%}
+{%- endmacro -%}
+
 {%- macro formatParams(ability, defaultPlayerTarget=null) -%}
 {%- set params = ([
     allTargetParam(ability.target),
     selfTargetParam(ability.target),
     amountParam(ability),
     locationParam(ability),
+    fullyParam(ability),
     targetPlayerParam(ability, defaultPlayerTarget)
 ] | selectattr("length", "equalto", 0)) -%}{# selectattr/rejectattr seem to do the opposite of what the docs say? #}
     {%- if params.length > 0 -%}
@@ -68,6 +75,8 @@ card.isOnFlank()
 card.hasToken('amber')
     {%- elif condition.name == "damaged" -%}
 card.hasToken('damage')
+    {%- elif condition.name == "neighboring" -%}
+context.source.neighbors.includes(card)
     {%- elif condition.name == "other" -%}
 card !== context.source
     {%- else -%}
@@ -84,7 +93,7 @@ card !== context.source
     {%- set l = l.concat(singleCondition(c)) -%}
 {%- endfor -%}
 {%- if l.length > 0 -%}
-cardCondition: (card) => {{ l | join(' && ') | safe }},
+cardCondition: (card{%- if (l | join()).includes("context") -%}, context{%endif%}) => {{ l | join(' && ') | safe }},
 {% endif -%}
 {%- endmacro -%}
 
@@ -200,9 +209,12 @@ controller: '{{effect.target.controller}}',
 {{ cardCondition(effect) | safe }}
 {%- endmacro -%}
 
-
-
-
+{%- macro persistentEffect(ability) -%}
+{
+    location: 'any',
+    effect: ability.effects.{{ability.effects[0].name}}()
+}
+{%- endmacro -%}
 
 {%- macro boldAbility(ability) -%}
 {
@@ -222,7 +234,9 @@ ability.effects.addKeyword({
 {%- endmacro -%}
 
 {%- macro formatAbility(ability) -%}
-{%- if (ability.name == 'bold') -%}
+{%- if (ability.name == 'persistentEffect') -%}
+this.persistentEffect({{persistentEffect(ability)}});
+{%- elif (ability.name == 'bold') -%}
 this.{{ability.trigger}}({{boldAbility(ability)}});
 {%- elif ability.name == 'upgrades' -%}
 this.whileAttached({

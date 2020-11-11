@@ -11,6 +11,7 @@ class LegatusRaptor extends Card {
                 target: {
                     cardType: 'creature',
                     controller: 'self',
+                    cardCondition: (card, context) => card !== context.source,
                     gameAction: ability.actions.sequential([
                         ability.actions.ready(),
                         ability.actions.use()

@@ -7,7 +7,8 @@ class CommanderChan extends Card {
             target: {
                 cardType: 'creature',
                 controller: 'self',
-                cardCondition: (card) => card.exhausted === false,
+                cardCondition: (card, context) =>
+                    card.exhausted === false && card !== context.source,
                 gameAction: ability.actions.use()
             }
         });

@@ -13,7 +13,14 @@ NewLine = [\n\r\u000b]+ {
 }
 
 //Overall effect formats
-PersistentEffect = (UnknownEffect "."? _)+ ReminderText?
+PersistentEffect = effects:(e:EntersPlayAbility "."? _ {return e;})+ ReminderText? {
+	return {name: 'persistentEffect', effects}
+}
+
+EntersPlayAbility = Self _ "enter" "s"? " play" _ state:("stunned"i/"ready"i) {
+	let effectName = 'entersPlay' + state.charAt(0).toUpperCase() + state.slice(1);
+	return {name:effectName}
+}
 
 BoldAbility = trigger:BoldTrigger tail:("/" t:BoldTrigger {return t;})* ": " effect:TriggeredEffect {
 	return {name: 'bold', trigger:trigger, effect:effect, extraTriggers: tail}
@@ -91,7 +98,7 @@ GainChains = "Gain"i "s"? _ amount:Number _ ("chains"/"chain") _ multiplier:Mult
 Multiplier = UnknownEffect
 
 //Card effects
-CardEffect = effect:(DealDamage / ReadyAndUse / ReadyAndFight / Ready / Use / Destroy / Sacrifice / Purge / Exalt / Ward / Enrage / Stun / Exhaust / ArchiveTarget) _ target:(Self/CardTarget) {
+CardEffect = effect:(DealDamage / ReadyAndUse / ReadyAndFight / Ready / Use / Destroy / Sacrifice / Purge / Exalt / Ward / Enrage / Stun / Exhaust / ArchiveTarget / Heal) _ target:(Self/CardTarget) {
 	return Object.assign(effect, {target:target})
 }
 
@@ -143,6 +150,10 @@ Stun = "Stun"i {
 	return {name: 'stun'}
 }
 
+Heal = "Fully heal"i {
+	return {name: 'heal', fully: true }
+}
+
 Exhaust = "Exhaust"i {
 	return {name: 'exhaust'}
 }
@@ -167,17 +178,17 @@ Self = "$this"
 
 UpgradedCreature = "this creature"i;
 
-CardTarget = targetCount:CardTargetCount  _ other:OtherSpecifier? _ damaged:DamagedSpecifier? _ controller:ControllerSpecifier? _ flank:FlankSpecifier? _ trait:TraitSpecifier? _ house:HouseSpecifier? _  type:CardType _ nonFlank:NonFlankSpecifier? _ hasAmber:HasAmberSpecifier? {
+CardTarget = targetCount:CardTargetCount  _ other:OtherSpecifier? _ damaged:DamagedSpecifier? _ controller:ControllerSpecifier? _ neighbor:NeighborSpecifier? _ flank:FlankSpecifier? _ trait:TraitSpecifier? _ house:HouseSpecifier? _  type:CardType? _ nonFlank:NonFlankSpecifier? _ hasAmber:HasAmberSpecifier? {
 	return Object.assign({
-    	type: type,
+    	type: type != null ? type : "creature",
         controller: controller, 
-        conditions: [other, damaged, flank, nonFlank, trait, house, hasAmber].filter(x => x !== null)
+        conditions: [other, damaged, neighbor, flank, nonFlank, trait, house, hasAmber].filter(x => x !== null)
     }, targetCount)
 }
 
 CardTargetCount = EachTarget / OneTarget / UpToTargets
 EachTarget = ("each"/"all") {return {mode: "all"}}
-OneTarget = ("another" / "an" / "a") {return {mode:"exactly", count:1}}
+OneTarget = ( "an" / "a") {return {mode:"exactly", count:1}}
 UpToTargets = "up to" _ count:Number {return {mode:"upTo", count}}
 
 
@@ -206,6 +217,10 @@ ControllerSpecifier = ("friendly"i / "enemy"i) {
 
 FlankSpecifier = "flank"i {
 	return {name: "flank"}
+}
+
+NeighborSpecifier = "neighboring"i {
+	return {name: "neighboring"}
 }
 
 NonFlankSpecifier = "that is"? _ "not on a flank"i {

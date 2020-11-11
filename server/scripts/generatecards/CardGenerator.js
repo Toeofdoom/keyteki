@@ -62,7 +62,7 @@ class CardGenerator {
 
         console.log('Card information loaded');
         for (let card of cards) {
-            let simplifiedText = card.text.replace(card.name, '$this');
+            let simplifiedText = card.text.split(card.name).join('$this');
             let data = {
                 name: this.camelCase(card.name),
                 card: card,
