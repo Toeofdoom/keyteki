@@ -150,9 +150,9 @@ class CardGenerator {
             .toLowerCase()
             .replace(/^[0-9]/, (m) => digitStrings[parseInt(m)])
             .replace('æ', 'a')
-            .replace(/[']/g, '')
+            .replace(/['’]/g, '')
             .replace(/\b([A-Za-z])/g, (m, chr) => chr.toUpperCase())
-            .replace(/[,?.!"„“” ’\-[\]]/g, '');
+            .replace(/[,?.!"„“” \-[\]]/g, '');
     }
 }
 

@@ -15,8 +15,6 @@ NewLine = [\n\r\u000b]+ {
 //Overall effect formats
 PersistentEffect = (UnknownEffect "."? _)+ ReminderText?
 
-
-
 BoldAbility = trigger:BoldTrigger tail:("/" t:BoldTrigger {return t;})* ": " effect:TriggeredEffect {
 	return {name: 'bold', trigger:trigger, effect:effect, extraTriggers: tail}
 }
@@ -26,12 +24,11 @@ BoldTrigger = ("Play" / "Reap" / "Before Fight" / "Fight" / "Destroyed" / "Actio
 	return text().toLowerCase();
 }
 
-
 TriggeredEffect = effect:(SingleEffect) ReminderText? "."? ReminderText? _ tail:(u:SingleSubsequentEffect "." _ ReminderText? {return u;} )* {
 	return [effect,...tail]
 }
 
-SingleEffect = optional:"You may"i? _ effect:(PlayerEffect / CaptureAmber / CardEffect / UnknownEffect) {
+SingleEffect = optional:"You may"i? _ effect:(PlayerEffect / CaptureAmber / CardEffect / GiveEffect / MoveCardEffect / UnknownEffect) {
 	let extras = {
     	optional: optional != null
     }
@@ -53,9 +50,9 @@ PlayerEffect = target:PlayerTarget? _ effect:(GainAmber / LoseAmber / StealAmber
 	return Object.assign(effect, info);
 }
 
-PlayerTarget = ("Your Opponent"i / "You") {
-	return text().toLowerCase().includes("opponent") ? "opponent" : "self";
-}
+PlayerTarget = ("Your Opponent"i "'s"? {return "opponent"}
+/ "You"i "r"? {return "self"}
+/ "their owners’" {return null;})
 
 //NumericalPlayerEffect...
 GainAmber = "Gain"i "s"? _ amount:Number ("<A>"/"A") _ multiplier:Multiplier? {
@@ -154,8 +151,16 @@ ArchiveTarget = "Archive"i {
 	return {name: 'archive'}
 }
 
+//"Give" effects
+GiveEffect = "Give" _ target:(Self/CardTarget) _ amount:Number _ "+1 power counters" {
+	return  Object.assign({name: 'addPowerCounter', amount}, {target:target})
+}
+
 //Card movement effects - these are worded in more complex ways than other card-related effects.
-MoveCardEffect = UnknownEffect
+MoveCardEffect = ("Return"/"Shuffle") _ target:(Self/CardTarget) _ "to" _ player:PlayerTarget? _ location:("hand"/"deck") "s"? {
+	let actionName = "returnTo" + location.charAt(0).toUpperCase() + location.slice(1)
+    return  Object.assign({name: actionName}, {target:target})
+}
 
 //Card targetting
 Self = "$this"
@@ -170,10 +175,12 @@ CardTarget = targetCount:CardTargetCount  _ other:OtherSpecifier? _ damaged:Dama
     }, targetCount)
 }
 
-CardTargetCount = ("each"/"all"/"another"/"an"/"a") {
-	if (text() == "each" || text() == "all") return {mode: "all"};
-    return {mode: "exactly", count: 1};
-}
+CardTargetCount = EachTarget / OneTarget / UpToTargets
+EachTarget = ("each"/"all") {return {mode: "all"}}
+OneTarget = ("another" / "an" / "a") {return {mode:"exactly", count:1}}
+UpToTargets = "up to" _ count:Number {return {mode:"upTo", count}}
+
+
 OtherSpecifier = "other" {
 	return {name: "other"};
 }
@@ -251,7 +258,7 @@ ReminderText = _ "(" [^)]+ ")" _ {
 }
 
 //Basics
-Number = "a" {return 1;} / Integer 
+Number = ("a"/"one") {return 1;} / "two" {return 2;} / "three" {return 3;} / Integer 
 Integer = [0-9]+ {return parseInt(text())}
 
 _ "whitespace" = [  ﻿\u202f]*

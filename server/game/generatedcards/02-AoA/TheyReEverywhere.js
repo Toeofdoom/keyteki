@@ -1,6 +1,6 @@
 const Card = require('../../Card.js');
 
-class TheyReEverywhere extends Card {
+class TheyreEverywhere extends Card {
     setupCardAbilities(ability) {
         this.play({
             gameAction: [
@@ -21,6 +21,6 @@ class TheyReEverywhere extends Card {
     }
 }
 
-TheyReEverywhere.id = 'they-re-everywhere';
+TheyreEverywhere.id = 'they-re-everywhere';
 
-module.exports = TheyReEverywhere;
+module.exports = TheyreEverywhere;

@@ -185,6 +185,12 @@ So we have cards that want to do things one way, and an engine that works a slig
 {%- endmacro -%}
 
 {%- macro formatTarget(effect) -%}
+{%- if effect.target.mode != "exactly" -%}
+mode: '{{effect.target.mode}}',
+{% endif -%}
+{%- if effect.target.count != 1 -%}
+numCards: '{{effect.target.count}}',
+{% endif -%}
 {%- if effect.target.type != null -%}
 cardType: '{{effect.target.type}}',
 {% endif -%}

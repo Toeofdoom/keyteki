@@ -1,17 +1,19 @@
 const Card = require('../../Card.js');
 
-class OrtannusBinding extends Card {
+class UnsuspectingPrey extends Card {
     setupCardAbilities(ability) {
         this.play({
             target: {
+                mode: 'upTo',
+                numCards: '3',
                 cardType: 'creature',
-                controller: 'self',
+                cardCondition: (card) => !card.hasToken('damage'),
                 gameAction: ability.actions.dealDamage({ amount: 2 })
             }
         });
     }
 }
 
-OrtannusBinding.id = 'ortannu-s-binding';
+UnsuspectingPrey.id = 'unsuspecting-prey';
 
-module.exports = OrtannusBinding;
+module.exports = UnsuspectingPrey;

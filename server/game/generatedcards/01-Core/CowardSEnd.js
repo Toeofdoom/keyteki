@@ -1,6 +1,6 @@
 const Card = require('../../Card.js');
 
-class CowardSEnd extends Card {
+class CowardsEnd extends Card {
     setupCardAbilities(ability) {
         this.play({
             gameAction: [
@@ -13,6 +13,6 @@ class CowardSEnd extends Card {
     }
 }
 
-CowardSEnd.id = 'coward-s-end';
+CowardsEnd.id = 'coward-s-end';
 
-module.exports = CowardSEnd;
+module.exports = CowardsEnd;
