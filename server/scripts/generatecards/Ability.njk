@@ -1,48 +1,278 @@
-{{#if (ability.name == 'bold')}}
-    {{#if ability.trigger == 'Reap'}}
-this.reap({
-    {{else if ability.trigger == 'Fight'}}
-this.fight({
-    {{else if ability.trigger == 'Destroyed'}}
-this.destroyed({
-    {{else if ability.trigger == 'Play'}}
-this.play({
-    {{else if ability.trigger == 'Omni'}}
-this.omni({
-    {{else if ability.trigger == 'Before Fight'}}
-this.beforefight({
-    {{else if ability.trigger == 'Action'}}
-this.action({
-    {{else}}
-this.unknown( //{{ ability.trigger }}
-    {{/if}}
-    gameAction: {{>ability ability=ability.effect}}
-});
-{{else if ability.name == 'keywords'}}
-//Keywords: {{ ability.keywords.join(", ") }}
-{{else if ability.name == 'gainAmber'}}
-ability.actions.gainAmber((context) => ({
-    amount: {{ ability.quantity }},
-    {{#if ability.target === 'opponent') }}
-    target: context.player.opponent
-    {{/if}}
-}))
-{{else if ability.name == 'stealAmber'}}
-    ability.actions.steal((context) => ({
-        amount: {{ ability.quantity  }},
-        {{#if ability.target === 'opponent'}}
-        target: context.player.opponent
-        {{/if}}
-    }))
-{{else if ability.name == 'loseAmber'}}
-ability.actions.loseAmber((context) => ({
-    amount: {{ ability.quantity }},
-    {{#if ability.target !== 'opponent'}}
-    target: context.player //{{ ability.target }}
-    {{/if}}
-}))
-{{else { }}
-    {{#each JSON.stringify(ability, null, 1).split(/[\r\n]/)) }}
-        //{{this}}
-    {{/each}}
-{{/if}}
+{# Formats any type of ability#}
+{%- macro formatAbility(ability) -%}
+{%- if (ability.name == 'bold') -%}
+this.{{ability.trigger}}({{boldAbility(ability)}});
+{%- elif (ability.name == 'persistentEffect') -%}
+this.persistentEffect({{persistentEffect(ability)}});
+{%- elif ability.name == 'upgrades' -%}
+this.whileAttached({{upgradeAbility(ability)}});
+{%- elif ability.name == 'keywords' -%}
+//Keywords: {{ ability.keywords | dump | safe}}
+{%- else -%}
+/*{{ ability | dump(2) | safe}}*/
+{%- endif -%}
+{%- endmacro -%}
+
+{# Bold abilities - these have simple triggers and often have targets. #}
+{%- macro boldAbility(ability) -%}
+{
+    {%- for extraTrigger in ability.extraTriggers %}
+    {{extraTrigger | lower}}: true,
+    {%- endfor %}
+    {{formatEffects(ability.effect) | indent(4)}}
+}
+{%- endmacro -%}
+
+{# Persistent effects - WIP #}
+{%- macro persistentEffect(ability) -%}
+{
+    location: 'any',
+    effect: ability.effects.{{ability.effects[0].name}}()
+}
+{%- endmacro -%}
+
+{# Upgrade effects - will probably be merged with persistent effects? #}
+{%- macro upgradeAbility(ability) -%}
+{
+    effect: [
+        {% set newline = joiner(",\n        ") -%}
+    {%- for effect in ability.gets -%}
+        {{newline()}}{{ formatSingleEffect(effect) | indent(8) }}
+    {%- endfor -%}
+    {%- for effect in ability.gains -%}
+        {%- if effect.name == 'bold' -%}
+        {{newline()}}ability.effects.gainAbility('{{effect.trigger}}', {{ boldAbility(effect) | indent(8) }})
+        {%- elif effect.name == 'keywords' -%}
+        {{newline()}}{{ gainKeywords(effect) | indent(8) }}
+        {%- endif -%}
+    {%- endfor %}
+    ]
+}
+{%- endmacro -%}
+
+{# Sorts out effects that may be targetted or untargeted, sequential or interdependent. #}
+
+{# After reviewing some of how the engine works, this should
+actually group targetted and untargetted actions. A single ability can have both.
+Targetted abilities appear to happen first, regardless of what order they should really occur in. 
+*Theoretically* that probably means you could put other game actions in targeted action lists if you want to control ordering as long as you can reset the targets?? Or list them as needing targets with a null handler?? 
+
+What about "Then" stuff??
+Good question! That just looks at everything in the blob before it... probably.
+Apparently then abilities can indeed have a target (see nerve blast). Gorm of omm should technically work this way too.
+
+So we have cards that want to do things one way, and an engine that works a slightly different way but hopefully it's close enough to work.
+#}
+{%- macro formatEffects(effects, then = false) -%}
+{%- set effectGroups = effects | sortEffects(then) -%}
+{%- set newline = joiner(",\n") -%}
+{# Targetted effects #}
+{%- if effectGroups.optional -%}
+{{newline()}}optional: true
+{%- endif -%}
+{%- if effectGroups.targets.length > 1 -%}
+/*{{effectGroups.targets | dump(2) | safe}}*/
+{%- elif effectGroups.targets.length == 1 -%}
+{{newline()}}target: {
+    {{formatTarget(effectGroups.targets[0]) | indent(4) -}}
+    gameAction: {{formatSingleEffect(effectGroups.targets[0]) | indent(4)}}
+}
+{%- endif -%}
+{# Untargetted effects #}
+{%- if effectGroups.default.length > 0 -%}
+{{newline()}}gameAction: {{formatEffectArray(effectGroups.default)}}
+{%- endif -%}
+{# Dependent effects #}
+{%- if effectGroups.then.length > 0 -%}
+{{newline()}}then: {
+    {{formatEffects(effectGroups.then, true) | indent(4) }}
+}
+{%- endif -%}
+{# Stuff we can't format yet #}
+{%- for unknownEffect in effectGroups.unknown %}
+/*Unsupported combinations: {{unknownEffect | dump(2) | safe}}*/
+{%- endfor -%}
+{%- endmacro -%}
+
+{%- macro formatEffectArray(effects) -%}
+{%- if effects.length > 1 -%}
+[
+    {%- for e in effects %}
+    {{ formatSingleEffect(e) | indent(4) }}{% if not loop.last %},{% endif %}
+    {%- endfor %}
+]
+{%- elif effects.length == 1 -%}
+{{ formatSingleEffect(effects[0]) }}
+{%- endif %}
+{%- endmacro -%}
+
+{# Individual effect implementations - mostly just calls the matching function, but
+there are some exceptions. #}
+{%- macro formatSingleEffect(effect) -%}
+    {%- if ['gainAmber','stealAmber','gainChains','draw'].includes(effect.name) -%}
+ability.actions.{{effect.name}}({{ formatParams(effect, defaultPlayerTarget='you') }})
+    {%- elif ['loseAmber','discard','discardAtRandom'].includes(effect.name) -%}
+ability.actions.{{effect.name}}({{ formatParams(effect, defaultPlayerTarget='opponent') }})
+    {%- elif effect.name == 'readyAndUse' -%}
+ability.actions.sequential([
+    ability.actions.ready(),
+    ability.actions.use()
+])
+    {%- elif effect.name == 'readyAndFight' -%}
+ability.actions.sequential([
+    ability.actions.ready(),
+    ability.actions.fight()
+])
+    {%- elif effect.name == 'unknown' -%}
+/*{{effect | dump(2) | safe}}*/
+    {%- else -%}
+ability.actions.{{effect.name}}({{formatParams(effect)}})
+    {%- endif -%}
+{%- endmacro -%}
+
+{%- macro gainKeywords(effect) -%}
+ability.effects.addKeyword({ 
+    {%- for keyword in effect.keywords %}
+    {{keyword.name}}: {{keyword.count|default(1, true)}}{% if not loop.last %},{% endif %}
+    {%- endfor %}
+})
+{%- endmacro -%}
+
+{# Targetting options setup #}
+{%- macro formatTarget(effect) -%}
+{%- if effect.target.mode != "exactly" -%}
+mode: '{{effect.target.mode}}',
+{% endif -%}
+{%- if effect.target.count != 1 -%}
+numCards: '{{effect.target.count}}',
+{% endif -%}
+{%- if effect.target.type != null -%}
+cardType: '{{effect.target.type}}',
+{% endif -%}
+{%- if effect.target.controller != null -%}
+controller: '{{effect.target.controller}}',
+{% endif -%}
+{{ cardCondition(effect) | safe }}
+{%- endmacro -%}
+
+{# Parameters #}
+{%- macro formatParams(ability, defaultPlayerTarget=null) -%}
+{%- set params = ([
+    allTargetParam(ability.target),
+    selfTargetParam(ability.target),
+    amountParam(ability),
+    locationParam(ability),
+    fullyParam(ability),
+    targetPlayerParam(ability, defaultPlayerTarget)
+] | selectattr("length", "equalto", 0)) -%}{# selectattr/rejectattr seem to do the opposite of what the docs say? #}
+    {%- if params.length > 0 -%}
+        {%- if (params | join()).includes("context") -%}
+(context) => ({
+    {{ params | join(",\n") | indent(4) | safe }}
+})
+        {%- elif params.length > 1 -%}
+{
+    {{ params | join(",\n") | indent(4) | safe}}
+}
+        {%- else -%}
+{ {{ params[0] }} }
+        {%- endif -%}
+    {%- endif -%}
+{%- endmacro -%}
+
+{%- macro allTargetParam(target) -%}
+{%- if target != null and target.mode == "all" -%}
+target: context.game.{{target.type}}sInPlay{{cardFilter(target)}}
+{%- endif -%}
+{%- endmacro -%}
+
+{%- macro selfTargetParam(target) -%}
+{%- if target == "$this" -%}
+target: context.source
+{%- endif -%}
+{%- endmacro -%}
+
+{%- macro amountParam(ability) -%}
+{%- if ability.amount != null -%}
+amount: {{ability.amount}}
+{%- endif -%}
+{%- endmacro -%}
+
+{%- macro locationParam(ability) -%}
+{%- if ability.location != null -%}
+location: '{{ability.location}}'
+{%- endif -%}
+{%- endmacro -%}
+
+{%- macro fullyParam(ability) -%}
+{%- if ability.fully == true -%}
+fully: true
+{%- endif -%}
+{%- endmacro -%}
+
+{%- macro targetPlayerParam(ability, defaultTarget=null) -%}
+{%- if ability.targetPlayer and ability.targetPlayer !== defaultTarget -%}
+    {%- if ability.targetPlayer === 'self' -%}
+target: context.player
+    {%- else -%}
+target: context.player.opponent
+    {%- endif -%}
+{%- endif -%}
+{%- endmacro -%}
+
+
+{# card condition checks #}
+{%- macro singleCondition(condition) -%}
+    {%- if condition.name == "not" -%}
+!{{singleCondition(condition.condition)}}
+    {%- elif condition.name == "trait" -%}
+card.hasTrait('{{condition.trait}}')
+    {%- elif condition.name == "house" -%}
+card.hasHouse('{{condition.house}}')
+    {%- elif condition.name == "flank" -%}
+card.isOnFlank()
+    {%- elif condition.name == "hasAmber" -%}
+card.hasToken('amber')
+    {%- elif condition.name == "damaged" -%}
+card.hasToken('damage')
+    {%- elif condition.name == "neighboring" -%}
+context.source.neighbors.includes(card)
+    {%- elif condition.name == "other" -%}
+card !== context.source
+    {%- else -%}
+/*{{ effect | dump(2) | safe}}*/
+    {%- endif -%}
+{%- endmacro -%}
+
+{%- macro cardCondition(effect) -%}
+{%- set l = [] -%}
+{%- if effect.name == 'use' -%} {# Is this required, or inbuilt anyway? #}
+    {%- set l = l.concat(['card.exhausted === false']) -%}
+{%- endif -%}
+{%- for c in effect.target.conditions -%}
+    {%- set l = l.concat(singleCondition(c)) -%}
+{%- endfor -%}
+{%- if l.length > 0 -%}
+cardCondition: (card{%- if (l | join()).includes("context") -%}, context{%endif%}) => {{ l | join(' && ') | safe }},
+{% endif -%}
+{%- endmacro -%}
+
+{%- macro controllerCondition(target) -%}
+card.controller {{'===' if target.controller === 'you' else '!==' |safe }} context.player
+{%- endmacro -%}
+
+{%- macro cardFilter(target) -%}
+{%- set l = [] -%}
+{%- if target.controller != null -%}
+    {%- set l = l.concat(controllerCondition(target)) -%}
+{%- endif -%}
+{%- for c in target.conditions -%}
+    {%- set l = l.concat(singleCondition(c)) -%}
+{%- endfor -%}
+{%- if l.length > 0 -%}
+.filter(
+    (card) => {{ l | join(' && ') | safe }}
+) 
+{%- endif -%}
+{%- endmacro -%}
+

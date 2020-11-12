@@ -1,10 +1,9 @@
 //Structure
-
 Lines = line:Line tail:(NewLine l:Line {return l;})* NewLine? {
 	return [line, ...tail].filter((l) => !Array.isArray(l) || l.length > 0)
 }
 
-Line = ability:(Keywords / BoldAbility / UpgradeEffect / PersistentEffect / ReminderText / _)_ {
+Line = ability:(Keywords / BoldAbility / PersistentEffect / UpgradeEffect / ReminderText / _)_ {
 	return ability
 }
 
@@ -13,15 +12,7 @@ NewLine = [\n\r\u000b]+ {
 }
 
 //Overall effect formats
-PersistentEffect = effects:(e:EntersPlayAbility "."? _ {return e;})+ ReminderText? {
-	return {name: 'persistentEffect', effects}
-}
-
-EntersPlayAbility = Self _ "enter" "s"? " play" _ state:("stunned"i/"ready"i) {
-	let effectName = 'entersPlay' + state.charAt(0).toUpperCase() + state.slice(1);
-	return {name:effectName}
-}
-
+//"Bold" effects (Play, fight, reap, destroyed etc.)
 BoldAbility = trigger:BoldTrigger tail:("/" t:BoldTrigger {return t;})* ": " effect:TriggeredEffect {
 	return {name: 'bold', trigger:trigger, effect:effect, extraTriggers: tail}
 }
@@ -31,7 +22,8 @@ BoldTrigger = ("Play" / "Reap" / "Before Fight" / "Fight" / "Destroyed" / "Actio
 	return text().toLowerCase();
 }
 
-TriggeredEffect = effect:(SingleEffect) ReminderText? "."? ReminderText? _ tail:(u:SingleSubsequentEffect "." _ ReminderText? {return u;} )* {
+TriggeredEffect = effect:(SingleEffect) ReminderText? "."? ReminderText? _ 
+tail:(u:SingleSubsequentEffect "." _ ReminderText? {return u;} )* {
 	return [effect,...tail]
 }
 
@@ -47,6 +39,21 @@ SingleSubsequentEffect = ifYouDo:"If you do,"i? _ effect:SingleEffect {
     	ifYouDo: ifYouDo != null
     }
     return Object.assign(effect, extras)
+}
+
+//Persistent effects.
+PersistentEffect = effects:(e:EntersPlayAbility "."? _ {return e;})+ ReminderText? {
+	return {name: 'persistentEffect', effects}
+}
+
+EntersPlayAbility = Self _ "enter" "s"? " play" _ state:("stunned"i/"ready"i) {
+	let effectName = 'entersPlay' + state.charAt(0).toUpperCase() + state.slice(1);
+	return {name:effectName}
+}
+
+//Upgrade effects are similar to persistent effects - they should probably be combined.
+UpgradeEffect = "This creature"i _ gets:GetsStats? _ "and"i? _ gains:GainsAbility? "."? {
+	return {name: "upgrades", gets, gains}
 }
 
 
@@ -94,8 +101,6 @@ DiscardCards = "Discard"i "s"? _ amount:Number _ random:"random"i? _ ("cards"/"c
 GainChains = "Gain"i "s"? _ amount:Number _ ("chains"/"chain") _ multiplier:Multiplier? {
 	return {name: 'gainChains', amount: amount, multiplier: multiplier}
 }
-
-Multiplier = UnknownEffect
 
 //Card effects
 CardEffect = effect:(DealDamage / ReadyAndUse / ReadyAndFight / Ready / Use / Destroy / Sacrifice / Purge / Exalt / Ward / Enrage / Stun / Exhaust / ArchiveTarget / Heal) _ target:(Self/CardTarget) {
@@ -173,10 +178,26 @@ MoveCardEffect = ("Return"/"Shuffle") _ target:(Self/CardTarget) _ "to" _ player
     return  Object.assign({name: actionName}, {target:target})
 }
 
+
+//Upgrades
+GainsAbility = "gains"i ","? _ ability:(keywords:Keywords "and,"? _{return keywords;} / Quote bold:BoldAbility Quote {return bold;} )+ {
+	return ability
+}
+
+GetsStats = "gets" _ statChanges:(stat:StatChange _ "and"? _ {return stat;})+ {
+	return statChanges;
+}
+
+StatChange = "+" amount:Number _ stat:("power"i/"armor"i){
+	return {name: "gain"+ stat.charAt(0).toUpperCase() + stat.slice(1), amount};
+}
+
+Quote = [\“"”]
+
+
 //Card targetting
 Self = "$this"
-
-UpgradedCreature = "this creature"i;
+UpgradedCreature = "this creature"i
 
 CardTarget = targetCount:CardTargetCount  _ other:OtherSpecifier? _ damaged:DamagedSpecifier? _ controller:ControllerSpecifier? _ neighbor:NeighborSpecifier? _ flank:FlankSpecifier? _ trait:TraitSpecifier? _ house:HouseSpecifier? _  type:CardType? _ nonFlank:NonFlankSpecifier? _ hasAmber:HasAmberSpecifier? {
 	return Object.assign({
@@ -192,9 +213,9 @@ OneTarget = ( "an" / "a") {return {mode:"exactly", count:1}}
 UpToTargets = "up to" _ count:Number {return {mode:"upTo", count}}
 
 
-OtherSpecifier = "other" {
-	return {name: "other"};
-}
+OtherSpecifier = "other" {return {name: "other"};}
+FlankSpecifier = "flank"i {	return {name: "flank"};}
+NeighborSpecifier = "neighboring"i {return {name: "neighboring"};}
 
 DamagedSpecifier = negate:"un"i? "damaged" {
 	let c = {name: "damaged"};
@@ -215,14 +236,6 @@ ControllerSpecifier = ("friendly"i / "enemy"i) {
 	return text().toLowerCase() == "friendly" ? "self" : "opponent";
 }
 
-FlankSpecifier = "flank"i {
-	return {name: "flank"}
-}
-
-NeighborSpecifier = "neighboring"i {
-	return {name: "neighboring"}
-}
-
 NonFlankSpecifier = "that is"? _ "not on a flank"i {
 	return {name: "not", condition: {name: "flank"}}
 }
@@ -232,24 +245,6 @@ HasAmberSpecifier = "with" _ negate:"no" _ "A on it"  {
 	return negate != null ? {name: "not", condition: c} : c;
 }
 
-//Upgrades
-UpgradeEffect = "This creature"i _ gets:GetsStats? _ "and"i? _ gains:GainsAbility? "."? {
-	return {name: "upgrades", gets, gains}
-}
-
-GainsAbility = "gains"i ","? _ ability:(keywords:Keywords "and,"? _{return keywords;} / Quote bold:BoldAbility Quote {return bold;} )+ {
-	return ability
-}
-
-GetsStats = "gets" _ statChanges:(stat:StatChange _ "and"? _ {return stat;})+ {
-	return statChanges;
-}
-
-StatChange = "+" amount:Number _ stat:("power"i/"armor"i){
-	return {name: "gain"+ stat.charAt(0).toUpperCase() + stat.slice(1), amount};
-}
-
-Quote = [\“"”]
 //Descriptors
 House = "brobnar"i / "dis"i / "logos"i / "mars"i / "sanctum"i / "shadows"i / "untamed" / "saurian"i / "star alliance"i {
 	return text().replace(" ", "");
@@ -258,6 +253,9 @@ Trait = "mutant"i / "shard"i / "cat"i / "beast"i / "agent"i / "human"i / "scient
 CardType = type:("action"i / "artifact"i / "creature"i / "upgrade"i) "s"? {
 	return type
 }
+
+// Modifiers
+Multiplier = UnknownEffect
 
 //Ignorable text section
 Keywords = word:Keyword tail:(". " w:Keyword {return w;})* "."? _ ReminderText? {
