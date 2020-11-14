@@ -154,69 +154,45 @@ controller: '{{effect.target.controller}}',
 
 {# Parameters #}
 {%- macro formatParams(ability, defaultPlayerTarget=null) -%}
-{%- set params = ([
-    allTargetParam(ability.target),
-    selfTargetParam(ability.target),
-    amountParam(ability),
-    locationParam(ability),
-    fullyParam(ability),
-    targetPlayerParam(ability, defaultPlayerTarget)
-] | selectattr("length", "equalto", 0)) -%}{# selectattr/rejectattr seem to do the opposite of what the docs say? #}
-    {%- if params.length > 0 -%}
-        {%- if (params | join()).includes("context") -%}
+{%- set params = formatParamsInternal(ability, defaultPlayerTarget) -%}
+{%- if params.includes("context") -%}
 (context) => ({
-    {{ params | join(",\n") | indent(4) }}
+    {{ params | indent(4) }}
 })
-        {%- elif params.length > 1 -%}
+{%- elif params.includes("\n") -%}
 {
-    {{ params | join(",\n") | indent(4) }}
+    {{ params | indent(4) }}
 }
-        {%- else -%}
-{ {{ params[0] }} }
-        {%- endif -%}
-    {%- endif -%}
-{%- endmacro -%}
-
-{%- macro allTargetParam(target) -%}
-{%- if target != null and target.mode == "all" -%}
-target: context.game.{{target.type}}sInPlay{{cardFilter(target)}}
+{%- elif params.length > 0 -%}
+{ {{ params }} }
 {%- endif -%}
 {%- endmacro -%}
 
-{%- macro selfTargetParam(target) -%}
-{%- if target == "$this" -%}
-target: context.source
+{%- macro formatParamsInternal(ability, defaultPlayerTarget=null) -%}
+{%- set j = joiner(',\n') -%}
+{%- if ability.target != null and ability.target.mode == "all" -%}
+{{j()}}target: context.game.{{ability.target.type}}sInPlay{{cardFilter(ability.target)}}
 {%- endif -%}
-{%- endmacro -%}
-
-{%- macro amountParam(ability) -%}
+{%- if ability.target == "$this" -%}
+{{j()}}target: context.source
+{%- endif -%}
 {%- if ability.amount != null -%}
-amount: {{ability.amount}}
+{{j()}}amount: {{ability.amount}}
 {%- endif -%}
-{%- endmacro -%}
-
-{%- macro locationParam(ability) -%}
 {%- if ability.location != null -%}
-location: '{{ability.location}}'
+{{j()}}location: '{{ability.location}}'
 {%- endif -%}
-{%- endmacro -%}
-
-{%- macro fullyParam(ability) -%}
 {%- if ability.fully == true -%}
-fully: true
+{{j()}}fully: true
 {%- endif -%}
-{%- endmacro -%}
-
-{%- macro targetPlayerParam(ability, defaultTarget=null) -%}
-{%- if ability.targetPlayer and ability.targetPlayer !== defaultTarget -%}
+{%- if ability.targetPlayer and ability.targetPlayer !== defaultPlayerTarget -%}
     {%- if ability.targetPlayer === 'self' -%}
-target: context.player
+{{j()}}target: context.player
     {%- else -%}
-target: context.player.opponent
+{{j()}}target: context.player.opponent
     {%- endif -%}
 {%- endif -%}
 {%- endmacro -%}
-
 
 {# card condition checks #}
 {# Card condition requires context if something checks it #}
