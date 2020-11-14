@@ -57,7 +57,11 @@ class CardGenerator {
                 folder: expansionPaths[duplicates[duplicates.length - 1].packCode]
             })
         );
-        var env = new nunjucks.Environment(new nunjucks.FileSystemLoader(__dirname));
+
+        //We are not generating HTML and we are not using an input that is a very sensible attack vector so there's not much point escaping everything.
+        var env = new nunjucks.Environment(new nunjucks.FileSystemLoader(__dirname), {
+            autoescape: false
+        });
         env.addFilter('sortEffects', sortEffects);
 
         console.log('Card information loaded');

@@ -1,34 +1,19 @@
 const Card = require('../../Card.js');
 
 class HitAndRun extends Card {
-    setupCardAbilities(/*ability*/) {
+    setupCardAbilities(ability) {
         this.play({
-            /*[
-              {
-                "name": "dealDamage",
-                "amount": 2,
-                "target": {
-                  "type": "creature",
-                  "controller": null,
-                  "conditions": [],
-                  "mode": "exactly",
-                  "count": 1
+            targets: {
+                target1: {
+                    cardType: 'creature',
+                    gameAction: ability.actions.dealDamage({ amount: 2 })
                 },
-                "optional": false
-              },
-              {
-                "name": "returnToHand",
-                "target": {
-                  "type": "creature",
-                  "controller": "self",
-                  "conditions": [],
-                  "mode": "exactly",
-                  "count": 1
-                },
-                "optional": false,
-                "ifYouDo": false
-              }
-            ]*/
+                target2: {
+                    cardType: 'creature',
+                    controller: 'self',
+                    gameAction: ability.actions.returnToHand()
+                }
+            }
         });
     }
 }

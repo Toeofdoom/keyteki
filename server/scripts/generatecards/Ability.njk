@@ -7,18 +7,18 @@ this.persistentEffect({{persistentEffect(ability)}});
 {%- elif ability.name == 'upgrades' -%}
 this.whileAttached({{upgradeAbility(ability)}});
 {%- elif ability.name == 'keywords' -%}
-//Keywords: {{ ability.keywords | dump | safe}}
+//Keywords: {{ ability.keywords | dump }}
 {%- else -%}
-/*{{ ability | dump(2) | safe}}*/
+/*{{ ability | dump(2) }}*/
 {%- endif -%}
 {%- endmacro -%}
 
 {# Bold abilities - these have simple triggers and often have targets. #}
 {%- macro boldAbility(ability) -%}
 {
-    {%- for extraTrigger in ability.extraTriggers %}
+{%- for extraTrigger in ability.extraTriggers %}
     {{extraTrigger | lower}}: true,
-    {%- endfor %}
+{%- endfor %}
     {{formatEffects(ability.effect) | indent(4)}}
 }
 {%- endmacro -%}
@@ -35,62 +35,59 @@ this.whileAttached({{upgradeAbility(ability)}});
 {%- macro upgradeAbility(ability) -%}
 {
     effect: [
-        {% set newline = joiner(",\n        ") -%}
-    {%- for effect in ability.gets -%}
-        {{newline()}}{{ formatSingleEffect(effect) | indent(8) }}
-    {%- endfor -%}
-    {%- for effect in ability.gains -%}
-        {%- if effect.name == 'bold' -%}
-        {{newline()}}ability.effects.gainAbility('{{effect.trigger}}', {{ boldAbility(effect) | indent(8) }})
-        {%- elif effect.name == 'keywords' -%}
-        {{newline()}}{{ gainKeywords(effect) | indent(8) }}
-        {%- endif -%}
-    {%- endfor %}
+        {% set j = joiner(",\n"|indent(8)) -%}
+{%- for effect in ability.gets -%}
+        {{j()}}{{ formatSingleEffect(effect) | indent(8) }}
+{%- endfor -%}
+{%- for effect in ability.gains -%}
+    {%- if effect.name == 'bold' -%}
+        {{j()}}ability.effects.gainAbility('{{effect.trigger}}', {{ boldAbility(effect) | indent(8) }})
+    {%- elif effect.name == 'keywords' -%}
+        {{j()}}{{ gainKeywords(effect) | indent(8) }}
+    {%- endif -%}
+{%- endfor %}
     ]
 }
 {%- endmacro -%}
 
 {# Sorts out effects that may be targetted or untargeted, sequential or interdependent. #}
 
-{# After reviewing some of how the engine works, this should
-actually group targetted and untargetted actions. A single ability can have both.
-Targetted abilities appear to happen first, regardless of what order they should really occur in. 
-*Theoretically* that probably means you could put other game actions in targeted action lists if you want to control ordering as long as you can reset the targets?? Or list them as needing targets with a null handler?? 
-
-What about "Then" stuff??
-Good question! That just looks at everything in the blob before it... probably.
-Apparently then abilities can indeed have a target (see nerve blast). Gorm of omm should technically work this way too.
-
-So we have cards that want to do things one way, and an engine that works a slightly different way but hopefully it's close enough to work.
-#}
+{# The rule regarding resolving one sentence at a time, except for damage and replacement effects etc. is not implemented yet - and many existing cards don't follow it anyway. In particular, this doesn't generate any unconditional "thens" using alwaysTriggers #}
 {%- macro formatEffects(effects, then = false) -%}
 {%- set effectGroups = effects | sortEffects(then) -%}
-{%- set newline = joiner(",\n") -%}
+{%- set j = joiner(",\n") -%}
 {# Targetted effects #}
 {%- if effectGroups.optional -%}
-{{newline()}}optional: true
+{{j()}}optional: true
 {%- endif -%}
 {%- if effectGroups.targets.length > 1 -%}
-/*{{effectGroups.targets | dump(2) | safe}}*/
+{{j()}}targets: {
+{%- for target in effectGroups.targets %}
+    target{{loop.index}}: {
+        {{formatTarget(target) | indent(8) -}}
+        gameAction: {{formatSingleEffect(target) | indent(8)}}
+    }{{"," if not loop.last }}
+{%- endfor %}
+}
 {%- elif effectGroups.targets.length == 1 -%}
-{{newline()}}target: {
+{{j()}}target: {
     {{formatTarget(effectGroups.targets[0]) | indent(4) -}}
     gameAction: {{formatSingleEffect(effectGroups.targets[0]) | indent(4)}}
 }
 {%- endif -%}
 {# Untargetted effects #}
 {%- if effectGroups.default.length > 0 -%}
-{{newline()}}gameAction: {{formatEffectArray(effectGroups.default)}}
+{{j()}}gameAction: {{formatEffectArray(effectGroups.default)}}
 {%- endif -%}
 {# Dependent effects #}
 {%- if effectGroups.then.length > 0 -%}
-{{newline()}}then: {
+{{j()}}then: {
     {{formatEffects(effectGroups.then, true) | indent(4) }}
 }
 {%- endif -%}
 {# Stuff we can't format yet #}
 {%- for unknownEffect in effectGroups.unknown %}
-/*Unsupported combinations: {{unknownEffect | dump(2) | safe}}*/
+/*Unsupported combinations: {{unknownEffect | dump(2) }}*/
 {%- endfor -%}
 {%- endmacro -%}
 
@@ -98,7 +95,7 @@ So we have cards that want to do things one way, and an engine that works a slig
 {%- if effects.length > 1 -%}
 [
     {%- for e in effects %}
-    {{ formatSingleEffect(e) | indent(4) }}{% if not loop.last %},{% endif %}
+    {{ formatSingleEffect(e) | indent(4) }}{{"," if not loop.last }}
     {%- endfor %}
 ]
 {%- elif effects.length == 1 -%}
@@ -124,7 +121,7 @@ ability.actions.sequential([
     ability.actions.fight()
 ])
     {%- elif effect.name == 'unknown' -%}
-/*{{effect | dump(2) | safe}}*/
+/*{{effect | dump(2) }}*/
     {%- else -%}
 ability.actions.{{effect.name}}({{formatParams(effect)}})
     {%- endif -%}
@@ -133,7 +130,7 @@ ability.actions.{{effect.name}}({{formatParams(effect)}})
 {%- macro gainKeywords(effect) -%}
 ability.effects.addKeyword({ 
     {%- for keyword in effect.keywords %}
-    {{keyword.name}}: {{keyword.count|default(1, true)}}{% if not loop.last %},{% endif %}
+    {{keyword.name}}: {{keyword.count|default(1, true)}}{{"," if not loop.last }}
     {%- endfor %}
 })
 {%- endmacro -%}
@@ -152,7 +149,7 @@ cardType: '{{effect.target.type}}',
 {%- if effect.target.controller != null -%}
 controller: '{{effect.target.controller}}',
 {% endif -%}
-{{ cardCondition(effect) | safe }}
+{{ cardCondition(effect) }}
 {%- endmacro -%}
 
 {# Parameters #}
@@ -168,11 +165,11 @@ controller: '{{effect.target.controller}}',
     {%- if params.length > 0 -%}
         {%- if (params | join()).includes("context") -%}
 (context) => ({
-    {{ params | join(",\n") | indent(4) | safe }}
+    {{ params | join(",\n") | indent(4) }}
 })
         {%- elif params.length > 1 -%}
 {
-    {{ params | join(",\n") | indent(4) | safe}}
+    {{ params | join(",\n") | indent(4) }}
 }
         {%- else -%}
 { {{ params[0] }} }
@@ -222,6 +219,38 @@ target: context.player.opponent
 
 
 {# card condition checks #}
+{# Card condition requires context if something checks it #}
+{%- macro cardCondition(effect) -%}
+{%- set c = cardConditionInternal(effect.target, effect) -%}
+{%- if c.length > 0 -%}
+cardCondition: (card{{", context" if c.includes("context") }}) => {{ c | safe}},
+{% endif -%}
+{%- endmacro -%}
+
+{# Card filter already has context #}
+{%- macro cardFilter(target) -%}
+{%- set c = cardConditionInternal(target, null) -%}
+{%- if c.length > 0 -%}
+.filter(
+    (card) => {{c}}
+) 
+{%- endif -%}
+{%- endmacro -%}
+
+{%- macro cardConditionInternal(target, effect) -%}
+{% set j = joiner(' && ') -%}
+{%- if effect != null and effect.name == 'use' -%}
+{{j()}}card.exhausted === false{# Is this required, or inbuilt anyway? #}
+{%- endif -%}
+{%- if target.controller != null and target.mode == 'all' -%}
+{{j()}}{{controllerCondition(target)}}
+{%- endif -%}
+{%- for c in target.conditions -%}
+{{j()}}{{singleCondition(c)}}
+{%- endfor -%}
+{%- endmacro -%}
+
+{# Individual conditions: #}
 {%- macro singleCondition(condition) -%}
     {%- if condition.name == "not" -%}
 !{{singleCondition(condition.condition)}}
@@ -240,39 +269,10 @@ context.source.neighbors.includes(card)
     {%- elif condition.name == "other" -%}
 card !== context.source
     {%- else -%}
-/*{{ effect | dump(2) | safe}}*/
+/*{{ effect | dump(2)}}*/
     {%- endif -%}
 {%- endmacro -%}
 
-{%- macro cardCondition(effect) -%}
-{%- set l = [] -%}
-{%- if effect.name == 'use' -%} {# Is this required, or inbuilt anyway? #}
-    {%- set l = l.concat(['card.exhausted === false']) -%}
-{%- endif -%}
-{%- for c in effect.target.conditions -%}
-    {%- set l = l.concat(singleCondition(c)) -%}
-{%- endfor -%}
-{%- if l.length > 0 -%}
-cardCondition: (card{%- if (l | join()).includes("context") -%}, context{%endif%}) => {{ l | join(' && ') | safe }},
-{% endif -%}
-{%- endmacro -%}
-
 {%- macro controllerCondition(target) -%}
-card.controller {{'===' if target.controller === 'you' else '!==' |safe }} context.player
+card.controller {{'===' if target.controller === 'you' else '!==' }} context.player
 {%- endmacro -%}
-
-{%- macro cardFilter(target) -%}
-{%- set l = [] -%}
-{%- if target.controller != null -%}
-    {%- set l = l.concat(controllerCondition(target)) -%}
-{%- endif -%}
-{%- for c in target.conditions -%}
-    {%- set l = l.concat(singleCondition(c)) -%}
-{%- endfor -%}
-{%- if l.length > 0 -%}
-.filter(
-    (card) => {{ l | join(' && ') | safe }}
-) 
-{%- endif -%}
-{%- endmacro -%}
-
