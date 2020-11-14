@@ -1,8 +1,9 @@
 const Card = require('../../Card.js');
 
-class WayOfTheWolf extends Card {
+class Halacor extends Card {
     setupCardAbilities(ability) {
-        this.whileAttached({
+        this.persistentEffect({
+            match: (card) => card.type == 'creature' && card.isOnFlank(),
             effect: ability.effects.addKeyword({
                 skirmish: 1
             })
@@ -10,6 +11,6 @@ class WayOfTheWolf extends Card {
     }
 }
 
-WayOfTheWolf.id = 'way-of-the-wolf';
+Halacor.id = 'halacor';
 
-module.exports = WayOfTheWolf;
+module.exports = Halacor;

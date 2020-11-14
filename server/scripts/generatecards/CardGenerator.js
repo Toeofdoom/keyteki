@@ -94,7 +94,7 @@ class CardGenerator {
                 var str = env.render(this.template, data);
                 ensureDirectoryExistence(filename);
                 fs.writeFileSync(filename, str);
-                if (isComplete(data.abilities)) a.complete++;
+                if (complete) a.complete++;
                 else a.partial++;
             } catch (err) {
                 console.log(`Failure when generating code from parsed abilities for ${card.id}`);

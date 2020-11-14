@@ -3,11 +3,9 @@ const Card = require('../../Card.js');
 class Duskrunner extends Card {
     setupCardAbilities(ability) {
         this.whileAttached({
-            effect: [
-                ability.effects.gainAbility('reap', {
-                    gameAction: ability.actions.steal({ amount: 1 })
-                })
-            ]
+            effect: ability.effects.gainAbility('reap', {
+                gameAction: ability.actions.steal({ amount: 1 })
+            })
         });
     }
 }

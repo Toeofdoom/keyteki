@@ -4,8 +4,8 @@ class KillzordMk9001 extends Card {
     setupCardAbilities(ability) {
         this.whileAttached({
             effect: [
-                ability.actions.gainArmor({ amount: 2 }),
-                ability.actions.gainPower({ amount: 2 })
+                ability.effects.modifyArmor({ amount: 2 }),
+                ability.effects.modifyPower({ amount: 2 })
             ]
         });
         this.whileAttached({

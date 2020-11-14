@@ -3,7 +3,7 @@ const Card = require('../../Card.js');
 class BloodOfTitans extends Card {
     setupCardAbilities(ability) {
         this.whileAttached({
-            effect: [ability.actions.gainPower({ amount: 5 })]
+            effect: ability.effects.modifyPower({ amount: 5 })
         });
     }
 }

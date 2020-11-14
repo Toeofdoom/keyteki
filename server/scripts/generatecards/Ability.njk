@@ -3,9 +3,11 @@
 {%- if (ability.name == 'bold') -%}
 this.{{ability.trigger}}({{boldAbility(ability)}});
 {%- elif (ability.name == 'persistentEffect') -%}
+    {%- if ability.target.mode == "upgradedCreature"-%}
+this.whileAttached({{persistentEffect(ability)}});
+    {%- else -%}
 this.persistentEffect({{persistentEffect(ability)}});
-{%- elif ability.name == 'upgrades' -%}
-this.whileAttached({{upgradeAbility(ability)}});
+    {%- endif -%}
 {%- elif ability.name == 'keywords' -%}
 //Keywords: {{ ability.keywords | dump }}
 {%- else -%}
@@ -26,8 +28,19 @@ this.whileAttached({{upgradeAbility(ability)}});
 {# Persistent effects - WIP #}
 {%- macro persistentEffect(ability) -%}
 {
+{%- if ability.effects[0].name.includes("entersPlay") %}
     location: 'any',
-    effect: ability.effects.{{ability.effects[0].name}}()
+{%- endif -%}
+{%- if ability.target != null and ability.target.controller == null and ability.target.mode == 'all' %}
+    targetController: 'any',
+{%- elif ability.target.controller == 'opponent' %}
+    targetController: 'opponent',
+{%- endif -%}
+{%- set c = cardConditionInternal(ability.target, checkType=true) -%}
+{%- if c.length > 0 %}
+    match: (card{{", context" if c.includes("context") }}) => {{c}},
+{%- endif %}
+    effect: {{formatEffectArray(ability.effects) | indent(4) }}
 }
 {%- endmacro -%}
 
@@ -50,9 +63,9 @@ this.whileAttached({{upgradeAbility(ability)}});
 }
 {%- endmacro -%}
 
-{# Sorts out effects that may be targetted or untargeted, sequential or interdependent. #}
+{# Sorts out effects that may be targetted or untargeted, sequential or interdependent. 
 
-{# The rule regarding resolving one sentence at a time, except for damage and replacement effects etc. is not implemented yet - and many existing cards don't follow it anyway. In particular, this doesn't generate any unconditional "thens" using alwaysTriggers #}
+ The rule regarding resolving one sentence at a time, except for damage and replacement effects etc. is not implemented yet - and many existing cards don't follow it anyway. In particular, this doesn't generate any unconditional "thens" using alwaysTriggers #}
 {%- macro formatEffects(effects, then = false) -%}
 {%- set effectGroups = effects | sortEffects(then) -%}
 {%- set j = joiner(",\n") -%}
@@ -103,38 +116,6 @@ this.whileAttached({{upgradeAbility(ability)}});
 {%- endif %}
 {%- endmacro -%}
 
-{# Individual effect implementations - mostly just calls the matching function, but
-there are some exceptions. #}
-{%- macro formatSingleEffect(effect) -%}
-    {%- if ['gainAmber','stealAmber','gainChains','draw'].includes(effect.name) -%}
-ability.actions.{{effect.name}}({{ formatParams(effect, defaultPlayerTarget='you') }})
-    {%- elif ['loseAmber','discard','discardAtRandom'].includes(effect.name) -%}
-ability.actions.{{effect.name}}({{ formatParams(effect, defaultPlayerTarget='opponent') }})
-    {%- elif effect.name == 'readyAndUse' -%}
-ability.actions.sequential([
-    ability.actions.ready(),
-    ability.actions.use()
-])
-    {%- elif effect.name == 'readyAndFight' -%}
-ability.actions.sequential([
-    ability.actions.ready(),
-    ability.actions.fight()
-])
-    {%- elif effect.name == 'unknown' -%}
-/*{{effect | dump(2) }}*/
-    {%- else -%}
-ability.actions.{{effect.name}}({{formatParams(effect)}})
-    {%- endif -%}
-{%- endmacro -%}
-
-{%- macro gainKeywords(effect) -%}
-ability.effects.addKeyword({ 
-    {%- for keyword in effect.keywords %}
-    {{keyword.name}}: {{keyword.count|default(1, true)}}{{"," if not loop.last }}
-    {%- endfor %}
-})
-{%- endmacro -%}
-
 {# Targetting options setup #}
 {%- macro formatTarget(effect) -%}
 {%- if effect.target.mode != "exactly" -%}
@@ -149,7 +130,46 @@ cardType: '{{effect.target.type}}',
 {%- if effect.target.controller != null -%}
 controller: '{{effect.target.controller}}',
 {% endif -%}
-{{ cardCondition(effect) }}
+{%- set c = cardConditionInternal(effect.target, effect) -%}
+{%- if c.length > 0 -%}
+cardCondition: (card{{", context" if c.includes("context") }}) => {{ c }},
+{% endif -%}
+{%- endmacro -%}
+
+{# Individual effect implementations - mostly just calls the matching function, but
+there are some exceptions. #}
+{%- macro formatSingleEffect(effect) -%}
+    {%- if ['gainAmber','stealAmber','gainChains','draw'].includes(effect.name) -%}
+ability.actions.{{effect.name}}({{ formatParams(effect, defaultPlayerTarget='you') }})
+    {%- elif ['loseAmber','discard','discardAtRandom'].includes(effect.name) -%}
+ability.actions.{{effect.name}}({{ formatParams(effect, defaultPlayerTarget='opponent') }})
+    {%- elif effect.name == 'gainAbility' -%}
+        {%- if effect.ability.name == 'bold' -%}
+ability.effects.gainAbility('{{effect.ability.trigger}}', {{ boldAbility(effect.ability) }})
+        {%- endif -%}
+    {%- elif effect.name == 'gainKeywords' -%}
+ability.effects.addKeyword({ 
+    {%- for keyword in effect.keywords %}
+    {{keyword.name}}: {{keyword.count|default(1, true)}}{{"," if not loop.last }}
+    {%- endfor %}
+})
+    {%- elif effect.name == 'readyAndUse' -%}
+ability.actions.sequential([
+    ability.actions.ready(),
+    ability.actions.use()
+])
+    {%- elif effect.name == 'readyAndFight' -%}
+ability.actions.sequential([
+    ability.actions.ready(),
+    ability.actions.fight()
+])
+    {%- elif ['entersPlayReady', 'entersPlayStunned', 'modifyPower', 'modifyArmor'].includes(effect.name) -%}
+ability.effects.{{effect.name}}({{formatParams(effect)}})
+    {%- elif effect.name == 'unknown' -%}
+/*{{effect | dump(2) }}*/
+    {%- else -%}
+ability.actions.{{effect.name}}({{formatParams(effect)}})
+    {%- endif -%}
 {%- endmacro -%}
 
 {# Parameters #}
@@ -159,7 +179,7 @@ controller: '{{effect.target.controller}}',
 (context) => ({
     {{ params | indent(4) }}
 })
-{%- elif params.includes("\n") -%}
+{%- elif params.includes("\n") -%}{#- This type of check only works at the lowest level.-#}
 {
     {{ params | indent(4) }}
 }
@@ -185,6 +205,9 @@ controller: '{{effect.target.controller}}',
 {%- if ability.fully == true -%}
 {{j()}}fully: true
 {%- endif -%}
+{%- if ability.all == true -%}
+{{j()}}all: true
+{%- endif -%}
 {%- if ability.targetPlayer and ability.targetPlayer !== defaultPlayerTarget -%}
     {%- if ability.targetPlayer === 'self' -%}
 {{j()}}target: context.player
@@ -196,16 +219,9 @@ controller: '{{effect.target.controller}}',
 
 {# card condition checks #}
 {# Card condition requires context if something checks it #}
-{%- macro cardCondition(effect) -%}
-{%- set c = cardConditionInternal(effect.target, effect) -%}
-{%- if c.length > 0 -%}
-cardCondition: (card{{", context" if c.includes("context") }}) => {{ c | safe}},
-{% endif -%}
-{%- endmacro -%}
-
 {# Card filter already has context #}
 {%- macro cardFilter(target) -%}
-{%- set c = cardConditionInternal(target, null) -%}
+{%- set c = cardConditionInternal(target, null, true) -%}
 {%- if c.length > 0 -%}
 .filter(
     (card) => {{c}}
@@ -213,13 +229,16 @@ cardCondition: (card{{", context" if c.includes("context") }}) => {{ c | safe}},
 {%- endif -%}
 {%- endmacro -%}
 
-{%- macro cardConditionInternal(target, effect) -%}
+{%- macro cardConditionInternal(target, effect=null, checkController = false, checkType = false) -%}
 {% set j = joiner(' && ') -%}
 {%- if effect != null and effect.name == 'use' -%}
 {{j()}}card.exhausted === false{# Is this required, or inbuilt anyway? #}
 {%- endif -%}
-{%- if target.controller != null and target.mode == 'all' -%}
+{%- if target.controller != null and checkController -%}
 {{j()}}{{controllerCondition(target)}}
+{%- endif -%}
+{%- if target.type != null and checkType -%}
+{{j()}}card.type == '{{target.type}}'
 {%- endif -%}
 {%- for c in target.conditions -%}
 {{j()}}{{singleCondition(c)}}

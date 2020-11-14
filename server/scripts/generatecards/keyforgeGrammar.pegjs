@@ -3,7 +3,7 @@ Lines = line:Line tail:(NewLine l:Line {return l;})* NewLine? {
 	return [line, ...tail].filter((l) => !Array.isArray(l) || l.length > 0)
 }
 
-Line = ability:(Keywords / BoldAbility / PersistentEffect / UpgradeEffect / ReminderText / _)_ {
+Line = ability:(Keywords / BoldAbility / PersistentEffect / ReminderText / _)_ {
 	return ability
 }
 
@@ -23,11 +23,11 @@ BoldTrigger = ("Play" / "Reap" / "Before Fight" / "Fight" / "Destroyed" / "Actio
 }
 
 TriggeredEffect = effect:(SingleEffect) ReminderText? "."? ReminderText? _ 
-tail:(u:SingleSubsequentEffect "." _ ReminderText? {return u;} )* {
+tail:(u:SingleSubsequentEffect "."? _ ReminderText? {return u;} )* {
 	return [effect,...tail]
 }
 
-SingleEffect = optional:"You may"i? _ effect:(PlayerEffect / CaptureAmber / CardEffect / GiveEffect / MoveCardEffect / UnknownEffect) {
+SingleEffect = optional:"You may"i? _ effect:(PlayerEffect / CaptureAmber / CardEffect / GiveEffect / MoveAmberEffect / MoveCardEffect / UnknownEffect) {
 	let extras = {
     	optional: optional != null
     }
@@ -42,20 +42,18 @@ SingleSubsequentEffect = ifYouDo:"If you do,"i? _ effect:SingleEffect {
 }
 
 //Persistent effects.
-PersistentEffect = effects:(e:EntersPlayAbility "."? _ {return e;})+ ReminderText? {
-	return {name: 'persistentEffect', effects}
+PersistentEffect = target:(CardTarget/UpgradedCreature)? _ effects:(EntersPlayAbility/CardPersistentEffect) "."? _ ReminderText? {
+    return {name: 'persistentEffect', target, effects}
 }
 
 EntersPlayAbility = Self _ "enter" "s"? " play" _ state:("stunned"i/"ready"i) {
 	let effectName = 'entersPlay' + state.charAt(0).toUpperCase() + state.slice(1);
-	return {name:effectName}
+	return [{name: effectName}]
 }
 
-//Upgrade effects are similar to persistent effects - they should probably be combined.
-UpgradeEffect = "This creature"i _ gets:GetsStats? _ "and"i? _ gains:GainsAbility? "."? {
-	return {name: "upgrades", gets, gains}
+CardPersistentEffect = a:(GetsStats/GainsAbility) _ "and"i? _ b:GainsAbility? "."? {
+	return (a || []).concat(b || []).filter(x => x !== null)
 }
-
 
 //Player effect section - for abilities that target a single player
 PlayerEffect = target:PlayerTarget? _ effect:(GainAmber / LoseAmber / StealAmber / GainChains / DrawCards / DiscardCards) {
@@ -178,9 +176,15 @@ MoveCardEffect = ("Return"/"Shuffle") _ target:(Self/CardTarget) _ "to" _ player
     return  Object.assign({name: actionName}, {target:target})
 }
 
+//Amber movement effects are also worded in more complex ways
+MoveAmberEffect = "Move each A" _ ("on"/"from") _ "this creature to the common supply" {
+	return {name: "removeAmber", all:true};
+}
 
 //Upgrades
-GainsAbility = "gains"i ","? _ ability:(keywords:Keywords "and,"? _{return keywords;} / Quote bold:BoldAbility Quote {return bold;} )+ {
+GainsAbility = "gains"i ","? _ ability:(
+keywords:Keywords "and,"? _{return {name: "gainKeywords", keywords: keywords.keywords};} / 
+Quote bold:BoldAbility Quote {return {name: "gainAbility", ability:bold};} )+ {
 	return ability
 }
 
@@ -189,7 +193,7 @@ GetsStats = "gets" _ statChanges:(stat:StatChange _ "and"? _ {return stat;})+ {
 }
 
 StatChange = "+" amount:Number _ stat:("power"i/"armor"i){
-	return {name: "gain"+ stat.charAt(0).toUpperCase() + stat.slice(1), amount};
+	return {name: "modify"+ stat.charAt(0).toUpperCase() + stat.slice(1), amount};
 }
 
 Quote = [\“"”]
@@ -197,7 +201,7 @@ Quote = [\“"”]
 
 //Card targetting
 Self = "$this"
-UpgradedCreature = "this creature"i
+UpgradedCreature = "this creature"i {return {mode: "upgradedCreature"}}
 
 CardTarget = targetCount:CardTargetCount  _ other:OtherSpecifier? _ damaged:DamagedSpecifier? _ controller:ControllerSpecifier? _ neighbor:NeighborSpecifier? _ flank:FlankSpecifier? _ trait:TraitSpecifier? _ house:HouseSpecifier? _  type:CardType? _ nonFlank:NonFlankSpecifier? _ hasAmber:HasAmberSpecifier? {
 	return Object.assign({
@@ -208,9 +212,9 @@ CardTarget = targetCount:CardTargetCount  _ other:OtherSpecifier? _ damaged:Dama
 }
 
 CardTargetCount = EachTarget / OneTarget / UpToTargets
-EachTarget = ("each"/"all") {return {mode: "all"}}
-OneTarget = ( "an" / "a") {return {mode:"exactly", count:1}}
-UpToTargets = "up to" _ count:Number {return {mode:"upTo", count}}
+EachTarget = ("each"i/"all"i) {return {mode: "all"}}
+OneTarget = ( "an"i / "a"i) {return {mode:"exactly", count:1}}
+UpToTargets = "up to"i _ count:Number {return {mode:"upTo", count}}
 
 
 OtherSpecifier = "other" {return {name: "other"};}
