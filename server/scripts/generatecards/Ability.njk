@@ -78,19 +78,21 @@ this.persistentEffect({{persistentEffect(ability)}});
 {%- for target in effectGroups.targets %}
     target{{loop.index}}: {
         {{formatTarget(target) | indent(8) -}}
+        {{- formatCondition(target) -}}
         gameAction: {{formatSingleEffect(target) | indent(8)}}
     }{{"," if not loop.last }}
 {%- endfor %}
 }
 {%- elif effectGroups.targets.length == 1 -%}
 {{j()}}target: {
-    {{formatTarget(effectGroups.targets[0]) | indent(4) -}}
+    {{formatTarget(effectGroups.targets[0]) | indent(4) -}}{{- formatCondition(effectGroups.targets[0]) -}}
     gameAction: {{formatSingleEffect(effectGroups.targets[0]) | indent(4)}}
 }
 {%- endif -%}
 {# Untargetted effects #}
 {%- if effectGroups.default.length > 0 -%}
-{{j()}}gameAction: {{formatEffectArray(effectGroups.default)}}
+{{- formatCondition(effectGroups.default[0]) -}}{# Should really be splitting a group if any have conditions #}
+{{- j()}}gameAction: {{formatEffectArray(effectGroups.default)}}
 {%- endif -%}
 {# Dependent effects #}
 {%- if effectGroups.then.length > 0 -%}
@@ -270,4 +272,13 @@ card !== context.source
 
 {%- macro controllerCondition(target) -%}
 card.controller {{'===' if target.controller === 'you' else '!==' }} context.player
+{%- endmacro -%}
+
+{%- macro formatCondition(effect)-%}
+{%- if effect.condition == "destroysTarget" -%}
+condition: (context) => 
+    context.preThenEvent.destroyEvent && context.preThenEvent.destroyEvent.resolved,
+{% elif effect.condition != null -%}
+condition: /* {{effect.condition | dump(2)}} */
+{% endif -%}
 {%- endmacro -%}

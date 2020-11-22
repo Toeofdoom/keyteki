@@ -195,7 +195,7 @@ function sortEffects(effects, then) {
     };
     for (let effect of effects) {
         let targetted = effect.target && effect.target != '$this' && effect.target.mode !== 'all';
-        if (effect.ifYouDo && !then) {
+        if (effect.then && !then) {
             sortedEffects.then.push(effect);
         } else {
             if (effect.optional) sortedEffects.optional = true;

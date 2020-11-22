@@ -34,12 +34,19 @@ SingleEffect = optional:"You may"i? _ effect:(PlayerEffect / CaptureAmber / Card
     return Object.assign(effect, extras)
 }
 
-SingleSubsequentEffect = ifYouDo:"If you do,"i? _ effect:SingleEffect {
-	let extras = {
-    	ifYouDo: ifYouDo != null
-    }
-    return Object.assign(effect, extras)
+SingleSubsequentEffect = then:ThenCondition? _ effect:SingleEffect {
+    return Object.assign(effect, then)
 }
+
+ThenCondition = condition:(
+	"If you do," {return null}/
+    "If this damage destroys that creature," {return "destroysTarget"}) {
+    return {
+    	then: true,
+        condition
+    }
+}
+    
 
 //Persistent effects.
 PersistentEffect = target:(CardTarget/UpgradedCreature)? _ effects:(PersistentPlayerEffect/EntersPlayAbility/CardPersistentEffect) "."? _ ReminderText? {
@@ -206,7 +213,6 @@ Quote = [\“"”]
 //Card targetting
 Self = "$this"
 UpgradedCreature = "this creature"i {return {mode: "upgradedCreature"}}
-
 CardTarget = targetCount:CardTargetCount  _ other:OtherSpecifier? _ damaged:DamagedSpecifier? _ controller:ControllerSpecifier? _ neighbor:NeighborSpecifier? _ flank:FlankSpecifier? _ house:HouseSpecifier? _ base:BaseCardTarget _ nonFlank:NonFlankSpecifier? _ hasAmber:HasAmberSpecifier? {
 	return Object.assign({
     	type: base.type != null ? base.type : "creature",
@@ -251,7 +257,7 @@ NonFlankSpecifier = "that is"? _ "not on a flank"i {
 	return {name: "not", condition: {name: "flank"}}
 }
 
-HasAmberSpecifier = "with" _ negate:"no" _ "A on it"  {
+HasAmberSpecifier = "with" _ negate:"no"? _ "A on it"  {
 	let c = {name: "hasAmber"};
 	return negate != null ? {name: "not", condition: c} : c;
 }
