@@ -42,7 +42,7 @@ SingleSubsequentEffect = ifYouDo:"If you do,"i? _ effect:SingleEffect {
 }
 
 //Persistent effects.
-PersistentEffect = target:(CardTarget/UpgradedCreature)? _ effects:(EntersPlayAbility/CardPersistentEffect) "."? _ ReminderText? {
+PersistentEffect = target:(CardTarget/UpgradedCreature)? _ effects:(PersistentPlayerEffect/EntersPlayAbility/CardPersistentEffect) "."? _ ReminderText? {
     return {name: 'persistentEffect', target, effects}
 }
 
@@ -55,6 +55,10 @@ CardPersistentEffect = a:(GetsStats/GainsAbility) _ "and"i? _ b:GainsAbility? ".
 	return (a || []).concat(b || []).filter(x => x !== null)
 }
 
+PersistentPlayerEffect = target: PlayerTarget _ "keys cost " amount:Number "A" {
+	return {name: "modifyKeyCost", target, amount};
+}
+
 //Player effect section - for abilities that target a single player
 PlayerEffect = target:PlayerTarget? _ effect:(GainAmber / LoseAmber / StealAmber / GainChains / DrawCards / DiscardCards) {
 	let info = {};
@@ -64,7 +68,7 @@ PlayerEffect = target:PlayerTarget? _ effect:(GainAmber / LoseAmber / StealAmber
 
 PlayerTarget = ("Your Opponent"i "'s"? {return "opponent"}
 / "You"i "r"? {return "self"}
-/ "their owners’" {return null;})
+/ ("their owners’"i/"each player’s"i) {return null;})
 
 //NumericalPlayerEffect...
 GainAmber = "Gain"i "s"? _ amount:Number ("<A>"/"A") _ multiplier:Multiplier? {
@@ -192,7 +196,7 @@ GetsStats = "gets" _ statChanges:(stat:StatChange _ "and"? _ {return stat;})+ {
 	return statChanges;
 }
 
-StatChange = "+" amount:Number _ stat:("power"i/"armor"i){
+StatChange = amount:Number _ stat:("power"i/"armor"i){
 	return {name: "modify"+ stat.charAt(0).toUpperCase() + stat.slice(1), amount};
 }
 
@@ -203,13 +207,16 @@ Quote = [\“"”]
 Self = "$this"
 UpgradedCreature = "this creature"i {return {mode: "upgradedCreature"}}
 
-CardTarget = targetCount:CardTargetCount  _ other:OtherSpecifier? _ damaged:DamagedSpecifier? _ controller:ControllerSpecifier? _ neighbor:NeighborSpecifier? _ flank:FlankSpecifier? _ trait:TraitSpecifier? _ house:HouseSpecifier? _  type:CardType? _ nonFlank:NonFlankSpecifier? _ hasAmber:HasAmberSpecifier? {
+CardTarget = targetCount:CardTargetCount  _ other:OtherSpecifier? _ damaged:DamagedSpecifier? _ controller:ControllerSpecifier? _ neighbor:NeighborSpecifier? _ flank:FlankSpecifier? _ house:HouseSpecifier? _ base:BaseCardTarget _ nonFlank:NonFlankSpecifier? _ hasAmber:HasAmberSpecifier? {
 	return Object.assign({
-    	type: type != null ? type : "creature",
+    	type: base.type != null ? base.type : "creature",
         controller: controller, 
-        conditions: [other, damaged, neighbor, flank, nonFlank, trait, house, hasAmber].filter(x => x !== null)
+        conditions: [other, damaged, neighbor, flank, nonFlank, house, hasAmber].concat(base.conditions).filter(x => x !== null)
     }, targetCount)
 }
+
+BaseCardTarget = trait:TraitSpecifier? _ house:HouseSpecifier? _ type:CardType {return{type, conditions:[trait, house]};} /
+	t:TraitSpecifier {return{conditions:[t], type:null};}
 
 CardTargetCount = EachTarget / OneTarget / UpToTargets
 EachTarget = ("each"i/"all"i) {return {mode: "all"}}
@@ -276,7 +283,9 @@ ReminderText = _ "(" [^)]+ ")" _ {
 
 //Basics
 Number = ("a"/"one") {return 1;} / "two" {return 2;} / "three" {return 3;} / Integer 
-Integer = [0-9]+ {return parseInt(text())}
+Integer = sign:[+-]? number:[0-9]+ {
+	return sign == '-' ? -parseInt(text()): parseInt(text());
+}
 
 _ "whitespace" = [  ﻿\u202f]*
 
