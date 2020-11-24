@@ -2,7 +2,7 @@ const Card = require('../../Card.js');
 
 class TechnoThief extends Card {
     setupCardAbilities(ability) {
-        //Keywords: [{"name":"elusive","count":null}]
+        //Keywords: elusive
         this.reap({
             gameAction: ability.actions.discard((context) => ({
                 amount: 1,

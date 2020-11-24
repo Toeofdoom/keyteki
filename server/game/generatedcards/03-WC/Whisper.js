@@ -2,7 +2,7 @@ const Card = require('../../Card.js');
 
 class Whisper extends Card {
     setupCardAbilities(ability) {
-        //Keywords: [{"name":"elusive","count":null}]
+        //Keywords: elusive
         this.action({
             gameAction: ability.actions.loseAmber({ amount: 1 }),
             then: {

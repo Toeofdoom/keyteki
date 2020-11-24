@@ -2,7 +2,7 @@ const Card = require('../../Card.js');
 
 class HaplessCadet extends Card {
     setupCardAbilities(ability) {
-        //Keywords: [{"name":"taunt","count":null}]
+        //Keywords: taunt
         this.destroyed({
             gameAction: ability.actions.loseAmber({ amount: 3 })
         });

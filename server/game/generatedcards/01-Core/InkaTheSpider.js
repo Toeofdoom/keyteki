@@ -2,7 +2,7 @@ const Card = require('../../Card.js');
 
 class InkaTheSpider extends Card {
     setupCardAbilities(ability) {
-        //Keywords: [{"name":"poison","count":null}]
+        //Keywords: poison
         this.play({
             reap: true,
             target: {

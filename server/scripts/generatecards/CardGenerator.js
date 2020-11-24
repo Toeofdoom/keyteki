@@ -7,11 +7,12 @@ const nunjucks = require('nunjucks');
 const peg = require('pegjs');
 
 class CardGenerator {
-    constructor(dataSource, fullOutputDir, partialOutputDir) {
+    constructor(dataSource, fullOutputDir, partialOutputDir, comments) {
         this.dataSource = dataSource;
         this.fullOutputDir = fullOutputDir;
         this.partialOutputDir = partialOutputDir;
         this.template = 'Card.njk';
+        this.comments = comments;
         try {
             console.log('Starting card parser');
             let grammar = fs.readFileSync(path.join(__dirname, 'keyforgeGrammar.pegjs'), 'utf8');
@@ -70,7 +71,9 @@ class CardGenerator {
             let data = {
                 name: this.camelCase(card.name),
                 card: card,
-                abilities: this.parseAbilities(simplifiedText)
+                abilities: this.parseAbilities(simplifiedText),
+                text: simplifiedText.split(/[\n\r]+/g),
+                comments: this.comments
             };
 
             if (data.abilities == null) {
@@ -102,22 +105,6 @@ class CardGenerator {
                 console.log(`error:${err}`);
                 this.error++;
             }
-
-            /*ejs.renderFile(this.template, data, {}, function (err, str) {
-                if (err) {
-                    console.log(
-                        `Failure when generating code from parsed abilities for ${card.id}`
-                    );
-                    console.log(JSON.stringify(data.abilities, null, 1));
-                    console.log(`error:${err}`);
-                    this.error++;
-                } else {
-                    ensureDirectoryExistence(filename);
-                    fs.writeFileSync(filename, str);
-                    if (isComplete(data.abilities)) a.complete++;
-                    else a.partial++;
-                }
-            });*/
         }
         console.info(this.complete + ' cards completely converted');
         console.info(this.partial + ' cards partially converted');

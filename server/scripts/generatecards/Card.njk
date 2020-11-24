@@ -2,11 +2,19 @@
 const Card = require('../../Card.js');
 
 class {{ name }} extends Card {
+{%- if comments != "none" %}
+    {%- for line in text %}
+    //{{line}}
+    {%- endfor -%}
+{%- endif %}
     setupCardAbilities(ability) {
         {%- for ability in abilities %}
         {{Ability.formatAbility(ability) | indent(8)}}
         {%- endfor %}
     }
+{%- if comments == "all" %}
+    /*{{abilities | dump(2) | indent(4)}}*/
+{%- endif %}
 }
 
 {{name}}.id = '{{card.id}}';

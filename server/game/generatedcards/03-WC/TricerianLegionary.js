@@ -2,7 +2,7 @@ const Card = require('../../Card.js');
 
 class TricerianLegionary extends Card {
     setupCardAbilities(ability) {
-        //Keywords: [{"name":"taunt","count":null}]
+        //Keywords: taunt
         this.play({
             target: {
                 cardType: 'creature',

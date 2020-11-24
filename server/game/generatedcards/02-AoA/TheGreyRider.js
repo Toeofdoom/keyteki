@@ -2,7 +2,7 @@ const Card = require('../../Card.js');
 
 class TheGreyRider extends Card {
     setupCardAbilities(ability) {
-        //Keywords: [{"name":"deploy","count":null}]
+        //Keywords: deploy
         this.play({
             fight: true,
             reap: true,

@@ -5,7 +5,7 @@ class Pride extends Card {
         this.reap({
             gameAction: ability.actions.ward((context) => ({
                 target: context.game.creaturesInPlay.filter(
-                    (card) => card.controller !== context.player && card.hasTrait('sin')
+                    (card) => card.controller === context.player && card.hasTrait('sin')
                 )
             }))
         });

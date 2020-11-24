@@ -2,7 +2,7 @@ const Card = require('../../Card.js');
 
 class DamoThief extends Card {
     setupCardAbilities(ability) {
-        //Keywords: [{"name":"elusive","count":null}]
+        //Keywords: elusive
         this.destroyed({
             gameAction: ability.actions.steal({ amount: 1 })
         });

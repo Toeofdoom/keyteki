@@ -2,7 +2,7 @@ const Card = require('../../Card.js');
 
 class LupoTheScarred extends Card {
     setupCardAbilities(ability) {
-        //Keywords: [{"name":"skirmish","count":null}]
+        //Keywords: skirmish
         this.play({
             target: {
                 cardType: 'creature',

@@ -2,7 +2,7 @@ const Card = require('../../Card.js');
 
 class SanitationEngineer extends Card {
     setupCardAbilities(ability) {
-        //Keywords: [{"name":"hazardous","count":1}]
+        //Keywords: hazardous 1
         this.reap({
             gameAction: ability.actions.discard((context) => ({
                 amount: 1,

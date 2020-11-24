@@ -2,7 +2,7 @@ const Card = require('../../Card.js');
 
 class ChuffApe extends Card {
     setupCardAbilities(ability) {
-        //Keywords: [{"name":"taunt","count":null}]
+        //Keywords: taunt
         this.persistentEffect({
             location: 'any',
             effect: ability.effects.entersPlayStunned()

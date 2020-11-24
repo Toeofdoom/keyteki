@@ -2,9 +2,9 @@ const Card = require('../../Card.js');
 
 class BossZarek extends Card {
     setupCardAbilities(ability) {
-        //Keywords: [{"name":"enhance","count":null}]
+        //Keywords: enhance
         this.persistentEffect({
-            match: (card) => card.type == 'creature' && card.hasToken('amber'),
+            match: (card) => card.type === 'creature' && card.hasToken('amber'),
             effect: ability.effects.addKeyword({
                 elusive: 1
             })

@@ -2,7 +2,7 @@ const Card = require('../../Card.js');
 
 class Floomf extends Card {
     setupCardAbilities(ability) {
-        //Keywords: [{"name":"skirmish","count":null}]
+        //Keywords: skirmish
         this.fight({
             target: {
                 cardType: 'creature',

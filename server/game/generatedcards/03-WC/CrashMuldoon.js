@@ -2,7 +2,7 @@ const Card = require('../../Card.js');
 
 class CrashMuldoon extends Card {
     setupCardAbilities(ability) {
-        //Keywords: [{"name":"deploy","count":null}]
+        //Keywords: deploy
         this.persistentEffect({
             location: 'any',
             effect: ability.effects.entersPlayReady()

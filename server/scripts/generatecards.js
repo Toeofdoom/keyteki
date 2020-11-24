@@ -21,6 +21,12 @@ const optionsDefinition = [
         name: 'partial-output-dir',
         type: String,
         defaultValue: path.join(__dirname, '..', 'game', 'partialcards')
+    },
+    {
+        name: 'comments',
+        type: String,
+        defaultValue: 'none',
+        description: 'How much information to include in code comments: none, text or all'
     }
 ];
 
@@ -40,7 +46,8 @@ let dataSource = createDataSource(options);
 let cardImport = new CardGenerator(
     dataSource,
     options['full-output-dir'],
-    options['partial-output-dir']
+    options['partial-output-dir'],
+    options.comments
 );
 
 const doImport = async () => {

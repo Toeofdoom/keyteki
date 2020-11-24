@@ -2,7 +2,7 @@ const Card = require('../../Card.js');
 
 class PrescriptiveGrammarbot extends Card {
     setupCardAbilities(ability) {
-        //Keywords: [{"name":"taunt","count":null},{"name":"hazardous","count":3}]
+        //Keywords: taunt, hazardous 3
         this.reap({
             target: {
                 cardType: 'creature',

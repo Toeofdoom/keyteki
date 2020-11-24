@@ -2,7 +2,7 @@ const Card = require('../../Card.js');
 
 class KindrithLongshot extends Card {
     setupCardAbilities(ability) {
-        //Keywords: [{"name":"elusive","count":null},{"name":"skirmish","count":null}]
+        //Keywords: elusive, skirmish
         this.reap({
             target: {
                 cardType: 'creature',

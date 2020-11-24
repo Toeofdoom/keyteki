@@ -2,7 +2,7 @@ const Card = require('../../Card.js');
 
 class DinoBeast extends Card {
     setupCardAbilities(ability) {
-        //Keywords: [{"name":"skirmish","count":null}]
+        //Keywords: skirmish
         this.play({
             optional: true,
             gameAction: ability.actions.exalt((context) => ({

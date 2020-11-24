@@ -2,11 +2,11 @@ const Card = require('../../Card.js');
 
 class IxxyxliFixfinger extends Card {
     setupCardAbilities(ability) {
-        //Keywords: [{"name":"elusive","count":null}]
+        //Keywords: elusive
         this.persistentEffect({
             targetController: 'any',
             match: (card, context) =>
-                card.type == 'creature' && card !== context.source && card.hasTrait('martian'),
+                card.type === 'creature' && card !== context.source && card.hasTrait('martian'),
             effect: ability.effects.modifyArmor({ amount: 1 })
         });
     }

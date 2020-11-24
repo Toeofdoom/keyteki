@@ -2,7 +2,7 @@ const Card = require('../../Card.js');
 
 class DeepwoodDruid extends Card {
     setupCardAbilities(ability) {
-        //Keywords: [{"name":"deploy","count":null}]
+        //Keywords: deploy
         this.play({
             reap: true,
             target: {

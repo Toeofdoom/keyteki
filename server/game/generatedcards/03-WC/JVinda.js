@@ -2,7 +2,7 @@ const Card = require('../../Card.js');
 
 class JVinda extends Card {
     setupCardAbilities(ability) {
-        //Keywords: [{"name":"elusive","count":null}]
+        //Keywords: elusive
         this.reap({
             target: {
                 cardType: 'creature',

@@ -2,7 +2,7 @@ const Card = require('../../Card.js');
 
 class TechnoBeast extends Card {
     setupCardAbilities(ability) {
-        //Keywords: [{"name":"skirmish","count":null}]
+        //Keywords: skirmish
         this.reap({
             gameAction: ability.actions.discard((context) => ({
                 amount: 1,

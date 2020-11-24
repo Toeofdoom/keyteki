@@ -2,7 +2,7 @@ const Card = require('../../Card.js');
 
 class Bulleteye extends Card {
     setupCardAbilities(ability) {
-        //Keywords: [{"name":"elusive","count":null}]
+        //Keywords: elusive
         this.reap({
             target: {
                 cardType: 'creature',

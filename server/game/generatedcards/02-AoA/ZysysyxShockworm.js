@@ -1,0 +1,17 @@
+const Card = require('../../Card.js');
+
+class ZysysyxShockworm extends Card {
+    setupCardAbilities(ability) {
+        this.reaction({
+            when: {
+                onReap: (event, context) =>
+                    event.card.controller !== context.player && event.card.type === 'creature'
+            },
+            gameAction: ability.actions.stun()
+        });
+    }
+}
+
+ZysysyxShockworm.id = 'zysysyx-shockworm';
+
+module.exports = ZysysyxShockworm;

@@ -2,7 +2,7 @@ const Card = require('../../Card.js');
 
 class QuestorJarta extends Card {
     setupCardAbilities(ability) {
-        //Keywords: [{"name":"elusive","count":null}]
+        //Keywords: elusive
         this.reap({
             optional: true,
             gameAction: ability.actions.exalt((context) => ({

@@ -2,7 +2,7 @@ const Card = require('../../Card.js');
 
 class Hystricog extends Card {
     setupCardAbilities(ability) {
-        //Keywords: [{"name":"enhance","count":null}]
+        //Keywords: enhance
         this.action({
             target: {
                 cardType: 'creature',

@@ -5,7 +5,7 @@ class AncientPower extends Card {
         this.play({
             gameAction: ability.actions.ward((context) => ({
                 target: context.game.creaturesInPlay.filter(
-                    (card) => card.controller !== context.player && card.hasToken('amber')
+                    (card) => card.controller === context.player && card.hasToken('amber')
                 )
             }))
         });

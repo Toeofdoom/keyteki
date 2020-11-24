@@ -2,7 +2,7 @@ const Card = require('../../Card.js');
 
 class Urchin extends Card {
     setupCardAbilities(ability) {
-        //Keywords: [{"name":"elusive","count":null}]
+        //Keywords: elusive
         this.play({
             gameAction: ability.actions.steal({ amount: 1 })
         });

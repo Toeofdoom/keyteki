@@ -2,7 +2,7 @@ const Card = require('../../Card.js');
 
 class Mooncurser extends Card {
     setupCardAbilities(ability) {
-        //Keywords: [{"name":"skirmish","count":null},{"name":"poison","count":null}]
+        //Keywords: skirmish, poison
         this.fight({
             gameAction: ability.actions.steal({ amount: 1 })
         });

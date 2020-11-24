@@ -3,7 +3,7 @@ Lines = line:Line tail:(NewLine l:Line {return l;})* NewLine? {
 	return [line, ...tail].filter((l) => !Array.isArray(l) || l.length > 0)
 }
 
-Line = ability:(Keywords / BoldAbility / PersistentEffect / ReminderText / _)_ {
+Line = ability:(Keywords / BoldAbility / PersistentEffect / GeneralTrigger / ReminderText / _)_ {
 	return ability
 }
 
@@ -27,7 +27,7 @@ tail:(u:SingleSubsequentEffect "."? _ ReminderText? {return u;} )* {
 	return [effect,...tail]
 }
 
-SingleEffect = optional:"You may"i? _ effect:(PlayerEffect / CaptureAmber / CardEffect / GiveEffect / MoveAmberEffect / MoveCardEffect / UnknownEffect) {
+SingleEffect = optional:"You may"i? _ effect:(PlayerEffect / CaptureAmber / CardEffect / GiveEffect / MoveAmberEffect / MoveCardEffect / TimeLimitedEffect / UnknownEffect) {
 	let extras = {
     	optional: optional != null
     }
@@ -46,7 +46,13 @@ ThenCondition = condition:(
         condition
     }
 }
-    
+
+TimeLimitedEffect = duration:Duration "," _ effect:(PersistentEffect/GeneralTrigger) {
+	return {name:duration, durationEffect:effect}
+}
+
+Duration = "For the remainder of the turn"i {return "forRemainderOfTurn"} /
+"during your opponent’s next turn"i {return "next"}
 
 //Persistent effects.
 PersistentEffect = target:(CardTarget/UpgradedCreature)? _ effects:(PersistentPlayerEffect/EntersPlayAbility/CardPersistentEffect) "."? _ ReminderText? {
@@ -66,6 +72,29 @@ PersistentPlayerEffect = target: PlayerTarget _ "keys cost " amount:Number "A" {
 	return {name: "modifyKeyCost", target, amount};
 }
 
+GeneralTrigger = GeneralPreTrigger/GeneralPostTrigger
+
+GeneralPreTrigger = ("Each time"/"After") _ trigger:Trigger "," _ playerTarget:PlayerTarget? _ effect:SingleEffect "."? {
+	return {name: "reaction", trigger, effect, playerTarget}
+}
+GeneralPostTrigger = playerTarget:PlayerTarget? _ effect:SingleEffect _ "Each time"i _ trigger:Trigger {
+	return {name: "reaction", trigger, effect, playerTarget}
+}
+
+Trigger = PreTrigger / PostTrigger
+
+PreTrigger = eventPlayer:PlayerTarget? _ trigger:"play"i "s"? _ card:CardTarget {
+	return {trigger, card: Object.assign(card, {eventPlayer})}
+}
+
+PostTrigger =card:CardTarget _ trigger:TriggerType _ condition:"during your turn"? {
+	return {trigger, card, condition}
+}
+
+TriggerType = "is destroyed" {return "destroyed"}
+/"reaps" {return "reap"}
+/("fights"/"is used to fight") {return "fight"}
+
 //Player effect section - for abilities that target a single player
 PlayerEffect = target:PlayerTarget? _ effect:(GainAmber / LoseAmber / StealAmber / GainChains / DrawCards / DiscardCards) {
 	let info = {};
@@ -75,7 +104,9 @@ PlayerEffect = target:PlayerTarget? _ effect:(GainAmber / LoseAmber / StealAmber
 
 PlayerTarget = ("Your Opponent"i "'s"? {return "opponent"}
 / "You"i "r"? {return "self"}
-/ ("their owners’"i/"each player’s"i) {return null;})
+/ ("their owners’"i/"each player’s"i) {return null;}
+/"its owner" {return "owner"}
+/"its opponent" {return "controllerOpponent"})
 
 //NumericalPlayerEffect...
 GainAmber = "Gain"i "s"? _ amount:Number ("<A>"/"A") _ multiplier:Multiplier? {
@@ -112,8 +143,17 @@ GainChains = "Gain"i "s"? _ amount:Number _ ("chains"/"chain") _ multiplier:Mult
 }
 
 //Card effects
-CardEffect = effect:(DealDamage / ReadyAndUse / ReadyAndFight / Ready / Use / Destroy / Sacrifice / Purge / Exalt / Ward / Enrage / Stun / Exhaust / ArchiveTarget / Heal) _ target:(Self/CardTarget) {
+CardEffect = CardPreEffect/CardPostEffect
+CardPreEffect = effect:(DealDamage / ReadyAndUse / ReadyAndFight / Ready / Use / Destroy / Sacrifice / Purge / Exalt / Ward / Enrage / Stun / Exhaust / ArchiveTarget / Heal) _ target:(Self/CardTarget/ItTarget) {
 	return Object.assign(effect, {target:target})
+}
+
+CardPostEffect = target:(Self/CardTarget/ItTarget) _ effect:(Captures) {
+	return Object.assign(effect, {target:target})
+}
+
+Captures = "Captures"i _ amount:Number ("<A>"/"A") {
+	return {name: 'capture', amount: amount}
 }
 
 DealDamage = "Deal"i _ amount:Number ("<D>"/"D") _ "to" {
@@ -177,12 +217,12 @@ ArchiveTarget = "Archive"i {
 }
 
 //"Give" effects
-GiveEffect = "Give" _ target:(Self/CardTarget) _ amount:Number _ "+1 power counters" {
+GiveEffect = "Give" _ target:(Self/CardTarget/ItTarget) _ amount:Number _ "+1 power counters" {
 	return  Object.assign({name: 'addPowerCounter', amount}, {target:target})
 }
 
 //Card movement effects - these are worded in more complex ways than other card-related effects.
-MoveCardEffect = ("Return"/"Shuffle") _ target:(Self/CardTarget) _ "to" _ player:PlayerTarget? _ location:("hand"/"deck") "s"? {
+MoveCardEffect = ("Return"/"Shuffle") _ target:(Self/CardTarget/ItTarget) _ "to" _ player:PlayerTarget? _ location:("hand"/"deck") "s"? {
 	let actionName = "returnTo" + location.charAt(0).toUpperCase() + location.slice(1)
     return  Object.assign({name: actionName}, {target:target})
 }
@@ -228,7 +268,7 @@ CardTargetCount = EachTarget / OneTarget / UpToTargets
 EachTarget = ("each"i/"all"i) {return {mode: "all"}}
 OneTarget = ( "an"i / "a"i) {return {mode:"exactly", count:1}}
 UpToTargets = "up to"i _ count:Number {return {mode:"upTo", count}}
-
+ItTarget = ("it"i) {return {mode: "trigger"}}
 
 OtherSpecifier = "other" {return {name: "other"};}
 FlankSpecifier = "flank"i {	return {name: "flank"};}
@@ -272,7 +312,7 @@ CardType = type:("action"i / "artifact"i / "creature"i / "upgrade"i) "s"? {
 }
 
 // Modifiers
-Multiplier = UnknownEffect
+Multiplier = "For each something something"
 
 //Ignorable text section
 Keywords = word:Keyword tail:(". " w:Keyword {return w;})* "."? _ ReminderText? {

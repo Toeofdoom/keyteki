@@ -5,7 +5,7 @@ class CallToAction extends Card {
         this.play({
             gameAction: ability.actions.ready((context) => ({
                 target: context.game.creaturesInPlay.filter(
-                    (card) => card.controller !== context.player && card.hasTrait('knight')
+                    (card) => card.controller === context.player && card.hasTrait('knight')
                 )
             }))
         });

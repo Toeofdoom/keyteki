@@ -8,8 +8,14 @@ this.whileAttached({{persistentEffect(ability)}});
     {%- else -%}
 this.persistentEffect({{persistentEffect(ability)}});
     {%- endif -%}
+{%- elif ability.name == 'reaction' -%}
+this.reaction({
+    {{formatReaction(ability) | indent(4)}}
+});
 {%- elif ability.name == 'keywords' -%}
-//Keywords: {{ ability.keywords | dump }}
+//Keywords: {% for k in ability.keywords -%}
+{{k.name}}{{" " + k.count if k.count != null}}{{", " if not loop.last}}
+    {%- endfor %}
 {%- else -%}
 /*{{ ability | dump(2) }}*/
 {%- endif -%}
@@ -165,6 +171,12 @@ ability.actions.sequential([
     ability.actions.ready(),
     ability.actions.fight()
 ])
+    {%- elif ['forRemainderOfTurn'].includes(effect.name) -%}
+        {%- if effect.durationEffect.name == "reaction" or effect.durationEffect.target == null -%}
+ability.actions.{{effect.name}}({{formatParams(effect, allowContext=false)}})
+        {%- else -%}
+ability.actions.cardLastingEffect({{formatParams(effect.durationEffect)}})
+        {%- endif -%}
     {%- elif ['entersPlayReady', 'entersPlayStunned', 'modifyPower', 'modifyArmor'].includes(effect.name) -%}
 ability.effects.{{effect.name}}({{formatParams(effect)}})
     {%- elif effect.name == 'unknown' -%}
@@ -175,9 +187,9 @@ ability.actions.{{effect.name}}({{formatParams(effect)}})
 {%- endmacro -%}
 
 {# Parameters #}
-{%- macro formatParams(ability, defaultPlayerTarget=null) -%}
+{%- macro formatParams(ability, defaultPlayerTarget=null, allowContext=true) -%}
 {%- set params = formatParamsInternal(ability, defaultPlayerTarget) -%}
-{%- if params.includes("context") -%}
+{%- if params.includes("context") and allowContext -%}
 (context) => ({
     {{ params | indent(4) }}
 })
@@ -190,6 +202,20 @@ ability.actions.{{effect.name}}({{formatParams(effect)}})
 {%- endif -%}
 {%- endmacro -%}
 
+{%- macro whenTriggers(trigger) -%}
+{%- if trigger.trigger == "reap" -%}
+onReap: {{eventCondition(trigger)}}
+{%- elif trigger.trigger == "play" -%}
+onCardPlayed: {{eventCondition(trigger)}}
+{%- elif trigger.trigger == "fight" -%}
+onFight: {{eventCondition(trigger)}}
+{%- elif trigger.trigger == "destroyed" -%}
+onCardDestroyed: {{eventCondition(trigger, true)}}
+{%- else -%}
+{{ability.durationEffect | dump(2)}}
+{%- endif -%}
+{%- endmacro-%}
+
 {%- macro formatParamsInternal(ability, defaultPlayerTarget=null) -%}
 {%- set j = joiner(',\n') -%}
 {%- if ability.target != null and ability.target.mode == "all" -%}
@@ -197,6 +223,13 @@ ability.actions.{{effect.name}}({{formatParams(effect)}})
 {%- endif -%}
 {%- if ability.target == "$this" -%}
 {{j()}}target: context.source
+{%- endif -%}
+{%- if ability.durationEffect != null -%}
+    {%- if ability.durationEffect.name == "reaction" -%}
+{{formatReaction(ability.durationEffect)}}
+    {%- else -%}
+{{ability.durationEffect | dump(2)}}
+    {%- endif -%}
 {%- endif -%}
 {%- if ability.amount != null -%}
 {{j()}}amount: {{ability.amount}}
@@ -217,6 +250,9 @@ ability.actions.{{effect.name}}({{formatParams(effect)}})
 {{j()}}target: context.player.opponent
     {%- endif -%}
 {%- endif -%}
+{%- if ability.effects != null -%}
+{{j()}}effect: {{formatEffectArray(ability.effects) }}
+{%- endif -%}
 {%- endmacro -%}
 
 {# card condition checks #}
@@ -231,47 +267,50 @@ ability.actions.{{effect.name}}({{formatParams(effect)}})
 {%- endif -%}
 {%- endmacro -%}
 
-{%- macro cardConditionInternal(target, effect=null, checkController = false, checkType = false) -%}
+{%- macro cardConditionInternal(target, effect=null, checkController = false, checkType = false, card = 'card') -%}
 {% set j = joiner(' && ') -%}
 {%- if effect != null and effect.name == 'use' -%}
-{{j()}}card.exhausted === false{# Is this required, or inbuilt anyway? #}
+{{j()}}{{card}}.exhausted === false{# Is this required, or inbuilt anyway? #}
 {%- endif -%}
 {%- if target.controller != null and checkController -%}
-{{j()}}{{controllerCondition(target)}}
+{{j()}}{{controllerCondition(target, card)}}
+{%- endif -%}
+{%- if target.eventPlayer != null -%}
+{{j()}}event.player {{ '===' if target.eventPlayer === 'self' else '!==' }} context.player
 {%- endif -%}
 {%- if target.type != null and checkType -%}
-{{j()}}card.type == '{{target.type}}'
+{{j()}}{{card}}.type === '{{target.type}}'
 {%- endif -%}
 {%- for c in target.conditions -%}
-{{j()}}{{singleCondition(c)}}
+{{j()}}{{singleCondition(c, card)}}
 {%- endfor -%}
 {%- endmacro -%}
 
 {# Individual conditions: #}
-{%- macro singleCondition(condition) -%}
+{%- macro singleCondition(condition, card) -%}
     {%- if condition.name == "not" -%}
-!{{singleCondition(condition.condition)}}
+!{{singleCondition(condition.condition, card)}}
     {%- elif condition.name == "trait" -%}
-card.hasTrait('{{condition.trait}}')
+{{card}}.hasTrait('{{condition.trait}}')
     {%- elif condition.name == "house" -%}
-card.hasHouse('{{condition.house}}')
+{{card}}.hasHouse('{{condition.house}}')
     {%- elif condition.name == "flank" -%}
-card.isOnFlank()
+{{card}}.isOnFlank()
     {%- elif condition.name == "hasAmber" -%}
-card.hasToken('amber')
+{{card}}.hasToken('amber')
     {%- elif condition.name == "damaged" -%}
-card.hasToken('damage')
+{{card}}.hasToken('damage')
     {%- elif condition.name == "neighboring" -%}
-context.source.neighbors.includes(card)
+context.source.neighbors.includes({{card}})
     {%- elif condition.name == "other" -%}
-card !== context.source
+{{card}} !== context.source
     {%- else -%}
 /*{{ effect | dump(2)}}*/
     {%- endif -%}
 {%- endmacro -%}
 
-{%- macro controllerCondition(target) -%}
-card.controller {{'===' if target.controller === 'you' else '!==' }} context.player
+{%- macro controllerCondition(target, card) -%}
+{{card}}.controller {{'===' if target.controller === 'self' else '!==' }} context.player
 {%- endmacro -%}
 
 {%- macro formatCondition(effect)-%}
@@ -281,4 +320,16 @@ condition: (context) =>
 {% elif effect.condition != null -%}
 condition: /* {{effect.condition | dump(2)}} */
 {% endif -%}
+{%- endmacro -%}
+
+{%- macro eventCondition(trigger, useClone = false) -%}
+{%- set c = cardConditionInternal(trigger.card, null, true, true, 'event.clone' if useClone else 'event.card') -%}
+({{"event" if c.includes("event") }}{{", context" if c.includes("context") }}) => {{ c }},
+{%- endmacro -%}
+
+{%- macro formatReaction(reaction) -%}
+when: {
+    {{whenTriggers(reaction.trigger)}}
+},
+gameAction: {{formatSingleEffect(reaction.effect)}}
 {%- endmacro -%}

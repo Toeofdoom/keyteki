@@ -6,7 +6,7 @@ class Wardrummer extends Card {
             gameAction: ability.actions.returnToHand((context) => ({
                 target: context.game.creaturesInPlay.filter(
                     (card) =>
-                        card.controller !== context.player &&
+                        card.controller === context.player &&
                         card !== context.source &&
                         card.hasHouse('brobnar')
                 )

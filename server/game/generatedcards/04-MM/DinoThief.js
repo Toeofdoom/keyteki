@@ -2,7 +2,7 @@ const Card = require('../../Card.js');
 
 class DinoThief extends Card {
     setupCardAbilities(ability) {
-        //Keywords: [{"name":"elusive","count":null}]
+        //Keywords: elusive
         this.play({
             optional: true,
             gameAction: ability.actions.exalt((context) => ({

@@ -2,7 +2,7 @@ const Card = require('../../Card.js');
 
 class DarkFaerie extends Card {
     setupCardAbilities(ability) {
-        //Keywords: [{"name":"skirmish","count":null}]
+        //Keywords: skirmish
         this.fight({
             gameAction: ability.actions.gainAmber({ amount: 2 })
         });

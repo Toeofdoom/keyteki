@@ -2,7 +2,7 @@ const Card = require('../../Card.js');
 
 class DewFaerie extends Card {
     setupCardAbilities(ability) {
-        //Keywords: [{"name":"elusive","count":null}]
+        //Keywords: elusive
         this.reap({
             gameAction: ability.actions.gainAmber({ amount: 1 })
         });

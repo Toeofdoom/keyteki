@@ -2,7 +2,7 @@ const Card = require('../../Card.js');
 
 class Batdrone extends Card {
     setupCardAbilities(ability) {
-        //Keywords: [{"name":"skirmish","count":null}]
+        //Keywords: skirmish
         this.fight({
             gameAction: ability.actions.steal({ amount: 1 })
         });
