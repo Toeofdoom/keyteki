@@ -1,6 +1,7 @@
 const Card = require('../../Card.js');
 
 class Charybdis extends Card {
+    //Each enemy creatures gains, “Before Fight: Lose 1A.”
     setupCardAbilities(ability) {
         this.persistentEffect({
             targetController: 'opponent',

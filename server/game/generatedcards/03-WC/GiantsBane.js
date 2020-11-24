@@ -1,6 +1,8 @@
 const Card = require('../../Card.js');
 
 class GiantsBane extends Card {
+    //Play: Destroy a Giant creature.
+    //
     setupCardAbilities(ability) {
         this.play({
             target: {

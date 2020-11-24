@@ -1,6 +1,8 @@
 const Card = require('../../Card.js');
 
 class TricerianLegionary extends Card {
+    //Taunt. (This creature’s neighbors cannot be attacked unless they have taunt.)
+    //Play: Ward a friendly creature.
     setupCardAbilities(ability) {
         //Keywords: taunt
         this.play({

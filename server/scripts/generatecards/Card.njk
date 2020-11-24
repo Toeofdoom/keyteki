@@ -4,7 +4,7 @@ const Card = require('../../Card.js');
 class {{ name }} extends Card {
 {%- if comments != "none" %}
     {%- for line in text %}
-    //{{line}}
+    //{{line | trim}}
     {%- endfor -%}
 {%- endif %}
     setupCardAbilities(ability) {

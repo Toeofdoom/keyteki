@@ -1,6 +1,8 @@
 const Card = require('../../Card.js');
 
 class OrbOfInvidius extends Card {
+    //After a creature reaps, stun it.
+    //
     setupCardAbilities(ability) {
         this.reaction({
             when: {

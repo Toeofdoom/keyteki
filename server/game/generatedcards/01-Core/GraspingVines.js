@@ -1,6 +1,7 @@
 const Card = require('../../Card.js');
 
 class GraspingVines extends Card {
+    //Play: Return up to 3 artifacts to their owners’ hands.
     setupCardAbilities(ability) {
         this.play({
             target: {

@@ -1,6 +1,7 @@
 const Card = require('../../Card.js');
 
 class BarnRazing extends Card {
+    //Play: For the remainder of the turn, your opponent loses 1A each time a friendly creature fights.
     setupCardAbilities(ability) {
         this.play({
             gameAction: ability.actions.forRemainderOfTurn({

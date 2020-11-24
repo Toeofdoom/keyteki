@@ -1,6 +1,7 @@
 const Card = require('../../Card.js');
 
 class DarkWave extends Card {
+    //Play: Deal 2D to each non-Mutant creature.
     setupCardAbilities(ability) {
         this.play({
             gameAction: ability.actions.dealDamage((context) => ({

@@ -1,6 +1,8 @@
 const Card = require('../../Card.js');
 
 class KindrithLongshot extends Card {
+    //Elusive. Skirmish.
+    //Reap: Deal 2D to a creature.
     setupCardAbilities(ability) {
         //Keywords: elusive, skirmish
         this.reap({

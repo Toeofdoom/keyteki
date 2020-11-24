@@ -1,6 +1,8 @@
 const Card = require('../../Card.js');
 
 class GuiltyHearts extends Card {
+    //Play: Destroy each creature with A on it.
+    //
     setupCardAbilities(ability) {
         this.play({
             gameAction: ability.actions.destroy((context) => ({

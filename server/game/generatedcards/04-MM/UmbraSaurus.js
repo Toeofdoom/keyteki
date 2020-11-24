@@ -1,6 +1,8 @@
 const Card = require('../../Card.js');
 
 class UmbraSaurus extends Card {
+    //Elusive. (The first time this creature is attacked each turn, no damage is dealt.)
+    //Play: You may exalt $this. If you do, deal 3D to a creature.
     setupCardAbilities(ability) {
         //Keywords: elusive
         this.play({

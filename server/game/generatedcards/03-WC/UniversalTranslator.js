@@ -1,6 +1,8 @@
 const Card = require('../../Card.js');
 
 class UniversalTranslator extends Card {
+    //This creature gains, “Fight/Reap: Use a friendly non-Star Alliance creature.”
+    //
     setupCardAbilities(ability) {
         this.whileAttached({
             effect: ability.effects.gainAbility('fight', {

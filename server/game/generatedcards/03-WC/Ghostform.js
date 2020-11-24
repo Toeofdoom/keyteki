@@ -1,6 +1,8 @@
 const Card = require('../../Card.js');
 
 class Ghostform extends Card {
+    //This creature gains invulnerable. (It cannot be destroyed or dealt damage.)
+    //This creature gains, “Fight/Reap: Archive $this.”
     setupCardAbilities(ability) {
         this.whileAttached({
             effect: ability.effects.addKeyword({

@@ -1,6 +1,7 @@
 const Card = require('../../Card.js');
 
 class FullMoon extends Card {
+    //Play: For the remainder of the turn, gain 1A each time you play a creature.
     setupCardAbilities(ability) {
         this.play({
             gameAction: ability.actions.forRemainderOfTurn({

@@ -1,6 +1,8 @@
 const Card = require('../../Card.js');
 
 class AmberspineMongrel extends Card {
+    //Hazardous 3. (Before this creature is attacked, deal 3D to the attacking enemy.)
+    //After an enemy creature reaps, gain 1A.
     setupCardAbilities(ability) {
         //Keywords: hazardous 3
         this.reaction({

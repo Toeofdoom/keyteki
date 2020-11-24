@@ -1,6 +1,7 @@
 const Card = require('../../Card.js');
 
 class HebeTheHuge extends Card {
+    //Play: Deal 2<D> to each other undamaged creature.
     setupCardAbilities(ability) {
         this.play({
             gameAction: ability.actions.dealDamage((context) => ({

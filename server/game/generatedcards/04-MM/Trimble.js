@@ -1,6 +1,8 @@
 const Card = require('../../Card.js');
 
 class Trimble extends Card {
+    //Each Mutant creature gains skirmish.
+    //
     setupCardAbilities(ability) {
         this.persistentEffect({
             targetController: 'any',

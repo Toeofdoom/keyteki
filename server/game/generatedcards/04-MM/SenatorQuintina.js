@@ -1,6 +1,8 @@
 const Card = require('../../Card.js');
 
 class SenatorQuintina extends Card {
+    //After a creature reaps, exalt it.
+    //
     setupCardAbilities(ability) {
         this.reaction({
             when: {

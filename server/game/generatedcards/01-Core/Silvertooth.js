@@ -1,6 +1,7 @@
 const Card = require('../../Card.js');
 
 class Silvertooth extends Card {
+    //$this enters play ready.
     setupCardAbilities(ability) {
         this.persistentEffect({
             location: 'any',

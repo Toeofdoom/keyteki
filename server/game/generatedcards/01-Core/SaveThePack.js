@@ -1,6 +1,7 @@
 const Card = require('../../Card.js');
 
 class SaveThePack extends Card {
+    //Play: Destroy each damaged creature. Gain 1 chain.
     setupCardAbilities(ability) {
         this.play({
             gameAction: [

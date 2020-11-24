@@ -1,6 +1,7 @@
 const Card = require('../../Card.js');
 
 class AmmoniaClouds extends Card {
+    //Play: Deal 3<D> to each creature.
     setupCardAbilities(ability) {
         this.play({
             gameAction: ability.actions.dealDamage((context) => ({

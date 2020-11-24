@@ -1,6 +1,7 @@
 const Card = require('../../Card.js');
 
 class InstrumentOfSilence extends Card {
+    //This creature gains skirmish and, “Fight: Gain 1A.”
     setupCardAbilities(ability) {
         this.whileAttached({
             effect: [

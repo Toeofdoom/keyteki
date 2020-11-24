@@ -1,6 +1,8 @@
 const Card = require('../../Card.js');
 
 class HedonisticIntent extends Card {
+    //Play: Exalt each flank creature.
+    //
     setupCardAbilities(ability) {
         this.play({
             gameAction: ability.actions.exalt((context) => ({

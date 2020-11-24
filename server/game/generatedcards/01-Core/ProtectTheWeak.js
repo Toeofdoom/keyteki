@@ -1,6 +1,7 @@
 const Card = require('../../Card.js');
 
 class ProtectTheWeak extends Card {
+    //This creature gets +1 armor and gains taunt. (This creature’s neighbors cannot be attacked unless they have taunt.)
     setupCardAbilities(ability) {
         this.whileAttached({
             effect: [

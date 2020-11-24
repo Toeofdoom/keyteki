@@ -1,6 +1,7 @@
 const Card = require('../../Card.js');
 
 class SeekerNeedle extends Card {
+    //Action: Deal 1D to a creature. If this damage destroys that creature, gain 1A.
     setupCardAbilities(ability) {
         this.action({
             target: {

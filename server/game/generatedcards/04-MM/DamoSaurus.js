@@ -1,6 +1,8 @@
 const Card = require('../../Card.js');
 
 class DamoSaurus extends Card {
+    //Play: You may exalt $this. If you do, deal 3D to a creature.
+    //Destroyed: Steal 1A.
     setupCardAbilities(ability) {
         this.play({
             optional: true,

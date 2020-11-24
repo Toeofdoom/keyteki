@@ -1,6 +1,8 @@
 const Card = require('../../Card.js');
 
 class DamoBot extends Card {
+    //Reap: Discard a card from your hand. If you do, draw a card.
+    //Destroyed: Steal 1A.
     setupCardAbilities(ability) {
         this.reap({
             gameAction: ability.actions.discard((context) => ({

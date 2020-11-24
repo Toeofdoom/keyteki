@@ -1,6 +1,9 @@
 const Card = require('../../Card.js');
 
 class CrashMuldoon extends Card {
+    //Deploy.
+    //$this enters play ready.
+    //Action: Use a neighboring non-Star Alliance creature.
     setupCardAbilities(ability) {
         //Keywords: deploy
         this.persistentEffect({

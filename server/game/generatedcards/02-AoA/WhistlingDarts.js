@@ -1,6 +1,7 @@
 const Card = require('../../Card.js');
 
 class WhistlingDarts extends Card {
+    //Play: Deal 1D to each enemy creature.
     setupCardAbilities(ability) {
         this.play({
             gameAction: ability.actions.dealDamage((context) => ({

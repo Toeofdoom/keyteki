@@ -1,6 +1,7 @@
 const Card = require('../../Card.js');
 
 class SpecialDelivery extends Card {
+    //Omni: Sacrifice $this. Deal 3D to a flank creature. If this damage destroys that creature, purge it.
     setupCardAbilities(ability) {
         this.omni({
             target: {
