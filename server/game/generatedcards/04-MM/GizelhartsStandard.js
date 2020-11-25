@@ -6,7 +6,7 @@ class GizelhartsStandard extends Card {
     setupCardAbilities(ability) {
         this.persistentEffect({
             match: (card) => card.type === 'creature' && card.hasToken('amber'),
-            effect: ability.effects.modifyArmor({ amount: 1 })
+            effect: ability.effects.modifyArmor(1)
         });
         this.play({
             target: {

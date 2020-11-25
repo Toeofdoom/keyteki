@@ -82,16 +82,20 @@ this.reaction({
 {%- if effectGroups.targets.length > 1 -%}
 {{j()}}targets: {
 {%- for target in effectGroups.targets %}
+    {{- formatCondition(target) -}}
     target{{loop.index}}: {
         {{formatTarget(target) | indent(8) -}}
-        {{- formatCondition(target) -}}
         gameAction: {{formatSingleEffect(target) | indent(8)}}
     }{{"," if not loop.last }}
 {%- endfor %}
 }
 {%- elif effectGroups.targets.length == 1 -%}
-{{j()}}target: {
-    {{formatTarget(effectGroups.targets[0]) | indent(4) -}}{{- formatCondition(effectGroups.targets[0]) -}}
+{{j()}}
+    {%- if effectGroups.targets[0].condition != null -%}
+{{- formatCondition(effectGroups.targets[0]) -}}
+    {%- endif -%}
+target: {
+    {{formatTarget(effectGroups.targets[0]) | indent(4) -}}
     gameAction: {{formatSingleEffect(effectGroups.targets[0]) | indent(4)}}
 }
 {%- endif -%}
@@ -138,6 +142,9 @@ cardType: '{{effect.target.type}}',
 {%- if effect.target.controller != null -%}
 controller: '{{effect.target.controller}}',
 {% endif -%}
+{%- if effect.target.location != null -%}
+location: '{{effect.target.location}}',
+{% endif -%}
 {%- set c = cardConditionInternal(effect.target, effect) -%}
 {%- if c.length > 0 -%}
 cardCondition: (card{{", context" if c.includes("context") }}) => {{ c }},
@@ -148,8 +155,8 @@ cardCondition: (card{{", context" if c.includes("context") }}) => {{ c }},
 there are some exceptions. #}
 {%- macro formatSingleEffect(effect) -%}
     {%- if ['gainAmber','stealAmber','gainChains','draw'].includes(effect.name) -%}
-ability.actions.{{effect.name}}({{ formatParams(effect, defaultPlayerTarget='you') }})
-    {%- elif ['loseAmber','discard','discardAtRandom'].includes(effect.name) -%}
+ability.actions.{{effect.name}}({{ formatParams(effect, defaultPlayerTarget='self') }})
+    {%- elif ['loseAmber', 'discardAtRandom'].includes(effect.name) -%}
 ability.actions.{{effect.name}}({{ formatParams(effect, defaultPlayerTarget='opponent') }})
     {%- elif effect.name == 'gainAbility' -%}
         {%- if effect.ability.name == 'bold' -%}
@@ -177,8 +184,10 @@ ability.actions.{{effect.name}}({{formatParams(effect, allowContext=false)}})
         {%- else -%}
 ability.actions.cardLastingEffect({{formatParams(effect.durationEffect)}})
         {%- endif -%}
-    {%- elif ['entersPlayReady', 'entersPlayStunned', 'modifyPower', 'modifyArmor'].includes(effect.name) -%}
-ability.effects.{{effect.name}}({{formatParams(effect)}})
+    {%- elif ['entersPlayReady', 'entersPlayStunned'].includes(effect.name) -%}
+ability.effects.{{effect.name}}()
+    {%- elif ['modifyPower', 'modifyArmor'].includes(effect.name) -%}
+ability.effects.{{effect.name}}({{effect.amount}})
     {%- elif effect.name == 'unknown' -%}
 /*{{effect | dump(2) }}*/
     {%- else -%}
@@ -208,9 +217,9 @@ onReap: {{eventCondition(trigger)}}
 {%- elif trigger.trigger == "play" -%}
 onCardPlayed: {{eventCondition(trigger)}}
 {%- elif trigger.trigger == "fight" -%}
-onFight: {{eventCondition(trigger)}}
+onFight: {{eventCondition(trigger, 'event.attacker')}}
 {%- elif trigger.trigger == "destroyed" -%}
-onCardDestroyed: {{eventCondition(trigger, true)}}
+onCardDestroyed: {{eventCondition(trigger, 'event.clone')}}
 {%- else -%}
 {{ability.durationEffect | dump(2)}}
 {%- endif -%}
@@ -223,6 +232,9 @@ onCardDestroyed: {{eventCondition(trigger, true)}}
 {%- endif -%}
 {%- if ability.target == "$this" -%}
 {{j()}}target: context.source
+{%- endif -%}
+{%- if ability.target.mode == "trigger" -%}
+{{j()}}target: context.event.card
 {%- endif -%}
 {%- if ability.durationEffect != null -%}
     {%- if ability.durationEffect.name == "reaction" -%}
@@ -243,11 +255,18 @@ onCardDestroyed: {{eventCondition(trigger, true)}}
 {%- if ability.all == true -%}
 {{j()}}all: true
 {%- endif -%}
-{%- if ability.targetPlayer and ability.targetPlayer !== defaultPlayerTarget -%}
-    {%- if ability.targetPlayer === 'self' -%}
+{%- set targetPlayer = ability.targetPlayer if ability.targetPlayer else 'self' -%}
+{%- if defaultPlayerTarget != null and targetPlayer !== defaultPlayerTarget -%}
+    {%- if targetPlayer === 'self' -%}
 {{j()}}target: context.player
-    {%- else -%}
+    {%- elif targetPlayer === 'opponent' -%}
 {{j()}}target: context.player.opponent
+    {%- elif targetPlayer === 'owner' -%}
+{{j()}}target: context.event.card.owner{#Should really have context-based card variable#}
+    {%- elif targetPlayer === 'controllerOpponent' -%}
+{{j()}}target: context.event.card.controller.opponent
+    {%- else -%}
+{{j()}}target: /* {{targetPlayer | dump}} */
     {%- endif -%}
 {%- endif -%}
 {%- if ability.effects != null -%}
@@ -322,8 +341,8 @@ condition: /* {{effect.condition | dump(2)}} */
 {% endif -%}
 {%- endmacro -%}
 
-{%- macro eventCondition(trigger, useClone = false) -%}
-{%- set c = cardConditionInternal(trigger.card, null, true, true, 'event.clone' if useClone else 'event.card') -%}
+{%- macro eventCondition(trigger, card = "event.card") -%}
+{%- set c = cardConditionInternal(trigger.card, null, true, true, card) -%}
 ({{"event" if c.includes("event") }}{{", context" if c.includes("context") }}) => {{ c }},
 {%- endmacro -%}
 

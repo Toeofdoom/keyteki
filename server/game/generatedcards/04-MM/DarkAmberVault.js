@@ -15,7 +15,7 @@ class DarkAmberVault extends Card {
         });
         this.persistentEffect({
             match: (card) => card.type === 'creature' && card.hasTrait('mutant'),
-            effect: ability.effects.modifyPower({ amount: 2 })
+            effect: ability.effects.modifyPower(2)
         });
     }
 }

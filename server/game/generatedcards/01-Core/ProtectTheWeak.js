@@ -5,7 +5,7 @@ class ProtectTheWeak extends Card {
     setupCardAbilities(ability) {
         this.whileAttached({
             effect: [
-                ability.effects.modifyArmor({ amount: 1 }),
+                ability.effects.modifyArmor(1),
                 ability.effects.addKeyword({
                     taunt: 1
                 })

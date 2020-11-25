@@ -9,12 +9,11 @@ class Stomp extends Card {
                 gameAction: ability.actions.dealDamage({ amount: 5 })
             },
             then: {
+                condition: (context) =>
+                    context.preThenEvent.destroyEvent && context.preThenEvent.destroyEvent.resolved,
                 target: {
                     cardType: 'creature',
                     controller: 'self',
-                    condition: (context) =>
-                        context.preThenEvent.destroyEvent &&
-                        context.preThenEvent.destroyEvent.resolved,
                     gameAction: ability.actions.exalt()
                 }
             }

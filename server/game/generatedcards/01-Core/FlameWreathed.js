@@ -5,7 +5,7 @@ class FlameWreathed extends Card {
     setupCardAbilities(ability) {
         this.whileAttached({
             effect: [
-                ability.effects.modifyPower({ amount: 2 }),
+                ability.effects.modifyPower(2),
                 ability.effects.addKeyword({
                     hazardous: 2
                 })

@@ -6,7 +6,10 @@ class Whisper extends Card {
     setupCardAbilities(ability) {
         //Keywords: elusive
         this.action({
-            gameAction: ability.actions.loseAmber({ amount: 1 }),
+            gameAction: ability.actions.loseAmber((context) => ({
+                amount: 1,
+                target: context.player
+            })),
             then: {
                 target: {
                     cardType: 'creature',

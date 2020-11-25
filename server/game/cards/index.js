@@ -35,7 +35,9 @@ function loadCards(directory) {
 }
 
 let cards = {};
-let directories = getDirectories('.');
+let generatedPath = '../generatedcards';
+let generatedDirectories = getDirectories(generatedPath).map((d) => path.join(generatedPath, d));
+let directories = getDirectories('.').concat(generatedDirectories);
 
 for (let directory of directories) {
     cards = Object.assign(cards, loadCards(directory));

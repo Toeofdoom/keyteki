@@ -5,11 +5,11 @@ class TechnoFiend extends Card {
     //Destroyed: Steal 1A.
     setupCardAbilities(ability) {
         this.reap({
-            gameAction: ability.actions.discard((context) => ({
-                amount: 1,
+            target: {
+                controller: 'self',
                 location: 'hand',
-                target: context.player
-            })),
+                gameAction: ability.actions.discard()
+            },
             then: {
                 gameAction: ability.actions.draw({ amount: 1 })
             }

@@ -13,13 +13,14 @@ class SpecialDelivery extends Card {
                 target: context.source
             })),
             then: {
+                condition: (context) =>
+                    context.preThenEvent.destroyEvent && context.preThenEvent.destroyEvent.resolved,
                 target: {
                     mode: 'trigger',
                     numCards: '',
-                    condition: (context) =>
-                        context.preThenEvent.destroyEvent &&
-                        context.preThenEvent.destroyEvent.resolved,
-                    gameAction: ability.actions.purge()
+                    gameAction: ability.actions.purge((context) => ({
+                        target: context.event.card
+                    }))
                 }
             }
         });

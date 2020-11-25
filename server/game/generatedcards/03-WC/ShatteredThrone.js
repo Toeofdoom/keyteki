@@ -5,9 +5,12 @@ class ShatteredThrone extends Card {
     setupCardAbilities(ability) {
         this.reaction({
             when: {
-                onFight: (event) => event.card.type === 'creature'
+                onFight: (event) => event.attacker.type === 'creature'
             },
-            gameAction: ability.actions.capture({ amount: 1 })
+            gameAction: ability.actions.capture((context) => ({
+                target: context.event.card,
+                amount: 1
+            }))
         });
     }
 }

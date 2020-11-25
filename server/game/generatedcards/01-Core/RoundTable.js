@@ -6,7 +6,7 @@ class RoundTable extends Card {
         this.persistentEffect({
             match: (card) => card.type === 'creature' && card.hasTrait('knight'),
             effect: [
-                ability.effects.modifyPower({ amount: 1 }),
+                ability.effects.modifyPower(1),
                 ability.effects.addKeyword({
                     taunt: 1
                 })

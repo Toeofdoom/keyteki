@@ -27,7 +27,7 @@ tail:(u:SingleSubsequentEffect "."? _ ReminderText? {return u;} )* {
 	return [effect,...tail]
 }
 
-SingleEffect = optional:"You may"i? _ effect:(PlayerEffect / CaptureAmber / CardEffect / GiveEffect / MoveAmberEffect / MoveCardEffect / TimeLimitedEffect / UnknownEffect) {
+SingleEffect = optional:"You may"i? _ effect:(MoveCardEffect /PlayerEffect / CaptureAmber / CardEffect / GiveEffect / MoveAmberEffect / TimeLimitedEffect / UnknownEffect) {
 	let extras = {
     	optional: optional != null
     }
@@ -74,11 +74,11 @@ PersistentPlayerEffect = target: PlayerTarget _ "keys cost " amount:Number "A" {
 
 GeneralTrigger = GeneralPreTrigger/GeneralPostTrigger
 
-GeneralPreTrigger = ("Each time"/"After") _ trigger:Trigger "," _ playerTarget:PlayerTarget? _ effect:SingleEffect "."? {
-	return {name: "reaction", trigger, effect, playerTarget}
+GeneralPreTrigger = ("Each time"/"After") _ trigger:Trigger "," _ targetPlayer:PlayerTarget? _ effect:SingleEffect "."? {
+	return {name: "reaction", trigger, effect: Object.assign(effect, {targetPlayer})}
 }
-GeneralPostTrigger = playerTarget:PlayerTarget? _ effect:SingleEffect _ "Each time"i _ trigger:Trigger {
-	return {name: "reaction", trigger, effect, playerTarget}
+GeneralPostTrigger = targetPlayer:PlayerTarget? _ effect:SingleEffect _ "Each time"i _ trigger:Trigger {
+	return {name: "reaction", trigger, effect: Object.assign(effect, {targetPlayer})}
 }
 
 Trigger = PreTrigger / PostTrigger
@@ -129,9 +129,9 @@ DrawCards = "Draw"i "s"? _ amount:Number _ ("cards"/"card") _ multiplier:Multipl
 	return {name: 'draw', amount: amount, multiplier: multiplier}
 }
 
-DiscardCards = "Discard"i "s"? _ amount:Number _ random:"random"i? _ ("cards"/"card") _ "from" _ ("your"i/"their"i) _ location:("hand") {
+DiscardCards = "Discard"i "s"? _ amount:Number _ "random"i _ ("cards"/"card") _ "from" _ ("your"i/"their"i) _ location:("hand") {
 	return {
-		name: random != null ? 'discardAtRandom' : 'discard', 
+		name: 'discardAtRandom', 
 		amount: amount, 
 		targetPlayer: 'self', 
 		location: location
@@ -222,9 +222,35 @@ GiveEffect = "Give" _ target:(Self/CardTarget/ItTarget) _ amount:Number _ "+1 po
 }
 
 //Card movement effects - these are worded in more complex ways than other card-related effects.
-MoveCardEffect = ("Return"/"Shuffle") _ target:(Self/CardTarget/ItTarget) _ "to" _ player:PlayerTarget? _ location:("hand"/"deck") "s"? {
-	let actionName = "returnTo" + location.charAt(0).toUpperCase() + location.slice(1)
-    return  Object.assign({name: actionName}, {target:target})
+MoveCardEffect = MoveFromPlay / DiscardFromHand / ArchiveFromHand
+
+MoveFromPlay = ("Return"i/"Shuffle"i) _ target:(Self/CardTarget/ItTarget) _ "to" _ player:PlayerTarget? _ location:("hand"/"deck") "s"? {
+    let name = "returnTo" + location.charAt(0).toUpperCase() + location.slice(1)
+    return {name, target} //Ignore player target, assumed for most movement.
+}
+
+
+DiscardFromHand = name:"Discard"i _ target:CardTarget _ "from" _ player:PlayerTarget _ location:("hand"/"deck") "s"? {
+    return {
+    	name: name.toLowerCase(),
+    	target: Object.assign(target, {
+            location: location, 
+            controller: player
+        })
+    }
+}
+
+ArchiveFromHand = name:"Archive"i _ "a card" _ "from"? _ player:PlayerTarget? _ location:("hand"/"deck")? "s"? {
+    return {
+    	name: name.toLowerCase(),
+    	target: {
+        	mode: "exactly",
+            count: 1,
+        	type: null, 
+            location: location || "hand", 
+            controller: player || "self"
+        }
+    }
 }
 
 //Amber movement effects are also worded in more complex ways
@@ -255,14 +281,14 @@ Self = "$this"
 UpgradedCreature = "this creature"i {return {mode: "upgradedCreature"}}
 CardTarget = targetCount:CardTargetCount  _ other:OtherSpecifier? _ damaged:DamagedSpecifier? _ controller:ControllerSpecifier? _ neighbor:NeighborSpecifier? _ flank:FlankSpecifier? _ house:HouseSpecifier? _ base:BaseCardTarget _ nonFlank:NonFlankSpecifier? _ hasAmber:HasAmberSpecifier? {
 	return Object.assign({
-    	type: base.type != null ? base.type : "creature",
+    	type: base.type,
         controller: controller, 
         conditions: [other, damaged, neighbor, flank, nonFlank, house, hasAmber].concat(base.conditions).filter(x => x !== null)
     }, targetCount)
 }
 
 BaseCardTarget = trait:TraitSpecifier? _ house:HouseSpecifier? _ type:CardType {return{type, conditions:[trait, house]};} /
-	t:TraitSpecifier {return{conditions:[t], type:null};}
+	t:TraitSpecifier {return{conditions:[t], type:"creature"};}
 
 CardTargetCount = EachTarget / OneTarget / UpToTargets
 EachTarget = ("each"i/"all"i) {return {mode: "all"}}
@@ -307,8 +333,8 @@ House = "brobnar"i / "dis"i / "logos"i / "mars"i / "sanctum"i / "shadows"i / "un
 	return text().replace(" ", "");
 }
 Trait = "mutant"i / "shard"i / "cat"i / "beast"i / "agent"i / "human"i / "scientist"i /"giant"i / "demon"i / "knight"i / "dinosaur"i / "thief"i / "martian"i / "robot"i / "sin"i / "horseman"i
-CardType = type:("action"i / "artifact"i / "creature"i / "upgrade"i) "s"? {
-	return type
+CardType = type:("action"i / "artifact"i / "creature"i / "upgrade"i / "card"i) "s"? {
+	return type.toLowerCase() != 'card' ? type : null;
 }
 
 // Modifiers

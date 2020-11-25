@@ -8,7 +8,9 @@ class SenatorQuintina extends Card {
             when: {
                 onReap: (event) => event.card.type === 'creature'
             },
-            gameAction: ability.actions.exalt()
+            gameAction: ability.actions.exalt((context) => ({
+                target: context.event.card
+            }))
         });
     }
 }

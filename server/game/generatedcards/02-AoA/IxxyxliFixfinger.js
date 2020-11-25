@@ -9,7 +9,7 @@ class IxxyxliFixfinger extends Card {
             targetController: 'any',
             match: (card, context) =>
                 card.type === 'creature' && card !== context.source && card.hasTrait('martian'),
-            effect: ability.effects.modifyArmor({ amount: 1 })
+            effect: ability.effects.modifyArmor(1)
         });
     }
 }

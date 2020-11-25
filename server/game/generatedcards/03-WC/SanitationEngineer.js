@@ -6,11 +6,11 @@ class SanitationEngineer extends Card {
     setupCardAbilities(ability) {
         //Keywords: hazardous 1
         this.reap({
-            gameAction: ability.actions.discard((context) => ({
-                amount: 1,
+            target: {
+                controller: 'self',
                 location: 'hand',
-                target: context.player
-            }))
+                gameAction: ability.actions.discard()
+            }
         });
     }
 }

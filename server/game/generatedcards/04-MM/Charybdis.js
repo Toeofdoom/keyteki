@@ -7,7 +7,10 @@ class Charybdis extends Card {
             targetController: 'opponent',
             match: (card) => card.type === 'creature',
             effect: ability.effects.gainAbility('beforeFight', {
-                gameAction: ability.actions.loseAmber({ amount: 1 })
+                gameAction: ability.actions.loseAmber((context) => ({
+                    amount: 1,
+                    target: context.player
+                }))
             })
         });
     }
