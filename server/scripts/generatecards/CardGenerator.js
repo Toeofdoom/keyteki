@@ -171,30 +171,71 @@ function isComplete(abilities) {
     }
 }
 
-function sortEffects(effects, then) {
+function sortEffects(effects) {
     //This function will need to get smarter to support other cards.
-    let sortedEffects = {
+    //Actual rules should be:
+    //Sentence by sentence.
+    //Some sentences combine.
+    // * Choose + effect. (Probably combined in parser?)
+    // * Something + instead.
+    // * Damage sentences (e.g. they're everywhere.)
+    // Effects will be chained using Then.
+    let firstEffect = {
         optional: false,
         targets: [],
         default: [],
-        then: [],
+        then: null,
         unknown: []
     };
-    for (let effect of effects) {
-        let targetted = effect.target && effect.target != '$this' && effect.target.mode !== 'all';
-        if (effect.then && !then) {
-            sortedEffects.then.push(effect);
-        } else {
-            if (effect.optional) sortedEffects.optional = true;
 
-            if (targetted) {
-                sortedEffects.targets.push(effect);
+    let lastEffect = firstEffect;
+
+    for (let effect of effects) {
+        if (isReplacementEffect(effect)) {
+            //Handle replacement effect logic?
+        } else {
+            let previousEffects = lastEffect.targets.concat(lastEffect.default);
+            if (
+                effect.then ||
+                (previousEffects.length > 0 &&
+                    !(isDamageEffect(effect) && previousEffects.some(isDamageEffect)) &&
+                    isTargetted(effect))
+            ) {
+                let newEffect = {
+                    optional: false,
+                    targets: [],
+                    default: [],
+                    then: null,
+                    unknown: [],
+                    alwaysTriggers: !effect.then
+                };
+                lastEffect.then = newEffect;
+                lastEffect = newEffect;
+            }
+            if (effect.optional) lastEffect.optional = true;
+            if (isTargetted(effect)) {
+                lastEffect.targets.push(effect);
             } else {
-                sortedEffects.default.push(effect);
+                lastEffect.default.push(effect);
             }
         }
     }
-    return sortedEffects;
+    return firstEffect;
+}
+
+function isDamageEffect(effect) {
+    return effect.name === 'dealDamage';
+}
+
+function isReplacementEffect(effect) {
+    return effect.name === 'instead'; //Not implemented yet
+}
+
+function isTargetted(effect) {
+    let untargettedModes = ['all', 'self', 'trigger'];
+    return (
+        effect.target && effect.target != '$this' && !untargettedModes.includes(effect.target.mode)
+    );
 }
 
 module.exports = CardGenerator;

@@ -12,13 +12,9 @@ class YxiloBolter extends Card {
             then: {
                 condition: (context) =>
                     context.preThenEvent.destroyEvent && context.preThenEvent.destroyEvent.resolved,
-                target: {
-                    mode: 'trigger',
-                    numCards: '',
-                    gameAction: ability.actions.purge((context) => ({
-                        target: context.event.card
-                    }))
-                }
+                gameAction: ability.actions.purge((context) => ({
+                    target: context.event.card
+                }))
             }
         });
     }

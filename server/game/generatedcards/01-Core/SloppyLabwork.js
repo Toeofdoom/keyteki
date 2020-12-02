@@ -5,13 +5,14 @@ class SloppyLabwork extends Card {
     //
     setupCardAbilities(ability) {
         this.play({
-            targets: {
-                target1: {
-                    controller: 'self',
-                    location: 'hand',
-                    gameAction: ability.actions.archive()
-                },
-                target2: {
+            target: {
+                controller: 'self',
+                location: 'hand',
+                gameAction: ability.actions.archive()
+            },
+            then: {
+                alwaysTriggers: true,
+                target: {
                     controller: 'self',
                     location: 'hand',
                     gameAction: ability.actions.discard()

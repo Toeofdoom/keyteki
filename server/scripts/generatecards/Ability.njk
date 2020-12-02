@@ -27,7 +27,7 @@ this.reaction({
 {%- for extraTrigger in ability.extraTriggers %}
     {{extraTrigger | lower}}: true,
 {%- endfor %}
-    {{formatEffects(ability.effect) | indent(4)}}
+    {{formatEffects(ability.effect | sortEffects) | indent(4)}}
 }
 {%- endmacro -%}
 
@@ -72,16 +72,15 @@ this.reaction({
 {# Sorts out effects that may be targetted or untargeted, sequential or interdependent. 
 
  The rule regarding resolving one sentence at a time, except for damage and replacement effects etc. is not implemented yet - and many existing cards don't follow it anyway. In particular, this doesn't generate any unconditional "thens" using alwaysTriggers #}
-{%- macro formatEffects(effects, then = false) -%}
-{%- set effectGroups = effects | sortEffects(then) -%}
+{%- macro formatEffects(effects) -%}
 {%- set j = joiner(",\n") -%}
 {# Targetted effects #}
-{%- if effectGroups.optional -%}
+{%- if effects.optional -%}
 {{j()}}optional: true
 {%- endif -%}
-{%- if effectGroups.targets.length > 1 -%}
+{%- if effects.targets.length > 1 -%}
 {{j()}}targets: {
-{%- for target in effectGroups.targets %}
+{%- for target in effects.targets %}
     {{- formatCondition(target) -}}
     target{{loop.index}}: {
         {{formatTarget(target) | indent(8) -}}
@@ -89,29 +88,32 @@ this.reaction({
     }{{"," if not loop.last }}
 {%- endfor %}
 }
-{%- elif effectGroups.targets.length == 1 -%}
+{%- elif effects.targets.length == 1 -%}
 {{j()}}
-    {%- if effectGroups.targets[0].condition != null -%}
-{{- formatCondition(effectGroups.targets[0]) -}}
+    {%- if effects.targets[0].condition != null -%}
+{{- formatCondition(effects.targets[0]) -}}
     {%- endif -%}
 target: {
-    {{formatTarget(effectGroups.targets[0]) | indent(4) -}}
-    gameAction: {{formatSingleEffect(effectGroups.targets[0]) | indent(4)}}
+    {{formatTarget(effects.targets[0]) | indent(4) -}}
+    gameAction: {{formatSingleEffect(effects.targets[0]) | indent(4)}}
 }
 {%- endif -%}
 {# Untargetted effects #}
-{%- if effectGroups.default.length > 0 -%}
-{{- formatCondition(effectGroups.default[0]) -}}{# Should really be splitting a group if any have conditions #}
-{{- j()}}gameAction: {{formatEffectArray(effectGroups.default)}}
+{%- if effects.default.length > 0 -%}
+{{- formatCondition(effects.default[0]) -}}{# Should really be splitting a group if any have conditions #}
+{{- j()}}gameAction: {{formatEffectArray(effects.default)}}
 {%- endif -%}
 {# Dependent effects #}
-{%- if effectGroups.then.length > 0 -%}
+{%- if effects.then != null-%}
 {{j()}}then: {
-    {{formatEffects(effectGroups.then, true) | indent(4) }}
+    {%- if effects.then.alwaysTriggers %}
+    alwaysTriggers: true,
+    {%- endif %}
+    {{formatEffects(effects.then) | indent(4) }}
 }
 {%- endif -%}
 {# Stuff we can't format yet #}
-{%- for unknownEffect in effectGroups.unknown %}
+{%- for unknownEffect in effects.unknown %}
 /*Unsupported combinations: {{unknownEffect | dump(2) }}*/
 {%- endfor -%}
 {%- endmacro -%}
@@ -343,6 +345,9 @@ condition: /* {{effect.condition | dump(2)}} */
 
 {%- macro eventCondition(trigger, card = "event.card") -%}
 {%- set c = cardConditionInternal(trigger.card, null, true, true, card) -%}
+{%- if trigger.condition == "during your turn" -%}
+{%- set c = c.concat(' && context.player === this.game.activePlayer') -%}{#TODO Add a proper condition handling system#}
+{%- endif -%}
 ({{"event" if c.includes("event") }}{{", context" if c.includes("context") }}) => {{ c }},
 {%- endmacro -%}
 
@@ -350,5 +355,5 @@ condition: /* {{effect.condition | dump(2)}} */
 when: {
     {{whenTriggers(reaction.trigger)}}
 },
-gameAction: {{formatSingleEffect(reaction.effect)}}
+{{formatEffects([reaction.effect] | sortEffects)}}
 {%- endmacro -%}

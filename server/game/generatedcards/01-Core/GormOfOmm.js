@@ -5,13 +5,16 @@ class GormOfOmm extends Card {
     //
     setupCardAbilities(ability) {
         this.omni({
-            target: {
-                cardType: 'artifact',
-                gameAction: ability.actions.destroy()
-            },
             gameAction: ability.actions.destroy((context) => ({
                 target: context.source
-            }))
+            })),
+            then: {
+                alwaysTriggers: true,
+                target: {
+                    cardType: 'artifact',
+                    gameAction: ability.actions.destroy()
+                }
+            }
         });
     }
 }
