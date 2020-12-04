@@ -11,7 +11,7 @@ class Tolas extends Card {
             },
             gameAction: ability.actions.gainAmber((context) => ({
                 amount: 1,
-                target: context.target.controller.opponent
+                target: context.event.clone.controller.opponent
             }))
         });
     }

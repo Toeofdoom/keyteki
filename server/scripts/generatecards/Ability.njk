@@ -245,7 +245,7 @@ onCardDestroyed: {{eventCondition(trigger, refs | check('event.clone'))}}
     {%- elif targetPlayer === 'opponent' -%}
 {{j()}}target: context.player.opponent
     {%- elif targetPlayer === 'owner' -%}
-{{j()}}target: {{refs.it}}.owner{#Should really have context-based card variable#}
+{{j()}}target: {{refs.it}}.owner
     {%- elif targetPlayer === 'controllerOpponent' -%}
 {{j()}}target: {{refs.it}}.controller.opponent
     {%- else -%}
@@ -336,5 +336,11 @@ condition: /* {{effect.condition | dump(2)}} */
 when: {
     {{whenTriggers(reaction.trigger, refs)}}
 },
-{{formatEffects([reaction.effect] | sortEffects, refs)}}
+{% if reaction.trigger.trigger == "fight" -%}
+{{formatEffects([reaction.effect] | sortEffects, refs | itIs('context.event.attacker'))}}
+{%- elif reaction.trigger.trigger == "destroyed" -%}
+{{formatEffects([reaction.effect] | sortEffects, refs | itIs('context.event.clone'))}}
+{%- else -%}
+{{formatEffects([reaction.effect] | sortEffects, refs | itIs('context.event.card'))}}
+{%- endif-%}
 {%- endmacro -%}

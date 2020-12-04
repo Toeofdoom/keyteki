@@ -11,7 +11,7 @@ class AmberImp extends Card {
                 onReap: (event) => event.card.type === 'creature'
             },
             gameAction: ability.actions.stun((context) => ({
-                target: context.target
+                target: context.event.card
             }))
         });
     }

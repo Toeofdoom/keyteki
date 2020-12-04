@@ -10,7 +10,7 @@ class PipPip extends Card {
                     event.card.controller !== context.player && event.card.type === 'creature'
             },
             gameAction: ability.actions.stun((context) => ({
-                target: context.target
+                target: context.event.card
             }))
         });
     }
