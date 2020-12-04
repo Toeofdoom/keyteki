@@ -12,9 +12,7 @@ class Ghostform extends Card {
         this.whileAttached({
             effect: ability.effects.gainAbility('fight', {
                 reap: true,
-                gameAction: ability.actions.archive((context) => ({
-                    target: context.source
-                }))
+                gameAction: ability.actions.archive({ target: this })
             })
         });
     }

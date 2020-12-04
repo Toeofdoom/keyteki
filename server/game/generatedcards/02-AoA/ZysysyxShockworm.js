@@ -10,7 +10,7 @@ class ZysysyxShockworm extends Card {
                     event.card.controller !== context.player && event.card.type === 'creature'
             },
             gameAction: ability.actions.stun((context) => ({
-                target: context.event.card
+                target: context.target
             }))
         });
     }

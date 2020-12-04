@@ -9,7 +9,7 @@ class OrbOfInvidius extends Card {
                 onReap: (event) => event.card.type === 'creature'
             },
             gameAction: ability.actions.stun((context) => ({
-                target: context.event.card
+                target: context.target
             }))
         });
     }

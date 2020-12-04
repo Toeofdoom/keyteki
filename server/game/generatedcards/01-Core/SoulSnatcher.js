@@ -9,7 +9,7 @@ class SoulSnatcher extends Card {
             },
             gameAction: ability.actions.gainAmber((context) => ({
                 amount: 1,
-                target: context.event.card.owner
+                target: context.target.owner
             }))
         });
     }

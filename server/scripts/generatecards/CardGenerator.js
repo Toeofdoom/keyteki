@@ -64,6 +64,9 @@ class CardGenerator {
             autoescape: false
         });
         env.addFilter('sortEffects', sortEffects);
+        env.addFilter('upgradeRefs', upgradeRefs);
+        env.addFilter('itIs', itIs);
+        env.addFilter('check', check);
 
         console.log('Card information loaded');
         for (let card of cards) {
@@ -73,7 +76,8 @@ class CardGenerator {
                 card: card,
                 abilities: this.parseAbilities(simplifiedText),
                 text: simplifiedText.split(/[\n\r]+/g),
-                comments: this.comments
+                comments: this.comments,
+                refs: baseRefs()
             };
 
             if (data.abilities == null) {
@@ -236,6 +240,26 @@ function isTargetted(effect) {
     return (
         effect.target && effect.target != '$this' && !untargettedModes.includes(effect.target.mode)
     );
+}
+
+function baseRefs() {
+    return {
+        this: 'context.source',
+        it: 'context.target',
+        check: 'card'
+    };
+}
+
+function upgradeRefs(refs) {
+    return Object.assign({}, refs, { this: 'this' });
+}
+
+function itIs(refs, it) {
+    return Object.assign({}, refs, { it: it });
+}
+
+function check(refs, card) {
+    return Object.assign({}, refs, { check: card });
 }
 
 module.exports = CardGenerator;

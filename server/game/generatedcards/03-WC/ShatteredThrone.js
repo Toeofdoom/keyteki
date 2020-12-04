@@ -8,7 +8,7 @@ class ShatteredThrone extends Card {
                 onFight: (event) => event.attacker.type === 'creature'
             },
             gameAction: ability.actions.capture((context) => ({
-                target: context.event.card,
+                target: context.target,
                 amount: 1
             }))
         });

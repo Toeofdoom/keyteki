@@ -9,7 +9,7 @@ class {{ name }} extends Card {
 {%- endif %}
     setupCardAbilities(ability) {
         {%- for ability in abilities %}
-        {{Ability.formatAbility(ability) | indent(8)}}
+        {{Ability.formatAbility(ability, refs) | indent(8)}}
         {%- endfor %}
     }
 {%- if comments == "all" %}

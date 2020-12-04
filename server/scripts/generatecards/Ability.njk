@@ -1,16 +1,16 @@
 {# Formats any type of ability#}
-{%- macro formatAbility(ability) -%}
+{%- macro formatAbility(ability, refs) -%}
 {%- if (ability.name == 'bold') -%}
-this.{{ability.trigger}}({{boldAbility(ability)}});
+this.{{ability.trigger}}({{boldAbility(ability, refs)}});
 {%- elif (ability.name == 'persistentEffect') -%}
     {%- if ability.target.mode == "upgradedCreature"-%}
-this.whileAttached({{persistentEffect(ability)}});
+this.whileAttached({{persistentEffect(ability, refs | upgradeRefs)}});
     {%- else -%}
-this.persistentEffect({{persistentEffect(ability)}});
+this.persistentEffect({{persistentEffect(ability, refs)}});
     {%- endif -%}
 {%- elif ability.name == 'reaction' -%}
 this.reaction({
-    {{formatReaction(ability) | indent(4)}}
+    {{formatReaction(ability, refs) | indent(4)}}
 });
 {%- elif ability.name == 'keywords' -%}
 //Keywords: {% for k in ability.keywords -%}
@@ -22,17 +22,17 @@ this.reaction({
 {%- endmacro -%}
 
 {# Bold abilities - these have simple triggers and often have targets. #}
-{%- macro boldAbility(ability) -%}
+{%- macro boldAbility(ability, refs) -%}
 {
 {%- for extraTrigger in ability.extraTriggers %}
     {{extraTrigger | lower}}: true,
 {%- endfor %}
-    {{formatEffects(ability.effect | sortEffects) | indent(4)}}
+    {{formatEffects(ability.effect | sortEffects, refs) | indent(4)}}
 }
 {%- endmacro -%}
 
 {# Persistent effects - WIP #}
-{%- macro persistentEffect(ability) -%}
+{%- macro persistentEffect(ability, refs) -%}
 {
 {%- if ability.effects[0].name.includes("entersPlay") %}
     location: 'any',
@@ -42,37 +42,18 @@ this.reaction({
 {%- elif ability.target.controller == 'opponent' %}
     targetController: 'opponent',
 {%- endif -%}
-{%- set c = cardConditionInternal(ability.target, checkType=true) -%}
+{%- set c = cardConditionInternal(ability.target, refs, checkType=true) -%}
 {%- if c.length > 0 %}
     match: (card{{", context" if c.includes("context") }}) => {{c}},
 {%- endif %}
-    effect: {{formatEffectArray(ability.effects) | indent(4) }}
-}
-{%- endmacro -%}
-
-{# Upgrade effects - will probably be merged with persistent effects? #}
-{%- macro upgradeAbility(ability) -%}
-{
-    effect: [
-        {% set j = joiner(",\n"|indent(8)) -%}
-{%- for effect in ability.gets -%}
-        {{j()}}{{ formatSingleEffect(effect) | indent(8) }}
-{%- endfor -%}
-{%- for effect in ability.gains -%}
-    {%- if effect.name == 'bold' -%}
-        {{j()}}ability.effects.gainAbility('{{effect.trigger}}', {{ boldAbility(effect) | indent(8) }})
-    {%- elif effect.name == 'keywords' -%}
-        {{j()}}{{ gainKeywords(effect) | indent(8) }}
-    {%- endif -%}
-{%- endfor %}
-    ]
+    effect: {{formatEffectArray(ability.effects, refs) | indent(4) }}
 }
 {%- endmacro -%}
 
 {# Sorts out effects that may be targetted or untargeted, sequential or interdependent. 
 
  The rule regarding resolving one sentence at a time, except for damage and replacement effects etc. is not implemented yet - and many existing cards don't follow it anyway. In particular, this doesn't generate any unconditional "thens" using alwaysTriggers #}
-{%- macro formatEffects(effects) -%}
+{%- macro formatEffects(effects, refs) -%}
 {%- set j = joiner(",\n") -%}
 {# Targetted effects #}
 {%- if effects.optional -%}
@@ -81,27 +62,27 @@ this.reaction({
 {%- if effects.targets.length > 1 -%}
 {{j()}}targets: {
 {%- for target in effects.targets %}
-    {{- formatCondition(target) -}}
+    {{- formatCondition(target, refs) -}}
     target{{loop.index}}: {
-        {{formatTarget(target) | indent(8) -}}
-        gameAction: {{formatSingleEffect(target) | indent(8)}}
+        {{formatTarget(target, refs) | indent(8) -}}
+        gameAction: {{formatSingleEffect(target, refs) | indent(8)}}
     }{{"," if not loop.last }}
 {%- endfor %}
 }
 {%- elif effects.targets.length == 1 -%}
 {{j()}}
     {%- if effects.targets[0].condition != null -%}
-{{- formatCondition(effects.targets[0]) -}}
+{{- formatCondition(effects.targets[0], refs) -}}
     {%- endif -%}
 target: {
-    {{formatTarget(effects.targets[0]) | indent(4) -}}
-    gameAction: {{formatSingleEffect(effects.targets[0]) | indent(4)}}
+    {{formatTarget(effects.targets[0], refs) | indent(4) -}}
+    gameAction: {{formatSingleEffect(effects.targets[0], refs) | indent(4)}}
 }
 {%- endif -%}
 {# Untargetted effects #}
 {%- if effects.default.length > 0 -%}
-{{- formatCondition(effects.default[0]) -}}{# Should really be splitting a group if any have conditions #}
-{{- j()}}gameAction: {{formatEffectArray(effects.default)}}
+{{- formatCondition(effects.default[0], refs) -}}{# Should really be splitting a group if any have conditions #}
+{{- j()}}gameAction: {{formatEffectArray(effects.default, refs)}}
 {%- endif -%}
 {# Dependent effects #}
 {%- if effects.then != null-%}
@@ -109,7 +90,7 @@ target: {
     {%- if effects.then.alwaysTriggers %}
     alwaysTriggers: true,
     {%- endif %}
-    {{formatEffects(effects.then) | indent(4) }}
+    {{formatEffects(effects.then, refs) | indent(4) }}
 }
 {%- endif -%}
 {# Stuff we can't format yet #}
@@ -118,20 +99,20 @@ target: {
 {%- endfor -%}
 {%- endmacro -%}
 
-{%- macro formatEffectArray(effects) -%}
+{%- macro formatEffectArray(effects, refs) -%}
 {%- if effects.length > 1 -%}
 [
     {%- for e in effects %}
-    {{ formatSingleEffect(e) | indent(4) }}{{"," if not loop.last }}
+    {{ formatSingleEffect(e, refs) | indent(4) }}{{"," if not loop.last }}
     {%- endfor %}
 ]
 {%- elif effects.length == 1 -%}
-{{ formatSingleEffect(effects[0]) }}
+{{ formatSingleEffect(effects[0], refs) }}
 {%- endif %}
 {%- endmacro -%}
 
 {# Targetting options setup #}
-{%- macro formatTarget(effect) -%}
+{%- macro formatTarget(effect, refs) -%}
 {%- if effect.target.mode != "exactly" -%}
 mode: '{{effect.target.mode}}',
 {% endif -%}
@@ -147,7 +128,7 @@ controller: '{{effect.target.controller}}',
 {%- if effect.target.location != null -%}
 location: '{{effect.target.location}}',
 {% endif -%}
-{%- set c = cardConditionInternal(effect.target, effect) -%}
+{%- set c = cardConditionInternal(effect.target, refs, effect) -%}
 {%- if c.length > 0 -%}
 cardCondition: (card{{", context" if c.includes("context") }}) => {{ c }},
 {% endif -%}
@@ -155,14 +136,14 @@ cardCondition: (card{{", context" if c.includes("context") }}) => {{ c }},
 
 {# Individual effect implementations - mostly just calls the matching function, but
 there are some exceptions. #}
-{%- macro formatSingleEffect(effect) -%}
+{%- macro formatSingleEffect(effect, refs) -%}
     {%- if ['gainAmber','stealAmber','gainChains','draw'].includes(effect.name) -%}
-ability.actions.{{effect.name}}({{ formatParams(effect, defaultPlayerTarget='self') }})
+ability.actions.{{effect.name}}({{ formatParams(effect, refs, defaultPlayerTarget='self') }})
     {%- elif ['loseAmber', 'discardAtRandom'].includes(effect.name) -%}
-ability.actions.{{effect.name}}({{ formatParams(effect, defaultPlayerTarget='opponent') }})
+ability.actions.{{effect.name}}({{ formatParams(effect, refs, defaultPlayerTarget='opponent') }})
     {%- elif effect.name == 'gainAbility' -%}
         {%- if effect.ability.name == 'bold' -%}
-ability.effects.gainAbility('{{effect.ability.trigger}}', {{ boldAbility(effect.ability) }})
+ability.effects.gainAbility('{{effect.ability.trigger}}', {{ boldAbility(effect.ability, refs) }})
         {%- endif -%}
     {%- elif effect.name == 'gainKeywords' -%}
 ability.effects.addKeyword({ 
@@ -182,9 +163,9 @@ ability.actions.sequential([
 ])
     {%- elif ['forRemainderOfTurn'].includes(effect.name) -%}
         {%- if effect.durationEffect.name == "reaction" or effect.durationEffect.target == null -%}
-ability.actions.{{effect.name}}({{formatParams(effect, allowContext=false)}})
+ability.actions.{{effect.name}}({{formatParams(effect, refs, allowContext=false)}})
         {%- else -%}
-ability.actions.cardLastingEffect({{formatParams(effect.durationEffect)}})
+ability.actions.cardLastingEffect({{formatParams(effect.durationEffect, refs)}})
         {%- endif -%}
     {%- elif ['entersPlayReady', 'entersPlayStunned'].includes(effect.name) -%}
 ability.effects.{{effect.name}}()
@@ -193,13 +174,13 @@ ability.effects.{{effect.name}}({{effect.amount}})
     {%- elif effect.name == 'unknown' -%}
 /*{{effect | dump(2) }}*/
     {%- else -%}
-ability.actions.{{effect.name}}({{formatParams(effect)}})
+ability.actions.{{effect.name}}({{formatParams(effect, refs)}})
     {%- endif -%}
 {%- endmacro -%}
 
 {# Parameters #}
-{%- macro formatParams(ability, defaultPlayerTarget=null, allowContext=true) -%}
-{%- set params = formatParamsInternal(ability, defaultPlayerTarget) -%}
+{%- macro formatParams(ability, refs, defaultPlayerTarget=null, allowContext=true) -%}
+{%- set params = formatParamsInternal(ability, refs, defaultPlayerTarget) -%}
 {%- if params.includes("context") and allowContext -%}
 (context) => ({
     {{ params | indent(4) }}
@@ -213,34 +194,34 @@ ability.actions.{{effect.name}}({{formatParams(effect)}})
 {%- endif -%}
 {%- endmacro -%}
 
-{%- macro whenTriggers(trigger) -%}
+{%- macro whenTriggers(trigger, refs) -%}
 {%- if trigger.trigger == "reap" -%}
-onReap: {{eventCondition(trigger)}}
+onReap: {{eventCondition(trigger, refs | check('event.card'))}}
 {%- elif trigger.trigger == "play" -%}
-onCardPlayed: {{eventCondition(trigger)}}
+onCardPlayed: {{eventCondition(trigger, refs | check('event.card'))}}
 {%- elif trigger.trigger == "fight" -%}
-onFight: {{eventCondition(trigger, 'event.attacker')}}
+onFight: {{eventCondition(trigger, refs | check('event.attacker'))}}
 {%- elif trigger.trigger == "destroyed" -%}
-onCardDestroyed: {{eventCondition(trigger, 'event.clone')}}
+onCardDestroyed: {{eventCondition(trigger, refs | check('event.clone'))}}
 {%- else -%}
 {{ability.durationEffect | dump(2)}}
 {%- endif -%}
 {%- endmacro-%}
 
-{%- macro formatParamsInternal(ability, defaultPlayerTarget=null) -%}
+{%- macro formatParamsInternal(ability, refs, defaultPlayerTarget=null) -%}
 {%- set j = joiner(',\n') -%}
 {%- if ability.target != null and ability.target.mode == "all" -%}
-{{j()}}target: context.game.{{ability.target.type}}sInPlay{{cardFilter(ability.target)}}
+{{j()}}target: context.game.{{ability.target.type}}sInPlay{{cardFilter(ability.target, refs)}}
 {%- endif -%}
 {%- if ability.target == "$this" -%}
-{{j()}}target: context.source
+{{j()}}target: {{refs.this}}
 {%- endif -%}
 {%- if ability.target.mode == "trigger" -%}
-{{j()}}target: context.event.card
+{{j()}}target: {{refs.it}}
 {%- endif -%}
 {%- if ability.durationEffect != null -%}
     {%- if ability.durationEffect.name == "reaction" -%}
-{{formatReaction(ability.durationEffect)}}
+{{formatReaction(ability.durationEffect, refs)}}
     {%- else -%}
 {{ability.durationEffect | dump(2)}}
     {%- endif -%}
@@ -264,23 +245,23 @@ onCardDestroyed: {{eventCondition(trigger, 'event.clone')}}
     {%- elif targetPlayer === 'opponent' -%}
 {{j()}}target: context.player.opponent
     {%- elif targetPlayer === 'owner' -%}
-{{j()}}target: context.event.card.owner{#Should really have context-based card variable#}
+{{j()}}target: {{refs.it}}.owner{#Should really have context-based card variable#}
     {%- elif targetPlayer === 'controllerOpponent' -%}
-{{j()}}target: context.event.card.controller.opponent
+{{j()}}target: {{refs.it}}.controller.opponent
     {%- else -%}
 {{j()}}target: /* {{targetPlayer | dump}} */
     {%- endif -%}
 {%- endif -%}
 {%- if ability.effects != null -%}
-{{j()}}effect: {{formatEffectArray(ability.effects) }}
+{{j()}}effect: {{formatEffectArray(ability.effects, refs) }} /*{{refs | dump}}*/
 {%- endif -%}
 {%- endmacro -%}
 
 {# card condition checks #}
 {# Card condition requires context if something checks it #}
 {# Card filter already has context #}
-{%- macro cardFilter(target) -%}
-{%- set c = cardConditionInternal(target, null, true) -%}
+{%- macro cardFilter(target, refs) -%}
+{%- set c = cardConditionInternal(target, refs, null, true) -%}
 {%- if c.length > 0 -%}
 .filter(
     (card) => {{c}}
@@ -288,50 +269,50 @@ onCardDestroyed: {{eventCondition(trigger, 'event.clone')}}
 {%- endif -%}
 {%- endmacro -%}
 
-{%- macro cardConditionInternal(target, effect=null, checkController = false, checkType = false, card = 'card') -%}
+{%- macro cardConditionInternal(target, refs, effect=null, checkController = false, checkType = false) -%}
 {% set j = joiner(' && ') -%}
 {%- if effect != null and effect.name == 'use' -%}
-{{j()}}{{card}}.exhausted === false{# Is this required, or inbuilt anyway? #}
+{{j()}}{{refs.check}}.exhausted === false{# Is this required, or inbuilt anyway? #}
 {%- endif -%}
 {%- if target.controller != null and checkController -%}
-{{j()}}{{controllerCondition(target, card)}}
+{{j()}}{{controllerCondition(target, refs)}}
 {%- endif -%}
 {%- if target.eventPlayer != null -%}
 {{j()}}event.player {{ '===' if target.eventPlayer === 'self' else '!==' }} context.player
 {%- endif -%}
 {%- if target.type != null and checkType -%}
-{{j()}}{{card}}.type === '{{target.type}}'
+{{j()}}{{refs.check}}.type === '{{target.type}}'
 {%- endif -%}
 {%- for c in target.conditions -%}
-{{j()}}{{singleCondition(c, card)}}
+{{j()}}{{singleCondition(c, refs)}}
 {%- endfor -%}
 {%- endmacro -%}
 
 {# Individual conditions: #}
-{%- macro singleCondition(condition, card) -%}
+{%- macro singleCondition(condition, refs) -%}
     {%- if condition.name == "not" -%}
-!{{singleCondition(condition.condition, card)}}
+!{{singleCondition(condition.condition, refs)}}
     {%- elif condition.name == "trait" -%}
-{{card}}.hasTrait('{{condition.trait}}')
+{{refs.check}}.hasTrait('{{condition.trait}}')
     {%- elif condition.name == "house" -%}
-{{card}}.hasHouse('{{condition.house}}')
+{{refs.check}}.hasHouse('{{condition.house}}')
     {%- elif condition.name == "flank" -%}
-{{card}}.isOnFlank()
+{{refs.check}}.isOnFlank()
     {%- elif condition.name == "hasAmber" -%}
-{{card}}.hasToken('amber')
+{{refs.check}}.hasToken('amber')
     {%- elif condition.name == "damaged" -%}
-{{card}}.hasToken('damage')
+{{refs.check}}.hasToken('damage')
     {%- elif condition.name == "neighboring" -%}
-context.source.neighbors.includes({{card}})
+context.source.neighbors.includes({{refs.check}})
     {%- elif condition.name == "other" -%}
-{{card}} !== context.source
+{{refs.check}} !== context.source
     {%- else -%}
 /*{{ effect | dump(2)}}*/
     {%- endif -%}
 {%- endmacro -%}
 
-{%- macro controllerCondition(target, card) -%}
-{{card}}.controller {{'===' if target.controller === 'self' else '!==' }} context.player
+{%- macro controllerCondition(target, refs) -%}
+{{refs.check}}.controller {{'===' if target.controller === 'self' else '!==' }} context.player
 {%- endmacro -%}
 
 {%- macro formatCondition(effect)-%}
@@ -343,17 +324,17 @@ condition: /* {{effect.condition | dump(2)}} */
 {% endif -%}
 {%- endmacro -%}
 
-{%- macro eventCondition(trigger, card = "event.card") -%}
-{%- set c = cardConditionInternal(trigger.card, null, true, true, card) -%}
+{%- macro eventCondition(trigger, refs) -%}
+{%- set c = cardConditionInternal(trigger.card, refs, null, true, true) -%}
 {%- if trigger.condition == "during your turn" -%}
 {%- set c = c.concat(' && context.player === this.game.activePlayer') -%}{#TODO Add a proper condition handling system#}
 {%- endif -%}
 ({{"event" if c.includes("event") }}{{", context" if c.includes("context") }}) => {{ c }},
 {%- endmacro -%}
 
-{%- macro formatReaction(reaction) -%}
+{%- macro formatReaction(reaction, refs) -%}
 when: {
-    {{whenTriggers(reaction.trigger)}}
+    {{whenTriggers(reaction.trigger, refs)}}
 },
-{{formatEffects([reaction.effect] | sortEffects)}}
+{{formatEffects([reaction.effect] | sortEffects, refs)}}
 {%- endmacro -%}

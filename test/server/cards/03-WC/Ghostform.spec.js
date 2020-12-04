@@ -27,5 +27,13 @@ describe('Ghostform', function () {
             expect(this.urchin.location).toBe('play area');
             expect(this.player2).toHavePrompt('Choose a card to play, discard or use');
         });
+
+        it('should go to the archive on reap', function () {
+            this.player2.endTurn();
+            this.player1.clickPrompt('shadows');
+            this.player1.reap(this.urchin);
+            expect(this.urchin.location).toBe('play area');
+            expect(this.ghostform.location).toBe('archive');
+        });
     });
 });

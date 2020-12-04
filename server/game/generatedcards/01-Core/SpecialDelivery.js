@@ -19,7 +19,7 @@ class SpecialDelivery extends Card {
                         context.preThenEvent.destroyEvent &&
                         context.preThenEvent.destroyEvent.resolved,
                     gameAction: ability.actions.purge((context) => ({
-                        target: context.event.card
+                        target: context.target
                     }))
                 }
             }
