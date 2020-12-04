@@ -67,6 +67,7 @@ class CardGenerator {
         env.addFilter('upgradeRefs', upgradeRefs);
         env.addFilter('itIs', itIs);
         env.addFilter('check', check);
+        env.addFilter('then', then);
 
         console.log('Card information loaded');
         for (let card of cards) {
@@ -246,7 +247,9 @@ function baseRefs() {
     return {
         this: 'context.source',
         it: 'context.target',
-        check: 'card'
+        check: 'card',
+        thenDepth: 1,
+        thenContext: 'preThenContext'
     };
 }
 
@@ -260,6 +263,14 @@ function itIs(refs, it) {
 
 function check(refs, card) {
     return Object.assign({}, refs, { check: card });
+}
+
+function then(refs) {
+    let thenDepth = refs.thenDepth + 1;
+    return Object.assign({}, refs, {
+        thenDepth,
+        thenContext: `preThen${thenDepth}Context`
+    });
 }
 
 module.exports = CardGenerator;

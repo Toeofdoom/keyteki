@@ -9,13 +9,11 @@ class YxiloBolter extends Card {
                 cardType: 'creature',
                 gameAction: ability.actions.dealDamage({ amount: 2 })
             },
-            then: {
+            then: (preThenContext) => ({
                 condition: (context) =>
                     context.preThenEvent.destroyEvent && context.preThenEvent.destroyEvent.resolved,
-                gameAction: ability.actions.purge((context) => ({
-                    target: context.target
-                }))
-            }
+                gameAction: ability.actions.purge({ target: preThenContext.target })
+            })
         });
     }
 }

@@ -86,12 +86,13 @@ target: {
 {%- endif -%}
 {# Dependent effects #}
 {%- if effects.then != null-%}
-{{j()}}then: {
+{{ j()}}then: {% call provideParameters(refs.thenContext) %}{
     {%- if effects.then.alwaysTriggers %}
     alwaysTriggers: true,
     {%- endif %}
-    {{formatEffects(effects.then, refs) | indent(4) }}
+    {{formatEffects(effects.then, refs | then | itIs(refs.thenContext + '.target')) | indent(4) }}
 }
+{%- endcall %}
 {%- endif -%}
 {# Stuff we can't format yet #}
 {%- for unknownEffect in effects.unknown %}
@@ -343,4 +344,12 @@ when: {
 {%- else -%}
 {{formatEffects([reaction.effect] | sortEffects, refs | itIs('context.event.card'))}}
 {%- endif-%}
+{%- endmacro -%}
+
+{%- macro provideParameters(parameter) -%}
+{% if caller().includes(parameter) -%}
+({{parameter}}) => ({{caller()}})
+{%- else -%}
+{{caller()}}
+{%- endif -%}
 {%- endmacro -%}

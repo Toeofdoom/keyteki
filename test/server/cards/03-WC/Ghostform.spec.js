@@ -33,7 +33,7 @@ describe('Ghostform', function () {
             this.player1.clickPrompt('shadows');
             this.player1.reap(this.urchin);
             expect(this.urchin.location).toBe('play area');
-            expect(this.ghostform.location).toBe('archive');
+            expect(this.ghostform.location).toBe('archives');
         });
     });
 });

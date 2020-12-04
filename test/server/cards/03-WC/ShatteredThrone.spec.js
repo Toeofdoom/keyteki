@@ -43,6 +43,7 @@ describe('Shattered Throne', function () {
             expect(this.gamgee.amber).toBe(1);
             expect(this.culfTheQuiet.amber).toBe(0);
             expect(this.player1.amber).toBe(2);
+            expect(this.player2.amber).toBe(3);
         });
     });
     describe('Shattered Throne Ability', function () {
