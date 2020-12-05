@@ -9,7 +9,10 @@ class FirstOfficerFrane extends Card {
             target: {
                 cardType: 'creature',
                 controller: 'self',
-                gameAction: ability.actions.capture({ amount: 1 })
+                gameAction: ability.actions.capture((context) => ({
+                    amount: 1,
+                    player: context.target.controller.opponent
+                }))
             }
         });
     }

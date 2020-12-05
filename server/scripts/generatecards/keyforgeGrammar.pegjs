@@ -47,29 +47,34 @@ ThenCondition = condition:(
     }
 }
 
-TimeLimitedEffect = duration:Duration "," _ effect:(PersistentEffect/GeneralTrigger) {
+TimeLimitedEffect = (duration:Duration "," _ effect:(PersistentEffect/GeneralTrigger) {
 	return {name:duration, durationEffect:effect}
-}
+}/effect:PersistentEffect _ duration:Duration {
+	return {name:duration, durationEffect:effect}
+})
 
 Duration = "For the remainder of the turn"i {return "forRemainderOfTurn"} /
-"during your opponent’s next turn"i {return "next"}
+"during your opponent’s next turn"i {return "lastingEffect"} //Technically not a lasting effect
 
 //Persistent effects.
-PersistentEffect = target:(CardTarget/UpgradedCreature)? _ effects:(PersistentPlayerEffect/EntersPlayAbility/CardPersistentEffect) "."? _ ReminderText? {
-    return {name: 'persistentEffect', target, effects}
+PersistentEffect = pe:(
+effects:PersistentPlayerEffect {return effects}
+/target:(GeneralCardTarget/UpgradedCreature)? _ effects:CardPersistentEffect {return {target, effects};}) 
+"."? _ ReminderText? {
+    return Object.assign({name: 'persistentEffect'}, pe)
 }
 
-EntersPlayAbility = Self _ "enter" "s"? " play" _ state:("stunned"i/"ready"i) {
+EntersPlayAbility = "enter" "s"? " play" _ state:("stunned"i/"ready"i) {
 	let effectName = 'entersPlay' + state.charAt(0).toUpperCase() + state.slice(1);
 	return [{name: effectName}]
 }
 
-CardPersistentEffect = a:(GetsStats/GainsAbility) _ "and"i? _ b:GainsAbility? "."? {
+CardPersistentEffect = a:(GetsStats/GainsAbility/EntersPlayAbility) _ "and"i? _ b:GainsAbility? "."? {
 	return (a || []).concat(b || []).filter(x => x !== null)
 }
 
-PersistentPlayerEffect = target: PlayerTarget _ "keys cost " amount:Number "A" {
-	return {name: "modifyKeyCost", target, amount};
+PersistentPlayerEffect = target:PlayerTarget? _ "keys cost "i amount:Number ("<A>"/"A") {
+	return {target: {controller:target || "any"}, effects:[{name: "modifyKeyCost", amount}]};
 }
 
 GeneralTrigger = GeneralPreTrigger/GeneralPostTrigger
@@ -83,11 +88,11 @@ GeneralPostTrigger = targetPlayer:PlayerTarget? _ effect:SingleEffect _ "Each ti
 
 Trigger = PreTrigger / PostTrigger
 
-PreTrigger = eventPlayer:PlayerTarget? _ trigger:"play"i "s"? _ card:CardTarget {
+PreTrigger = eventPlayer:PlayerTarget? _ trigger:"play"i "s"? _ card:GeneralCardTarget {
 	return {trigger, card: Object.assign(card, {eventPlayer})}
 }
 
-PostTrigger =card:CardTarget _ trigger:TriggerType _ condition:"during your turn"? {
+PostTrigger =card:GeneralCardTarget _ trigger:TriggerType _ condition:"during your turn"? {
 	return {trigger, card, condition}
 }
 
@@ -102,9 +107,9 @@ PlayerEffect = target:PlayerTarget? _ effect:(GainAmber / LoseAmber / StealAmber
 	return Object.assign(effect, info);
 }
 
-PlayerTarget = ("Your Opponent"i "'s"? {return "opponent"}
+PlayerTarget = ("Your Opponent"i (['’]?"s"?) {return "opponent"}
 / "You"i "r"? {return "self"}
-/ ("their owners’"i/"each player’s"i) {return null;}
+/ ("their owners’"i/"each player’s"i) {return "any";}
 /"its owner" {return "owner"}
 /"its opponent" {return "controllerOpponent"})
 
@@ -144,12 +149,15 @@ GainChains = "Gain"i "s"? _ amount:Number _ ("chains"/"chain") _ multiplier:Mult
 
 //Card effects
 CardEffect = CardPreEffect/CardPostEffect
-CardPreEffect = effect:(DealDamage / ReadyAndUse / ReadyAndFight / Ready / Use / Destroy / Sacrifice / Purge / Exalt / Ward / Enrage / Stun / Exhaust / ArchiveTarget / Heal) _ target:(Self/CardTarget/ItTarget) {
+CardPreEffect = effect:(DealDamage / ReadyAndUse / ReadyAndFight / Ready / Use / Destroy / Sacrifice / Purge / Exalt / Ward / Enrage / Stun / Exhaust / ArchiveTarget / Heal) _ target:GeneralCardTarget {
 	return Object.assign(effect, {target:target})
 }
 
-CardPostEffect = target:(Self/CardTarget/ItTarget) _ effect:(Captures) {
-	return Object.assign(effect, {target:target})
+CardPostEffect = target:GeneralCardTarget _ effect:(Captures) _ hypnosis:("from" _ ("its"/"their") _"own side")? {
+	return Object.assign(effect, {
+      target, 
+      player: hypnosis != null? 'controller' : 'controllerOpponent'
+    })
 }
 
 Captures = "Captures"i _ amount:Number ("<A>"/"A") {
@@ -217,20 +225,20 @@ ArchiveTarget = "Archive"i {
 }
 
 //"Give" effects
-GiveEffect = "Give" _ target:(Self/CardTarget/ItTarget) _ amount:Number _ "+1 power counters" {
+GiveEffect = "Give" _ target:GeneralCardTarget _ amount:Number _ "+1 power counters" {
 	return  Object.assign({name: 'addPowerCounter', amount}, {target:target})
 }
 
 //Card movement effects - these are worded in more complex ways than other card-related effects.
 MoveCardEffect = MoveFromPlay / DiscardFromHand / ArchiveFromHand
 
-MoveFromPlay = ("Return"i/"Shuffle"i) _ target:(Self/CardTarget/ItTarget) _ "to" _ player:PlayerTarget? _ location:("hand"/"deck") "s"? {
+MoveFromPlay = ("Return"i/"Shuffle"i) _ target:GeneralCardTarget _ "to" _ player:PlayerTarget? _ location:("hand"/"deck") "s"? {
     let name = "returnTo" + location.charAt(0).toUpperCase() + location.slice(1)
     return {name, target} //Ignore player target, assumed for most movement.
 }
 
 
-DiscardFromHand = name:"Discard"i _ target:CardTarget _ "from" _ player:PlayerTarget _ location:("hand"/"deck") "s"? {
+DiscardFromHand = name:"Discard"i _ target:GeneralCardTarget _ "from" _ player:PlayerTarget _ location:("hand"/"deck") "s"? {
     return {
     	name: name.toLowerCase(),
     	target: Object.assign(target, {
@@ -277,6 +285,8 @@ Quote = [\“"”]
 
 
 //Card targetting
+
+GeneralCardTarget = (NeighborTarget/Self/CardTarget/ItTarget)
 Self = "$this"
 UpgradedCreature = "this creature"i {return {mode: "upgradedCreature"}}
 CardTarget = targetCount:CardTargetCount  _ other:OtherSpecifier? _ damaged:DamagedSpecifier? _ controller:ControllerSpecifier? _ neighbor:NeighborSpecifier? _ flank:FlankSpecifier? _ house:HouseSpecifier? _ base:BaseCardTarget _ nonFlank:NonFlankSpecifier? _ hasAmber:HasAmberSpecifier? {
@@ -285,6 +295,12 @@ CardTarget = targetCount:CardTargetCount  _ other:OtherSpecifier? _ damaged:Dama
         controller: controller, 
         conditions: [other, damaged, neighbor, flank, nonFlank, house, hasAmber].concat(base.conditions).filter(x => x !== null)
     }, targetCount)
+}
+NeighborTarget = "Each of $this’"i "s"? _ "neighbors" {
+	return Object.assign({
+    	type: "creature",
+        conditions: [{name: "neighboring"}]
+    })
 }
 
 BaseCardTarget = trait:TraitSpecifier? _ house:HouseSpecifier? _ type:CardType {return{type, conditions:[trait, house]};} /
@@ -355,8 +371,8 @@ ReminderText = _ "(" [^)]+ ")" _ {
 
 //Basics
 Number = ("a"/"one") {return 1;} / "two" {return 2;} / "three" {return 3;} / Integer 
-Integer = sign:[+-]? number:[0-9]+ {
-	return sign == '-' ? -parseInt(text()): parseInt(text());
+Integer = sign:[+\-–]? number:[0-9]+ {
+	return sign == '-' || sign == '–' ? -parseInt(number): parseInt(number);
 }
 
 _ "whitespace" = [  ﻿\u202f]*

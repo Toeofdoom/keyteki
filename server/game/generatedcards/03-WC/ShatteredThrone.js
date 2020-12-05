@@ -9,7 +9,8 @@ class ShatteredThrone extends Card {
             },
             gameAction: ability.actions.capture((context) => ({
                 target: context.event.attacker,
-                amount: 1
+                amount: 1,
+                player: context.event.attacker.controller.opponent
             }))
         });
     }

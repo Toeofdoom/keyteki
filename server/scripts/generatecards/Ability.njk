@@ -37,9 +37,10 @@ this.reaction({
 {%- if ability.effects[0].name.includes("entersPlay") %}
     location: 'any',
 {%- endif -%}
-{%- if ability.target != null and ability.target.controller == null and ability.target.mode == 'all' %}
+{%- if ability.target != null and (ability.target.controller == 'any' or 
+ability.target.controller == null and ability.target.mode == 'all') %}
     targetController: 'any',
-{%- elif ability.target.controller == 'opponent' %}
+{%- elif ability.target != null and ability.target.controller == 'opponent' %}
     targetController: 'opponent',
 {%- endif -%}
 {%- set c = cardConditionInternal(ability.target, refs, checkType=true) -%}
@@ -162,7 +163,7 @@ ability.actions.sequential([
     ability.actions.ready(),
     ability.actions.fight()
 ])
-    {%- elif ['forRemainderOfTurn'].includes(effect.name) -%}
+    {%- elif ['forRemainderOfTurn', 'lastingEffect'].includes(effect.name) -%}
         {%- if effect.durationEffect.name == "reaction" or effect.durationEffect.target == null -%}
 ability.actions.{{effect.name}}({{formatParams(effect, refs, allowContext=false)}})
         {%- else -%}
@@ -170,7 +171,7 @@ ability.actions.cardLastingEffect({{formatParams(effect.durationEffect, refs)}})
         {%- endif -%}
     {%- elif ['entersPlayReady', 'entersPlayStunned'].includes(effect.name) -%}
 ability.effects.{{effect.name}}()
-    {%- elif ['modifyPower', 'modifyArmor'].includes(effect.name) -%}
+    {%- elif ['modifyPower', 'modifyArmor', 'modifyKeyCost'].includes(effect.name) -%}
 ability.effects.{{effect.name}}({{effect.amount}})
     {%- elif effect.name == 'unknown' -%}
 /*{{effect | dump(2) }}*/
@@ -241,22 +242,33 @@ onCardDestroyed: {{eventCondition(trigger, refs | check('event.clone'))}}
 {%- endif -%}
 {%- set targetPlayer = ability.targetPlayer if ability.targetPlayer else 'self' -%}
 {%- if defaultPlayerTarget != null and targetPlayer !== defaultPlayerTarget -%}
-    {%- if targetPlayer === 'self' -%}
-{{j()}}target: context.player
-    {%- elif targetPlayer === 'opponent' -%}
-{{j()}}target: context.player.opponent
-    {%- elif targetPlayer === 'owner' -%}
-{{j()}}target: {{refs.it}}.owner
-    {%- elif targetPlayer === 'controllerOpponent' -%}
-{{j()}}target: {{refs.it}}.controller.opponent
-    {%- else -%}
-{{j()}}target: /* {{targetPlayer | dump}} */
-    {%- endif -%}
+{{j()}}target: {{formatPlayer(targetPlayer, refs)}}
+{%- endif -%}
+{%- if ability.player != null -%}
+{{j()}}player: {{formatPlayer(ability.player, refs)}}
 {%- endif -%}
 {%- if ability.effects != null -%}
 {{j()}}effect: {{formatEffectArray(ability.effects, refs) }} /*{{refs | dump}}*/
 {%- endif -%}
 {%- endmacro -%}
+
+{% macro formatPlayer(targetPlayer, refs) %}
+{%- if targetPlayer === 'self' -%}
+context.player
+{%- elif targetPlayer === 'opponent' -%}
+context.player.opponent
+{%- elif targetPlayer === 'owner' -%}
+{{refs.it}}.owner
+{%- elif targetPlayer === 'ownerOpponent' -%}
+{{refs.it}}.owner.opponent
+{%- elif targetPlayer === 'controller' -%}
+{{refs.it}}.controller
+{%- elif targetPlayer === 'controllerOpponent' -%}
+{{refs.it}}.controller.opponent
+{%- else -%}
+/* {{targetPlayer | dump}} */
+{%- endif -%}
+{% endmacro %}
 
 {# card condition checks #}
 {# Card condition requires context if something checks it #}
