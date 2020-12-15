@@ -43,7 +43,7 @@ _ count:Integer? {
 }
 
 //"Bold" effects (Play, fight, reap, destroyed etc.)
-BoldAbility = trigger:BoldTrigger extraTriggers:("/" t:BoldTrigger {return t;})* ": " effect:TriggeredEffect {
+BoldAbility = trigger:BoldTrigger extraTriggers:("/" t:BoldTrigger {return t;})* ": " effect:ActionList {
 	return {
 		name: 'bold', 
 		trigger, //TODO: Single triggers list.
@@ -85,21 +85,21 @@ PersistentCardEffectList = item:SinglePersistentCardEffect _ items:(_ And _ e:Si
 //General triggers
 GeneralTrigger = SpontaneousTrigger/GeneralPersistentTrigger/GeneralDurationTrigger/PhaseTrigger
 
-//Spontaneous means that ss soon as a condition is met, a certain effect will occur
-SpontaneousTrigger = IfCondition _ TriggeredEffect
+//Spontaneous means that as soon as a condition is met, a certain effect will occur
+SpontaneousTrigger = IfCondition _ ActionList
 
 //Persistent effects typically list the trigger, then the effect. Duration effects typically reverse that.
-GeneralPersistentTrigger = ("Each time"i/"After"i) _ trigger:Trigger "," _ effect:TriggeredEffect [.;]? {
+GeneralPersistentTrigger = ("Each time"i/"After"i) _ trigger:Trigger "," _ effect:ActionList [.;]? {
 	return {name: "reaction", trigger, effect}
 }
-GeneralDurationTrigger = effect:SingleEffect _ "each time"i _ trigger:Trigger {
+GeneralDurationTrigger = effect:SingleAction _ "each time"i _ trigger:Trigger {
 	return {name: "reaction", trigger, effect}
 }
 
 //Phase or turn based triggers use different wording
 PhaseTrigger = "At the"i _ part:("start"/"end") _ "of" _ player:PlayerTarget _ 
 	trigger:("turn"{return null}/"“ready cards” step" {return "onCardsReadied"}) "," 
-	effect:TriggeredEffect [.;]? {
+	effect:ActionList [.;]? {
 	return {
 		name: "reaction", 
 		trigger: {
@@ -152,13 +152,14 @@ UnknownFragment = _ ([^\n\r\u000b.;“] / QuotedSection)+ {
 	return {name: 'unknown', text: text()}
 }
 
-//Triggered effects / actions
-TriggeredEffect = effect:(SingleEffect) ReminderText? ([.;]/_"and")? ReminderText? _ 
-tail:(u:SingleSubsequentEffect [.;]? _ ReminderText? {return u;} )* {
-	return [effect,...tail]
+//Actions
+ActionList = item:SingleAction items:(_ ([.;]/And)? _ u:SingleSubsequentAction  {return u;})* [.;]? {
+	return [item,...items]
 }
 
-SingleEffect = condition:IfCondition? _ optional:"You may"i? _ effect:(
+//TODO: Move time limited effects to the front to support permission effects (e.g. "you may play a non-logos card" )
+//so wording doesn't overlap with the "optional" check.
+SingleAction = condition:IfCondition? _ optional:"You may"i? _ effect:(
 MoveCardEffect / PlayerEffect / CaptureAmber / CardEffect / GiveEffect / MoveAmberEffect 
 / TimeLimitedEffect / ChooseTargetEffect / UnknownEffect) 
 condition2:IfCondition? {
@@ -171,7 +172,7 @@ condition2:IfCondition? {
 
 ChooseTargetEffect = ("Choose a house"i/"Choose"i _ CardTarget)
 
-SingleSubsequentEffect = then:ThenCondition? _ effect:SingleEffect _ replacement:"instead"? {
+SingleSubsequentAction = then:ThenCondition? _ effect:SingleAction _ replacement:"instead"? {
     return Object.assign(effect, then, {replacement:replacement != null})
 }
 
