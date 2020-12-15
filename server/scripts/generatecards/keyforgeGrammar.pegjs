@@ -69,7 +69,7 @@ PersistentPlayerEffect = target:PlayerTarget? _ effect:SinglePersistentPlayerEff
 		target, 
 		effects: [effect]
 	}
-}/SpecialPersistentPlayerEffect //For effects with more unique formats.
+} / SpecialPersistentPlayerEffect //For effects with more unique formats.
 
 PersistentCardEffect = target:GeneralCardTarget? _ effects:PersistentCardEffectList [.;]? {
 	return  {
@@ -83,34 +83,60 @@ PersistentCardEffectList = item:SinglePersistentCardEffect _ items:(_ And _ e:Si
 }
 
 //General triggers
-GeneralTrigger = SpontaneousTrigger/GeneralPreTrigger/GeneralPostTrigger/PhaseTrigger
-GeneralPreTrigger = ("Each time"i/"After"i) _ trigger:Trigger "," _ targetPlayer:PlayerTarget? _ effect:TriggeredEffect [.;]? {
-	return {name: "reaction", trigger, effect: Object.assign(effect, {targetPlayer})}
-}
-GeneralPostTrigger = targetPlayer:PlayerTarget? _ effect:SingleEffect _ "Each time"i _ trigger:Trigger {
-	return {name: "reaction", trigger, effect: Object.assign(effect, {targetPlayer})}
-}
-PhaseTrigger = ("At the"i _ ("start"/"end") _ "of" _ PlayerTarget _ ("turn"/"“ready cards” step"))"," effect:TriggeredEffect [.;]?
+GeneralTrigger = SpontaneousTrigger/GeneralPersistentTrigger/GeneralDurationTrigger/PhaseTrigger
+
+//Spontaneous means that ss soon as a condition is met, a certain effect will occur
 SpontaneousTrigger = IfCondition _ TriggeredEffect
-Trigger = PreTrigger / PostTrigger
 
-PreTrigger = eventPlayer:PlayerTarget? _ t:(
-trigger:("play"i/"use"i/"fight with"i/"reap with"i) "s"? _ card:GeneralCardTarget {return {trigger, card}}
-/"forge" "s"? _ "a key" {return {trigger:"forges"}}) {
-	return Object.assign(t, {eventPlayer});
+//Persistent effects typically list the trigger, then the effect. Duration effects typically reverse that.
+GeneralPersistentTrigger = ("Each time"i/"After"i) _ trigger:Trigger "," _ effect:TriggeredEffect [.;]? {
+	return {name: "reaction", trigger, effect}
+}
+GeneralDurationTrigger = effect:SingleEffect _ "each time"i _ trigger:Trigger {
+	return {name: "reaction", trigger, effect}
 }
 
-PostTrigger = card:GeneralCardTarget _ trigger:TriggerType _ condition:"during your turn"? {
+//Phase or turn based triggers use different wording
+PhaseTrigger = "At the"i _ part:("start"/"end") _ "of" _ player:PlayerTarget _ 
+	trigger:("turn"{return null}/"“ready cards” step" {return "onCardsReadied"}) "," 
+	effect:TriggeredEffect [.;]? {
+	return {
+		name: "reaction", 
+		trigger: {
+			name: trigger || (part == "start" ? "onRoundStarted" : "onRoundEnded"),
+			player,
+		},
+		effect
+	}
+}
+
+//All the actual triggers
+Trigger = PlayerFocusedTrigger / CardFocusedTrigger / PlayerAndCardFocusedTrigger
+
+PlayerFocusedTrigger = eventPlayer:PlayerTarget _ trigger:PlayerTriggerType {
+	return {trigger, eventPlayer};
+}
+
+CardFocusedTrigger = card:GeneralCardTarget _ trigger:CardTriggerType _ condition:"during your turn"? {
 	return {trigger, card, condition}
 }
 
-TriggerType = "is destroyed fighting $this" {return "destroyedFightingThis"}
-/"is destroyed" {return "destroyed"}
-/"reaps" {return "reap"}
-/"is used" {return "used"}
-/("fights"/"is used to fight") {return "fight"}
-/"enters play"
-/"is discarded from" _ playerTarget:PlayerTarget _ "hand" {return "discardedACard"}
+PlayerAndCardFocusedTrigger = eventPlayer:PlayerTarget _ trigger:PlayerCardTriggerType _ 
+	card:GeneralCardTarget {
+	return {trigger, card, eventPlayer};
+}
+
+PlayerTriggerType = "forge" "s"? _ "a key" {return "forges"}
+
+PlayerCardTriggerType = t:("play"i/"use"i/"fight with"i/"reap with"i) "s"? {return t}
+
+CardTriggerType = "is destroyed fighting $this" {return "destroyedFightingThis"}
+	/"is destroyed" {return "destroyed"}
+	/"reaps" {return "reap"}
+	/"is used" {return "used"}
+	/("fights"/"is used to fight") {return "fight"}
+	/"enters play" {return "entersPlay"}
+	/"is discarded from" _ playerTarget:PlayerTarget _ "hand" {return "discardedACard"}
 
 //Reminder text
 ReminderText = _ "(" [^)]+ ")" _ {
@@ -126,7 +152,7 @@ UnknownFragment = _ ([^\n\r\u000b.;“] / QuotedSection)+ {
 	return {name: 'unknown', text: text()}
 }
 
-//???
+//Triggered effects / actions
 TriggeredEffect = effect:(SingleEffect) ReminderText? ([.;]/_"and")? ReminderText? _ 
 tail:(u:SingleSubsequentEffect [.;]? _ ReminderText? {return u;} )* {
 	return [effect,...tail]
