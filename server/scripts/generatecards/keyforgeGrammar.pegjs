@@ -1,13 +1,18 @@
-//Structure
-Lines = line:Line tail:(NewLine l:Line {return l;})* NewLine? 
 {
-	let items = []
-    for(let item of [line, ...tail])
+  function flattenArrays(array) {
+    let items = []
+    for(let item of array)
     	if(!Array.isArray(item))
         	items.push(item)
         else
-        	items = items.concat(item)
+        	items = items.concat(flattenArrays(item))
     return items
+  }
+}
+
+//Structure
+Lines = line:Line tail:(NewLine l:Line {return l;})* NewLine? {
+	return flattenArrays([line, ...tail])
 }
 
 Line = ability:(Keywords / BoldAbility / PersistentEffect / GeneralTrigger / ReminderText / _ )
@@ -66,11 +71,15 @@ PersistentPlayerEffect = target:PlayerTarget? _ effect:SinglePersistentPlayerEff
 	}
 }/SpecialPersistentPlayerEffect //For effects with more unique formats.
 
-PersistentCardEffect = target:GeneralCardTarget? _ a:(SinglePersistentCardEffect) _ "and"i? _ b:SinglePersistentCardEffect? [.;]? {
+PersistentCardEffect = target:GeneralCardTarget? _ effects:PersistentCardEffectList [.;]? {
 	return  {
 		target, 
-		effects:(a || []).concat(b || []).filter(x => x !== null)
+		effects: flattenArrays(effects).filter(x => x !== null)
 	}
+}
+
+PersistentCardEffectList = item:SinglePersistentCardEffect _ items:(_ And _ e:SinglePersistentCardEffect {return e;})* {
+	return [item, ...items]
 }
 
 //General triggers
@@ -162,23 +171,46 @@ Duration = "For the remainder of the turn"i {return "forRemainderOfTurn"} /
 
 
 //Persistent effects
-
+//Persistent player effects
 SinglePersistentPlayerEffect = KeyCost/CantBeStolen
 SpecialPersistentPlayerEffect = ModifyHandSize
 
+//Persistent card effects, including upgrades
 SinglePersistentCardEffect = GetsStats/GainsAbility/EntersPlayAbility/MayBeUsed/CannotEffect/LimitFightDamage
 
+//TODO: Figure out neatest way of dealing with arrays here.
+GetsStats = "gets" _ statChanges:StatChangeList _ multiplier:Multiplier? {
+	return statChanges.map((s) => Object.assign(s, {multiplier}));
+}
+StatChangeList = item:StatChange items:(_ And _ e:StatChange {return e;})* {
+	return [item, ...items]
+}
+StatChange = amount:Number _ stat:("power"i/"armor"i){
+	return {name: "modify"+ stat.charAt(0).toUpperCase() + stat.slice(1), amount};
+}
+
+//"Gains"
+GainsAbility = "gains"i ","? _ ability:GainAbilityList {
+	return ability
+}
+
+GainSingleAbility = keywords:Keywords _{return Object.assign(keywords, {name: "gainKeywords"});} 
+/ Quote ability:BoldAbility Quote {return {name: "gainAbility", ability};}
+
+GainAbilityList = items:(e:GainSingleAbility _ And _ {return e;})* _ item:GainSingleAbility {
+	return [...items, item]
+}
+
+//Enters play
 EntersPlayAbility = "enter" "s"? " play" _ states:CardStateList {
 	return states.map((state) => ({name: 'entersPlay' + state.charAt(0).toUpperCase() + state.slice(1)}))
 }
 
-
+//TODO: Combine with conditions?
 CardState = ("stunned"i/"ready"i/"enraged"i/"exhausted"i)
-CardStateList = effects:(e:CardState ("," _ "and"/ _"and"/",") _ {return e;})* _ lastEffect:CardState {
-	return [...effects, lastEffect]
+CardStateList = items:(i:CardState _ And _ {return i;})* _ item:CardState {
+	return [...items, item]
 }
-
-
 
 CannotEffect = "cannot" _ effect:("reap"/"fight"/"be used"/"be dealt damage") {return [{name:"cannot",effect}];}
 LimitFightDamage = "only deals" _ amount:Number "D when fighting" {return [{name:"limitFightDamage",amount}];}
@@ -414,20 +446,8 @@ destination:("the common supply"/PlayerTarget _ "pool"/GeneralCardTarget) {
 	return {name: "removeAmber", all:amount == "each", amount, destination};
 }/"Move"i _ amount:("each"/Number) _ "A" _ ("on"/"from") _ GeneralCardTarget _ "to" _ PlayerTarget _ "pool"
 
-//Upgrades
-GainsAbility = "gains"i ","? _ ability:(
-keywords:Keywords "and,"? _{return {name: "gainKeywords", keywords: keywords.keywords};} / 
-Quote bold:BoldAbility Quote {return {name: "gainAbility", ability:bold};} )+ {
-	return ability
-}
 
-GetsStats = "gets" _ statChanges:(stat:StatChange _ "and"? _ {return stat;})+ _ multiplier:Multiplier? {
-	return statChanges.map((s) => Object.assign(s, {multiplier}));
-}
 
-StatChange = amount:Number _ stat:("power"i/"armor"i){
-	return {name: "modify"+ stat.charAt(0).toUpperCase() + stat.slice(1), amount};
-}
 
 MayBeUsed = e:MayFight {return [e]}
 MayFight = "may fight" { return {name: 'mayFight'}; }
@@ -567,3 +587,15 @@ Integer = sign:[+\-–]? number:[0-9]+ {
 _ "whitespace" = [  ﻿\u202f]*
 
 QuotedSection = "“" [^”“]+ [“”]
+
+/* Pattern - matching comma/and/or based lists:
+ThingList = items:(e:Thing _ And _ {return e;})* _ item:Thing {
+	return [...items, item]
+}
+or
+ThingList = item:Thing items:(_ And _ e:Thing {return e;})* {
+	return [item, ...items]
+}
+*/
+And = ("," _ "and"/"and,"/"and"/",")
+Or = ("," _ "or"/"or,"/"or"/",")
