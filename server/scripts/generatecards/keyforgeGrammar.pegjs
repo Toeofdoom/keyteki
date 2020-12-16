@@ -59,17 +59,17 @@ BoldTrigger = ("Play" / "Reap" / "Before Fight" / "Fight" / "Destroyed" / "Actio
 
 //Persistent effects. If conditions are required for things like bonesaw
 PersistentEffect = condition:(WhileCondition/IfCondition)? _ 
-pe:(PersistentPlayerAction/PersistentCardAction)
+pe:(PersistentPlayerEffect/PersistentCardAction)
 _ multiplier:Multiplier? [.;]? _ ReminderText? {
     return Object.assign({name: 'persistentEffect', multiplier, condition}, pe)
 }
 
-PersistentPlayerAction = target:PlayerTarget? _ effect:SinglePersistentPlayerAction {
+PersistentPlayerEffect = target:PlayerTarget? _ effect:SinglePersistentPlayerEffect {
 	return {
 		target, 
 		effects: [effect]
 	}
-} / SpecialPersistentPlayerAction //For effects with more unique formats.
+} / SpecialPersistentPlayerEffect //For effects with more unique formats.
 
 PersistentCardAction = target:GeneralCardTarget? _ effects:PersistentCardActionList [.;]? {
 	return  {
@@ -78,7 +78,7 @@ PersistentCardAction = target:GeneralCardTarget? _ effects:PersistentCardActionL
 	}
 }
 
-PersistentCardActionList = item:SinglePersistentCardAction _ items:(_ And _ e:SinglePersistentCardAction {return e;})* {
+PersistentCardActionList = item:SinglePersistentCardEffect _ items:(_ And _ e:SinglePersistentCardEffect {return e;})* {
 	return [item, ...items]
 }
 
@@ -170,7 +170,7 @@ condition2:IfCondition? {
     return Object.assign(effect, extras)
 }
 
-ChooseTarget = ("Choose a house"i/"Choose"i _ CardTarget)
+ChooseTarget = ("Choose a house"i/"Choose"i _ StandardCardTarget)
 
 SingleSubsequentAction = then:ThenCondition? _ effect:SingleAction _ replacement:"instead"? {
     return Object.assign(effect, then, {replacement:replacement != null})
@@ -215,7 +215,7 @@ AmberActionType = "Gain"i "s"? { return 'gainAmber';}
 	/"Lose"i "s"? {	return 'loseAmber'; }
 
 AmberCount = amount:Number ("<A>"/"A") { return amount; }
-	/("all of it"/"all of" _ PlayerTarget _ ("<A>"/"A")) {return "all"; }
+	/("all of it"/("each"/"all of" _ PlayerTarget) _ ("<A>"/"A")) {return "all"; }
 
 DrawCards = "Draw"i "s"? _ amount:Number _ ("cards"/"card") {
 	return {name: 'draw', amount}
@@ -304,22 +304,25 @@ MoveFromAToB = name:MoveCardActionType _ target:GeneralCardTarget _
     }
 }
 
-SpecificLocation = sublocation:SubLocation? _ controller:PlayerTarget _ location:Location {
+SpecificLocation = sublocation:SubLocation? _ controller:(PlayerTarget/("an"/"a" {return "any";})) 
+	_ location:CardLocation {
 	return {controller, location};
 }
 
 SubLocation = "the"? _ "top of"
 MoveCardActionType = "Return"i/"Shuffle"i/"Put"i/"Discard"i/"Purge"i/"Archive"i {return text().toLowerCase();}
-Location = "hand"i "s"? {return "hand"}
+CardLocation = "hand"i "s"? {return "hand"}
 	/"deck"i "s"? {return "deck"}
 	/"discard pile"i "s"? {return "discard"}
 	/"archives"i {return "archives"}
 
 //Amber movement effects are also worded in more complex ways
-MoveAmberAction = "Move"i _ amount:("each"/Number) _ "A" _ ("on"/"from") _ GeneralCardTarget _ "to" _ 
-destination:("the common supply"/PlayerTarget _ "pool"/GeneralCardTarget) {
-	return {name: "removeAmber", all:amount == "each", amount, destination};
-}/"Move"i _ amount:("each"/Number) _ "A" _ ("on"/"from") _ GeneralCardTarget _ "to" _ PlayerTarget _ "pool"
+MoveAmberAction = "Move"i _ amount:AmberCount _ ("on"/"from") _ GeneralCardTarget _ "to" _ 
+destination:AmberLocation {
+	return {name: "removeAmber", amount, destination};
+}
+
+AmberLocation = "the common supply"/PlayerTarget _ "pool"/GeneralCardTarget
 
 //Some actions apply an effect for a specific period of time.
 TimeLimitedEffect = (duration:Duration "," _ effect:(PersistentEffect/GeneralPersistentTrigger/GeneralDurationTrigger) {
@@ -331,50 +334,10 @@ TimeLimitedEffect = (duration:Duration "," _ effect:(PersistentEffect/GeneralPer
 Duration = "For the remainder of the turn"i {return "forRemainderOfTurn"} /
 "during your opponent’s next turn"i {return "lastingEffect"} //TODO: Correct this, lastingEffect also applies during the current turn
 
-
 //Persistent effects
 //Persistent player effects
-SinglePersistentPlayerAction = KeyCost/CantBeStolen
-SpecialPersistentPlayerAction = ModifyHandSize
-
-//Persistent card effects, including upgrades
-SinglePersistentCardAction = GetsStats/GainsAbility/EntersPlayAbility/MayBeUsed/CannotEffect/LimitFightDamage
-
-GetsStats = "gets" _ statChanges:StatChangeList _ multiplier:Multiplier? {
-	return statChanges.map((s) => Object.assign(s, {multiplier}));
-}
-StatChangeList = item:StatChange items:(_ And _ e:StatChange {return e;})* {
-	return [item, ...items]
-}
-StatChange = amount:Number _ stat:("power"i/"armor"i){
-	return {name: "modify"+ stat.charAt(0).toUpperCase() + stat.slice(1), amount};
-}
-
-//"Gains"
-GainsAbility = "gains"i ","? _ ability:GainAbilityList {
-	return ability
-}
-
-GainSingleAbility = keywords:Keywords _{return Object.assign(keywords, {name: "gainKeywords"});} 
-/ Quote ability:BoldAbility Quote {return {name: "gainAbility", ability};}
-
-GainAbilityList = items:(e:GainSingleAbility _ And _ {return e;})* _ item:GainSingleAbility {
-	return [...items, item]
-}
-
-//Enters play
-EntersPlayAbility = "enter" "s"? " play" _ states:CardStateList {
-	return states.map((state) => ({name: 'entersPlay' + state.charAt(0).toUpperCase() + state.slice(1)}))
-}
-
-//TODO: Combine with conditions?
-CardState = ("stunned"i/"ready"i/"enraged"i/"exhausted"i)
-CardStateList = items:(i:CardState _ And _ {return i;})* _ item:CardState {
-	return [...items, item]
-}
-
-CannotEffect = "cannot" _ effect:("reap"/"fight"/"be used"/"be dealt damage") {return [{name:"cannot",effect}];}
-LimitFightDamage = "only deals" _ amount:Number "D when fighting" {return [{name:"limitFightDamage",amount}];}
+SinglePersistentPlayerEffect = KeyCost/CantBeStolen
+SpecialPersistentPlayerEffect = ModifyHandSize
 
 KeyCost = "keys cost "i amount:Number ("<A>"/"A") {	return {name: "modifyKeyCost", amount};}
 CantBeStolen = "A cannot be stolen" {return {name:"cantBeStolen"};}
@@ -388,35 +351,74 @@ _ "hand to" _ amount:Number  _ "card" "s"? _ multiplier:Multiplier? {
     };
 }
 
+//Persistent card effects, including upgrades
+SinglePersistentCardEffect = GetsStats/GainsAbility/EntersPlayAbility/MayBeUsed/CannotEffect/LimitFightDamage
 
+//Gets stats
+GetsStats = "gets" _ statChanges:StatChangeList _ multiplier:Multiplier? {
+	return statChanges.map((s) => Object.assign(s, {multiplier}));
+}
+StatChangeList = item:SingleStatChange items:(_ And _ e:SingleStatChange {return e;})* {
+	return [item, ...items]
+}
+SingleStatChange = amount:Number _ stat:("power"i/"armor"i){
+	return {name: "modify"+ stat.charAt(0).toUpperCase() + stat.slice(1), amount};
+}
 
+//Gains abilities
+GainsAbility = "gains"i ","? _ abilities:GainAbilityList {return abilities}
+GainAbilityList = items:(e:GainSingleAbility _ And _ {return e;})* _ item:GainSingleAbility {
+	return [...items, item]
+}
+GainSingleAbility = keywords:Keywords _{return Object.assign(keywords, {name: "gainKeywords"});} 
+	/ Quote ability:BoldAbility Quote {return {name: "gainAbility", ability};}
 
-MayBeUsed = e:MayFight {return [e]}
+//Enters play
+EntersPlayAbility = "enter" "s"? " play" _ states:CardStateList {
+	return states.map((state) => ({name: 'entersPlay' + state.charAt(0).toUpperCase() + state.slice(1)}))
+}
+CardStateList = items:(i:CardState _ And _ {return i;})* _ item:CardState {
+	return [...items, item]
+}
+CardState = ("stunned"i/"ready"i/"enraged"i/"exhausted"i)
+
+//Other persistent card effects
+CannotEffect = "cannot" _ effect:("reap"/"fight"/"be used"/"be dealt damage") {return [{name:"cannot", effect}];}
+LimitFightDamage = "only deals" _ amount:Number "D when fighting" {return [{name:"limitFightDamage", amount}];}
+
+//Permission effects - work in progress
+MayBeUsed = e:(MayFight/MayUse) {return [e]}
 MayFight = "may fight" { return {name: 'mayFight'}; }
 MayUse = "may use" { return {name: 'mayUse'}; }
 
-Quote = [\“"”]
-
-
 //Targetting
 //Player targetting
-PlayerTarget = ("Your Opponent"i (['’]?"s"?) {return "opponent"}
-/ "You"i "r"? {return "self"}
-/ ("their owners’"i/"each player’s"i/"Each player"i) {return "any";}
-/"its owner" (['’]?"s"?) {return "owner"}
-/"its controller" "’s"? {return "controller"}
-/"its opponent" {return "controllerOpponent"})
-/"they"/"their"
+PlayerTarget = ("Your Opponent"i ['’s]* {return "opponent"}
+	/ "You"i "r"? {return "self"}
+	/ ("their owner"i ['’s]*/"each player"i ['’s]*/"they"i/"their"i) {return "any";}
+	/ "its owner" ['’s]* {return "owner"}
+	/ "its controller" ['’s]* {return "controller"}
+	/ "its opponent" ['’s]* {return "controllerOpponent"})
 
 //Card targetting
-GeneralCardTarget = (DeckCard/NeighborTarget/Self/CardTarget _ "and" _ CardTarget/CardTarget/ItTarget/UpgradedCreature)
+GeneralCardTarget = (DeckCard/NeighborTarget/Self/StandardCardTarget _ "and" _ StandardCardTarget/StandardCardTarget/ItTarget/UpgradedCreature)
+
+DeckCard = "the top"i _ amount:Number? _ "card""s"? " of your deck" {
+	return {name:"topdeck", amount}
+}
 Self = "$this"
 UpgradedCreature = "this creature"i {return {mode: "upgradedCreature"}}
-CardTarget = targetCount:CardTargetCount  _ minmax:MostPowerful? _ other:OtherSpecifier? _ damaged:DamagedSpecifier? 
-_ controller:ControllerSpecifier? _ neighbor:NeighborSpecifier? _ flank:FlankSpecifier? 
-_ house:HouseSpecifier? _ base:BaseCardTarget _ nonFlank:NonFlankSpecifier? _center:CenterSpecifier?
-_ hasAmber:HasAmberSpecifier? _ attached:AttachedToSpecifier? _ chosenHouse:ChosenHouseSpecifier? _ power:PowerSpecifier?
-_ location:LocationSpecifier? _ controlledBy:ControlledBySpecifier? {
+NeighborTarget = "Each of $this’"i "s"? _ "neighbors" {
+	return Object.assign({type: "creature", conditions: [{name: "neighboring"}]});
+}
+ItTarget = ("it"i/"that"i _ CardType) {return {mode: "trigger"}}
+
+StandardCardTarget = targetCount:CardTargetCount  _ minmax:MostPowerful? _ other:OtherSpecifier? 
+	_ damaged:DamagedSpecifier? _ controller:ControllerSpecifier? _ neighbor:NeighborSpecifier? 
+	_ flank:FlankSpecifier? _ house:HouseSpecifier? _ base:BaseCardTarget 
+	_ nonFlank:NonFlankSpecifier? _center:CenterSpecifier? _ hasAmber:HasAmberSpecifier?
+	_ attached:AttachedToSpecifier? _ chosenHouse:ChosenHouseSpecifier? _ power:PowerSpecifier?
+	_ controlledBy:ControlledBySpecifier? {
 	return Object.assign({
     	type: base.type,
         controller: controller || controlledBy, 
@@ -424,30 +426,24 @@ _ location:LocationSpecifier? _ controlledBy:ControlledBySpecifier? {
         conditions: [minmax, other, damaged, neighbor, flank, nonFlank, _center, house, hasAmber, attached, chosenHouse, power].concat(base.conditions).filter(x => x !== null)
     }, targetCount)
 }
-NeighborTarget = "Each of $this’"i "s"? _ "neighbors" {
-	return Object.assign({
-    	type: "creature",
-        conditions: [{name: "neighboring"}]
-    })
-}
-DeckCard = "the top"i _ amount:Number? _ "card""s"? " of your deck" {
-	return {name:"topdeck", amount}
-}
 
+//The core card target - need to at least specify a card type or a trait that implies a card type
 BaseCardTarget = trait:TraitSpecifier? _ house:HouseSpecifier? _ type:CardType {return{type, conditions:[trait, house]};} /
 	t:TraitSpecifier {return{conditions:[t], type:"creature"};}
 
+//How many targets?
 CardTargetCount = OneTarget / UpToTargets / NoTargets / AtLeastTargets / EachTarget
 EachTarget = ("each"i/"all"i)? {return {mode: "all"}}
 NoTargets = ("no"i) {return {mode:"exactly", count:0}}
-OneTarget = ( "an"i / "a"i / "the"i) {return {mode:"exactly", count:1}}
+OneTarget = ("an"i / "a"i / "the"i) {return {mode:"exactly", count:1}}
 UpToTargets = "up to"i _ count:Number {return {mode:"upTo", count}}
 AtLeastTargets = count:Number _ "or more" {return {mode:"atLeast", count}}
-ItTarget = ("it"i/"that"i _ CardType) {return {mode: "trigger"}}
 
+//Conditions before card
 OtherSpecifier = "other" {return {name: "other"};}
 FlankSpecifier = "flank"i {	return {name: "flank"};}
 NeighborSpecifier = "neighboring"i {return {name: "neighboring"};}
+MostPowerful = ("most"/"least") _ "powerful"
 
 DamagedSpecifier = negate:"un"i? "damaged" {
 	let c = {name: "damaged"};
@@ -465,7 +461,9 @@ HouseSpecifier = negate:"non-"i? house:House {
 }
 
 ControllerSpecifier = (("friendly"i/"your"i) {return "self";}
-/ ("enemy"i/"opponent’s"i) {return "opponent";})
+	/ ("enemy"i/"opponent’s"i) {return "opponent";})
+
+//Conditions after card
 ControlledBySpecifier = "controlled by any player" {return null;}
 
 NonFlankSpecifier = "that is"? _ "not on a flank"i {
@@ -480,8 +478,6 @@ PowerSpecifier = "with power" _ vs:Number _ "or" _ compare:("lower"/"higher") {
 	return {name: compare, check:"power", vs}
 }
 
-MostPowerful = ("most"/"least") _ "powerful"
-
 HasAmberSpecifier = "with" _ negate:"no"? _ "A on it"  {
 	let c = {name: "hasAmber"};
 	return negate != null ? {name: "not", condition: c} : c;
@@ -491,46 +487,52 @@ AttachedToSpecifier = ("attached to"/"on") _ target:GeneralCardTarget  {
 	return {name: "attached", target};
 }
 
-LocationSpecifier = "from" _ (PlayerTarget/"a") _"discard pile"
-
 ChosenHouseSpecifier = "of that house" {return {name: "chosenHouse"};}
-
-//Descriptors
-House = "brobnar"i / "dis"i / "logos"i / "mars"i / "sanctum"i / "shadows"i / "untamed"i / "saurian"i / "star alliance"i {
-	return text().replace(" ", "");
-}
-Trait = "mutant"i / "shard"i / "cat"i / "beast"i / "agent"i / "human"i / "scientist"i /"giant"i / "demon"i / "knight"i / "dinosaur"i / "thief"i / "martian"i / "robot"i / "sin"i / "horseman"i
-CardType = type:(a:"action"i _ "card"? {return a;}/ "artifact"i / "creature"i / "upgrade"i / "card"i) "s"? {
-	return type.toLowerCase() != 'card' ? type : null;
-}
 
 //Conditions
 IfCondition = "If"i _ c:Condition {return c;}
 WhileCondition = "While"i _ c:Condition {return c;}
 
 Condition = c:(
-PlayerTarget _ ("has"i/"have"i) _ Number ("A"/"<A>")_ "or" _ ("more"/"less")"," /
-"you control more creatures than your opponent"i /
-"it is not your turn,"i {return {name:"activePlayer", player:"opponent"}} /
-CardTarget _ "was destroyed this turn,"i/
-"it is your turn,"i {return {name:"activePlayer", player:"self"}}/
-"there are"i _ CardTarget _ "in play"? ","i/
-GeneralCardTarget _ "is in the center of your battleline,"i)
-{return c;}
+	PlayerTarget _ ("has"i/"have"i) _ Number ("A"/"<A>")_ "or" _ ("more"/"less")"," /
+	"you control more creatures than your opponent"i /
+	"it is not your turn,"i {return {name:"activePlayer", player:"opponent"}} /
+	StandardCardTarget _ "was destroyed this turn,"i/
+	"it is your turn,"i {return {name:"activePlayer", player:"self"}}/
+	"there are"i _ StandardCardTarget _ "in play"? ","i/
+	GeneralCardTarget _ "is in the center of your battleline,"i)
+	{return c;}
 
 // Modifiers
 Multiplier = "once"? _ "For"i _ (
-"each" _ not:"un"? _"forged key" _ PlayerTarget _ ("have"/"has")
-/"each A in your pool"
-/"each neighbor it has"
-/TriggerMultiplier
-/CardTarget) //This is actually just a subset of card counting multipliers
+	"each" _ not:"un"? _"forged key" _ PlayerTarget _ ("have"/"has")
+	/"each A in your pool"
+	/"each neighbor it has" //This is actually just a subset of card counting multipliers
+	/TriggerMultiplier
+	/StandardCardTarget)
 
-TriggerMultiplier = CardTarget _ trigger:("healed this way")
+TriggerMultiplier = StandardCardTarget _ trigger:("healed this way")
+
+//Descriptors
+House = "brobnar"i / "dis"i / "logos"i / "mars"i / "sanctum"i / "shadows"i / "untamed"i 
+	/ "saurian"i / "star alliance"i / "unfathomable"i {
+	return text().replace(" ", "");
+}
+
+//Creature traits only - split if artifact traits are needed.
+Trait = "mutant"i / "shard"i / "cat"i / "beast"i / "agent"i / "human"i / "scientist"i 
+	/"giant"i / "demon"i / "knight"i / "dinosaur"i / "thief"i / "martian"i / "robot"i 
+	/ "sin"i / "horseman"i {return text().toLowerCase();}
+
+CardType = "action"i _ "card"? "s"? {return "action";}
+	/ "artifact"i _ "card"? "s"? {return "artifact";}
+	/ "creature"i _ "card"? "s"? {return "creature";}
+	/ "upgrade"i _ "card"? "s"? {return "upgrade";}
+	/ "card"i "s"? {return null;}
 
 //Basics
 Number = n:(("a"/"one") {return 1;} / "two" {return 2;} / "three" {return 3;} / Integer)
-_ sign:("additional" {return 1;}/"less" {return -1;})? { return n*(sign || 1);}
+	_ sign:("additional" {return 1;}/"less" {return -1;})? { return n*(sign || 1);}
 
 Integer = sign:[+\-–]? number:[0-9]+ {
 	return sign == '-' || sign == '–' ? -parseInt(number): parseInt(number);
@@ -538,13 +540,10 @@ Integer = sign:[+\-–]? number:[0-9]+ {
 
 _ "whitespace" = [  ﻿\u202f]*
 
-QuotedSection = "“" [^”“]+ [“”]
+Quote = [\“"”]
+QuotedSection = Quote [^”“]+ Quote
 
 /* Pattern - matching comma/and/or based lists:
-ThingList = items:(e:Thing _ And _ {return e;})* _ item:Thing {
-	return [...items, item]
-}
-or
 ThingList = item:Thing items:(_ And _ e:Thing {return e;})* {
 	return [item, ...items]
 }
