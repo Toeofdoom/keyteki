@@ -59,26 +59,26 @@ BoldTrigger = ("Play" / "Reap" / "Before Fight" / "Fight" / "Destroyed" / "Actio
 
 //Persistent effects. If conditions are required for things like bonesaw
 PersistentEffect = condition:(WhileCondition/IfCondition)? _ 
-pe:(PersistentPlayerEffect/PersistentCardEffect)
+pe:(PersistentPlayerAction/PersistentCardAction)
 _ multiplier:Multiplier? [.;]? _ ReminderText? {
     return Object.assign({name: 'persistentEffect', multiplier, condition}, pe)
 }
 
-PersistentPlayerEffect = target:PlayerTarget? _ effect:SinglePersistentPlayerEffect {
+PersistentPlayerAction = target:PlayerTarget? _ effect:SinglePersistentPlayerAction {
 	return {
 		target, 
 		effects: [effect]
 	}
-} / SpecialPersistentPlayerEffect //For effects with more unique formats.
+} / SpecialPersistentPlayerAction //For effects with more unique formats.
 
-PersistentCardEffect = target:GeneralCardTarget? _ effects:PersistentCardEffectList [.;]? {
+PersistentCardAction = target:GeneralCardTarget? _ effects:PersistentCardActionList [.;]? {
 	return  {
 		target, 
 		effects: flattenArrays(effects).filter(x => x !== null)
 	}
 }
 
-PersistentCardEffectList = item:SinglePersistentCardEffect _ items:(_ And _ e:SinglePersistentCardEffect {return e;})* {
+PersistentCardActionList = item:SinglePersistentCardAction _ items:(_ And _ e:SinglePersistentCardAction {return e;})* {
 	return [item, ...items]
 }
 
@@ -144,7 +144,7 @@ ReminderText = _ "(" [^)]+ ")" _ {
 }
 
 //Unrecognised text
-UnknownEffect = [$A-Z]i([^\n\r\u000b.;“] / QuotedSection)* {
+UnknownAction = [$A-Z]i([^\n\r\u000b.;“] / QuotedSection)* {
 	return {name: 'unknown', text: text()}
 }
 
@@ -160,8 +160,8 @@ ActionList = item:SingleAction items:(_ ([.;]/And)? _ u:SingleSubsequentAction  
 //TODO: Move time limited effects to the front to support permission effects (e.g. "you may play a non-logos card" )
 //so wording doesn't overlap with the "optional" check.
 SingleAction = condition:IfCondition? _ optional:"You may"i? _ effect:(
-MoveCardEffect / PlayerEffect / CaptureAmber / CardEffect / GiveEffect / MoveAmberEffect 
-/ TimeLimitedEffect / ChooseTargetEffect / UnknownEffect) 
+MoveCardAction / PlayerAction / CardAction / MoveAmberAction 
+/ TimeLimitedEffect / ChooseTarget / UnknownAction) 
 condition2:IfCondition? {
 	let extras = {
     	optional: optional != null,
@@ -170,42 +170,176 @@ condition2:IfCondition? {
     return Object.assign(effect, extras)
 }
 
-ChooseTargetEffect = ("Choose a house"i/"Choose"i _ CardTarget)
+ChooseTarget = ("Choose a house"i/"Choose"i _ CardTarget)
 
 SingleSubsequentAction = then:ThenCondition? _ effect:SingleAction _ replacement:"instead"? {
     return Object.assign(effect, then, {replacement:replacement != null})
 }
 
 ThenCondition = condition:(
-	"If you do," {return null}/
+	"If you do,"i {return null}/
     "Otherwise,"i {return {name:"otherwise"}}/
-    "If this damage destroys that creature,"i {return {name:"destroysTarget"};}/
-    "If it is not destroyed,"i {return {name:"not", condition:{name:"destroysTarget"}};}) {
+    "If this damage destroys that creature,"i {return {name:"destroysTarget"};}) {
     return {
     	then: true,
         condition
     }
+}/condition:("If it is not destroyed,"i {return {name:"not", condition:{name:"destroysTarget"}};}) {
+    return {
+    	then: false,
+        condition
+    }
 }
 
-TimeLimitedEffect = (duration:Duration "," _ effect:(PersistentEffect/GeneralTrigger) {
+//Player actions section - for actions that target players
+PlayerAction = targetPlayer:PlayerTarget? _ effect:SinglePlayerAction _ multiplier:Multiplier? {
+	let info = {};
+	if (targetPlayer) info.targetPlayer = targetPlayer;
+	return Object.assign(effect, info);
+}
+
+//TODO: Add list support.
+SinglePlayerAction = Forge / AmberAction / GainChains / DrawCards / DiscardRandomCards 
+
+Forge = "forge a key at current cost"i {
+	return {name: 'forgeAKey'}
+}
+
+AmberAction = type:AmberActionType _ amount:AmberCount {
+	return {name: type, amount}
+}
+
+AmberActionType = "Gain"i "s"? { return 'gainAmber';}
+	/"Steal"i "s"? { return 'steal'; }
+	/"Capture"i "s"? { return 'capture'; }
+	/"Lose"i "s"? {	return 'loseAmber'; }
+
+AmberCount = amount:Number ("<A>"/"A") { return amount; }
+	/("all of it"/"all of" _ PlayerTarget _ ("<A>"/"A")) {return "all"; }
+
+DrawCards = "Draw"i "s"? _ amount:Number _ ("cards"/"card") {
+	return {name: 'draw', amount}
+}
+
+DiscardRandomCards = "Discard"i "s"? _ amount:Number _ "random card"i "s"? _ "from" _ PlayerTarget _ "hand" {
+	return {name: 'discardAtRandom', amount	};
+}
+
+GainChains = "Gain"i "s"? _ amount:Number _ "chain"i "s"? {
+	return {name: 'gainChains', amount}
+}
+
+//Card effects
+CardAction = StandardFormatCardAction/CardCapturesAction/GiveCounters
+
+StandardFormatCardAction = actions:CardActionList _ target:GeneralCardTarget 
+_ multiplier:Multiplier? _ splash:SplashSuffix?_ noPrevent:UnpreventableSuffix? _ AsIfItWereYours? {
+	let action = actions.length === 1 ? actions[0] : {name:"sequence", actions}
+	return Object.assign(action, {target, splash, multiplier, noPrevent})
+}
+
+CardActionList = item:SingleCardAction items:(_ And _ e:SingleCardAction {return e;})* {
+	return [item, ...items]
+}
+
+//Unusual formats
+CardCapturesAction = target:GeneralCardTarget _ "Captures"i _ amount:AmberCount 
+	_ hypnosis:("from" _ ("its"/"their") _"own side")? {
+	return {
+		name: 'capture', 
+		amount,
+		target,
+		player: hypnosis != null? 'controller' : 'controllerOpponent'
+    };
+}
+
+GiveCounters = "give"i _ target:GeneralCardTarget _ amount:Number _ "+1 power counter" "s"? {
+	return {name: 'addPowerCounters', amount, target};
+}
+
+//Standard formats
+SingleCardAction = Play / DealDamage / Ready / Use / Fight / Destroy / Sacrifice / Purge 
+	/ Exalt / Ward / RemoveWard / Enrage / Stun / Unstun / Exhaust / ArchiveTarget 
+	/ Look / Heal / FullyHeal / MayFight / PutCounters
+
+DealDamage = "Deal"i _ amount:Number ("<D>"/"D") _ "to" {return {name: 'dealDamage', amount}}
+SplashSuffix = ", with" _ amount:Number ("<D>"/"D") _ "splash" {return amount; }
+UnpreventableSuffix = ". This damage cannot be prevented by armor."i { return true; }
+
+Use = "Use"i {return {name: 'use'}}
+AsIfItWereYours = "as if it were yours"
+
+PutCounters = "Put"i _ amount:Number _ "+1 power counter" "s"? _ "on" {
+	return  {name: 'addPowerCounter', amount}
+}
+
+Play = "play"i {return {name: "play"};}
+Ready = "Ready"i {return {name: 'ready'}}
+Fight = "fight with"i {return {name: 'fight'}}
+Destroy = "Destroy"i {return {name: 'destroy'}}
+Sacrifice = "Sacrifice"i {return {name: 'sacrifice'}}
+Purge = "Purge"i {return {name: 'purge'}}
+Exalt = "Exalt"i {return {name: 'exalt'}}
+Ward = "Ward"i {return {name: 'ward'}}
+RemoveWard = "Remove a ward from"i {return {name: 'removeWard'}}
+Enrage = "Enrage"i {return {name: 'enrage'}}
+Stun = "Stun"i {return {name: 'stun'}}
+Unstun = "Unstun"i {return {name: 'unstun'}}
+Exhaust = "Exhaust"i {return {name: 'exhaust'}}
+ArchiveTarget = "Archive"i {return {name: 'archive'}}
+Look = "Look at"i {return {name: 'look'}}
+Heal = "heal"i _ amount:Number _ "damage from" {return {name: 'heal', amount }}
+FullyHeal = "Fully heal"i {	return {name: 'heal', fully: true }}
+
+//Card movement effects - these are worded in more complex ways than other card-related effects.
+MoveCardAction = MoveFromAToB
+
+MoveFromAToB = name:MoveCardActionType _ target:GeneralCardTarget _ 
+	locationA:("from" _ l:SpecificLocation {return l;})? _
+	locationB:(("to"/"into"/"on") _ l:SpecificLocation {return l;})? {
+	return {
+    	name,
+		target: locationA != null ? Object.assign(target, locationA) : target,
+		location: locationB
+    }
+}
+
+SpecificLocation = sublocation:SubLocation? _ controller:PlayerTarget _ location:Location {
+	return {controller, location};
+}
+
+SubLocation = "the"? _ "top of"
+MoveCardActionType = "Return"i/"Shuffle"i/"Put"i/"Discard"i/"Purge"i/"Archive"i {return text().toLowerCase();}
+Location = "hand"i "s"? {return "hand"}
+	/"deck"i "s"? {return "deck"}
+	/"discard pile"i "s"? {return "discard"}
+	/"archives"i {return "archives"}
+
+//Amber movement effects are also worded in more complex ways
+MoveAmberAction = "Move"i _ amount:("each"/Number) _ "A" _ ("on"/"from") _ GeneralCardTarget _ "to" _ 
+destination:("the common supply"/PlayerTarget _ "pool"/GeneralCardTarget) {
+	return {name: "removeAmber", all:amount == "each", amount, destination};
+}/"Move"i _ amount:("each"/Number) _ "A" _ ("on"/"from") _ GeneralCardTarget _ "to" _ PlayerTarget _ "pool"
+
+//Some actions apply an effect for a specific period of time.
+TimeLimitedEffect = (duration:Duration "," _ effect:(PersistentEffect/GeneralPersistentTrigger/GeneralDurationTrigger) {
 	return {name:duration, durationEffect:effect}
 }/effect:PersistentEffect _ duration:Duration {
 	return {name:duration, durationEffect:effect}
 })
 
 Duration = "For the remainder of the turn"i {return "forRemainderOfTurn"} /
-"during your opponent’s next turn"i {return "lastingEffect"}
+"during your opponent’s next turn"i {return "lastingEffect"} //TODO: Correct this, lastingEffect also applies during the current turn
 
 
 //Persistent effects
 //Persistent player effects
-SinglePersistentPlayerEffect = KeyCost/CantBeStolen
-SpecialPersistentPlayerEffect = ModifyHandSize
+SinglePersistentPlayerAction = KeyCost/CantBeStolen
+SpecialPersistentPlayerAction = ModifyHandSize
 
 //Persistent card effects, including upgrades
-SinglePersistentCardEffect = GetsStats/GainsAbility/EntersPlayAbility/MayBeUsed/CannotEffect/LimitFightDamage
+SinglePersistentCardAction = GetsStats/GainsAbility/EntersPlayAbility/MayBeUsed/CannotEffect/LimitFightDamage
 
-//TODO: Figure out neatest way of dealing with arrays here.
 GetsStats = "gets" _ statChanges:StatChangeList _ multiplier:Multiplier? {
 	return statChanges.map((s) => Object.assign(s, {multiplier}));
 }
@@ -254,225 +388,6 @@ _ "hand to" _ amount:Number  _ "card" "s"? _ multiplier:Multiplier? {
     };
 }
 
-//Player effect section - for abilities that target a single player
-PlayerEffect = target:PlayerTarget? _ effect:(
-Forge/ GainAmber / LoseAmber / StealAmber / GainChains / DrawCards / DiscardCards ) {
-	let info = {};
-	if (target) info.targetPlayer = target;
-	return Object.assign(effect, info);
-}
-
-PlayerTarget = ("Your Opponent"i (['’]?"s"?) {return "opponent"}
-/ "You"i "r"? {return "self"}
-/ ("their owners’"i/"each player’s"i/"Each player"i) {return "any";}
-/"its owner" (['’]?"s"?) {return "owner"}
-/"its controller" "’s"? {return "controller"}
-/"its opponent" {return "controllerOpponent"})
-/"they"
-
-//NumericalPlayerEffect...
-GainAmber = "Gain"i "s"? _ amount:Number ("<A>"/"A") _ multiplier:Multiplier? {
-	return {name: 'gainAmber', amount: amount, multiplier: multiplier}
-}
-
-StealAmber = "Steal"i "s"? _ amount:Number ("<A>"/"A") _ multiplier:Multiplier? {
-	return {name: 'steal', amount: amount, multiplier: multiplier}
-}
-
-CaptureAmber = "Capture"i "s"? _ howMuch:AmberCount {
-	return Object.assign({name: 'capture'}, howMuch);
-}
-
-LoseAmber = "Lose"i "s"? _ howMuch:AmberCount {
-	return Object.assign({name: 'loseAmber'}, howMuch);
-}
-
-AmberCount = amount:Number ("<A>"/"A") _ multiplier:Multiplier? { return {amount, multiplier}}
-/("all of it"/"all of" _ PlayerTarget _ ("<A>"/"A")) {return {amount: "all"};}
-
-Forge = "forge a key at current cost"i {
-	return {name: 'forgeAKey'}
-}
-
-DrawCards = "Draw"i "s"? _ amount:Number _ ("cards"/"card") _ multiplier:Multiplier? {
-	return {name: 'draw', amount: amount, multiplier: multiplier}
-}
-
-DiscardCards = "Discard"i "s"? _ amount:Number _ "random"i _ ("cards"/"card") _ "from" _ ("your"i/"their"i) _ location:("hand") {
-	return {
-		name: 'discardAtRandom', 
-		amount: amount, 
-		targetPlayer: 'self', 
-		location: location
-	}
-}
-
-GainChains = "Gain"i "s"? _ amount:Number _ ("chains"/"chain") _ multiplier:Multiplier? {
-	return {name: 'gainChains', amount: amount, multiplier: multiplier}
-}
-
-//Card effects
-CardEffect = CardPreEffect/CardPostEffect/AddCounters/PutCounters
-CardPreEffect = effect:(EffectList/ Play / DealDamage / ReadyAndUse / ReadyAndFight 
-/ Ready / Use / Destroy / Sacrifice / Purge / Exalt / Ward / RemoveWard / Enrage 
-/ Stun / Unstun / Exhaust / ArchiveTarget / Look / Heal / MayFight) _ 
-target:GeneralCardTarget _
-_ splash:Splash? _ multiplier:Multiplier? _ noPrevent:CannotBePrevented? _ AsIfItWereYours? {
-	return Object.assign(effect, {target, splash, multiplier, noPrevent})
-}
-
-CardPostEffect = target:GeneralCardTarget _ effect:(Captures) _ hypnosis:("from" _ ("its"/"their") _"own side")? {
-	return Object.assign(effect, {
-      target, 
-      player: hypnosis != null? 'controller' : 'controllerOpponent'
-    })
-}
-
-Play = "play"i {return {name: "play"};}
-
-AddCounters = "give"i _ target:GeneralCardTarget _ amount:Number _ "+1 power counter" "s"? {
-	return {name: 'addPowerCounters', amount, target};
-}
-
-PutCounters = "Put"i _ amount:Number _ "+1 power counter" "s"? _ "on" _ target:GeneralCardTarget {
-	return  Object.assign({name: 'addPowerCounter', amount}, {target:target})
-}
-
-Captures = "Captures"i _ amount:(Number/"all of your opponent’s") ("<A>"/"A") {
-	return {name: 'capture', amount: amount}
-}
-
-DealDamage = "Deal"i _ amount:Number ("<D>"/"D") _ "to" {
-	return {name: 'dealDamage', amount: amount}
-}
-
-Splash = ", with" _ amount:Number ("<D>"/"D") _ "splash" {
-	return amount
-}
-
-CannotBePrevented = ". This damage cannot be prevented by armor."i { return true }
-
-Ready = "Ready"i {
-	return {name: 'ready'}
-}
-
-Use = "Use"i {
-	return {name: 'use'}
-}
-
-AsIfItWereYours = "as if it were yours"
-
-ReadyAndUse = "Ready and use"i {
-	return {name: 'readyAndUse'}
-}
-
-ReadyAndFight = "Ready and fight with"i {
-	return {name: 'readyAndFight'}
-}
-
-Fight = "fight with"i {
-	return {name: 'fight'}
-}
-
-EffectList = effects:(e:ListableEffect ","? _ {return e;})* _ "and" _ lastEffect:ListableEffect {
-	return {name: 'sequence', effects:[...effects, lastEffect]}
-}
-ListableEffect = Ready/Use/Fight/Exalt/Heal/Ward
-
-
-Destroy = "Destroy"i {
-	return {name: 'destroy'}
-}
-
-Sacrifice = "Sacrifice"i {
-	return {name: 'sacrifice'}
-}
-
-Purge = "Purge"i {
-	return {name: 'purge'}
-}
-
-Exalt = "Exalt"i {
-	return {name: 'exalt'}
-}
-
-Ward = "Ward"i {
-	return {name: 'ward'}
-}
-
-RemoveWard = "Remove a ward from"i {
-	return {name: 'removeWard'}
-}
-
-Enrage = "Enrage"i {
-	return {name: 'enrage'}
-}
-
-Stun = "Stun"i {return {name: 'stun'}}
-Unstun = "Unstun"i {return {name: 'unstun'}}
-
-Heal = ("Fully heal"i {	return {name: 'heal', fully: true }}
-/ "heal"i _ amount:Number _ "damage from" {	return {name: 'heal', amount }})
-
-Exhaust = "Exhaust"i {
-	return {name: 'exhaust'}
-}
-
-ArchiveTarget = "Archive"i {
-	return {name: 'archive'}
-}
-
-Look = "Look at"i {
-	return {name: 'look'}
-}
-
-//"Give" effects
-GiveEffect = "Give" _ target:GeneralCardTarget _ amount:Number _ "+1 power counter" "s"? {
-	return  Object.assign({name: 'addPowerCounter', amount}, {target:target})
-}
-
-//Card movement effects - these are worded in more complex ways than other card-related effects.
-MoveCardEffect = MoveFromPlay / DiscardFromHand / ArchiveFromHand / Revive
-
-MoveFromPlay = ("Return"i/"Shuffle"i/"Put"i) _ target:GeneralCardTarget _ ("to the top of"/"to"/"into"/"on top of") _ player:PlayerTarget? _ location:("hand"/"deck"/"archives") "s"? {
-    let name = "returnTo" + location.charAt(0).toUpperCase() + location.slice(1)
-    return {name, target} //Ignore player target, assumed for most movement.
-}
-
-DiscardFromHand = name:("Discard"i/"Purge"i) _ target:GeneralCardTarget _ "from" _ player:PlayerTarget _ location:("hand"/"deck"/"archives") "s"? {
-    return {
-    	name: name.toLowerCase(),
-    	target: Object.assign(target, {
-            location: location, 
-            controller: player
-        })
-    }
-}
-
-ArchiveFromHand = name:"Archive"i _ "a card" _ "from"? _ player:PlayerTarget? _ location:("hand"/"deck")? "s"? {
-    return {
-    	name: name.toLowerCase(),
-    	target: {
-        	mode: "exactly",
-            count: 1,
-        	type: null, 
-            location: location || "hand", 
-            controller: player || "self"
-        }
-    }
-}
-
-Revive = ("Return"i/"Shuffle"i) _ target:GeneralCardTarget _ "from" _ player:PlayerTarget? _ "discard pile to" _ PlayerTarget? _ location:("hand"/"deck") "s"? {
-    let name = "returnFromDiscardTo" + location.charAt(0).toUpperCase() + location.slice(1)
-    return {name, target} //Ignore player target, assumed for most movement.
-}
-
-//Amber movement effects are also worded in more complex ways
-MoveAmberEffect = "Move"i _ amount:("each"/Number) _ "A" _ ("on"/"from") _ GeneralCardTarget _ "to" _ 
-destination:("the common supply"/PlayerTarget _ "pool"/GeneralCardTarget) {
-	return {name: "removeAmber", all:amount == "each", amount, destination};
-}/"Move"i _ amount:("each"/Number) _ "A" _ ("on"/"from") _ GeneralCardTarget _ "to" _ PlayerTarget _ "pool"
-
 
 
 
@@ -482,6 +397,16 @@ MayUse = "may use" { return {name: 'mayUse'}; }
 
 Quote = [\“"”]
 
+
+//Targetting
+//Player targetting
+PlayerTarget = ("Your Opponent"i (['’]?"s"?) {return "opponent"}
+/ "You"i "r"? {return "self"}
+/ ("their owners’"i/"each player’s"i/"Each player"i) {return "any";}
+/"its owner" (['’]?"s"?) {return "owner"}
+/"its controller" "’s"? {return "controller"}
+/"its opponent" {return "controllerOpponent"})
+/"they"/"their"
 
 //Card targetting
 GeneralCardTarget = (DeckCard/NeighborTarget/Self/CardTarget _ "and" _ CardTarget/CardTarget/ItTarget/UpgradedCreature)

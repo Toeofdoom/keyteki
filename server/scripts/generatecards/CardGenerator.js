@@ -43,13 +43,14 @@ class CardGenerator {
         fs.rmdirSync(this.partialOutputDir, { recursive: true });
         console.log('Loading card information');
         let cards = await this.dataSource.getCards();
-        cards = cards.sort((a, b) => (a.expansion > b.expansion ? -1 : 1));
+        cards = cards.sort((a, b) => ((a.expansion || 999) > (b.expansion || 999) ? -1 : 1));
 
         let expansionPaths = {
             CotA: '01-Core',
             AoA: '02-AoA',
             WC: '03-WC',
-            MM: '04-MM'
+            MM: '04-MM',
+            DT: '05-DT'
         };
 
         let cardsById = _.groupBy(cards, (card) => card.id);
