@@ -4,10 +4,7 @@ class SubtleMaul extends Card {
     //Action: Your opponent discards a random card from their hand.
     setupCardAbilities(ability) {
         this.action({
-            gameAction: ability.actions.discardAtRandom({
-                amount: 1,
-                location: 'hand'
-            })
+            gameAction: ability.actions.discardAtRandom({ amount: 1 })
         });
     }
 }

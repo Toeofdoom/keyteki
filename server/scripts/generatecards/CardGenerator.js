@@ -72,7 +72,8 @@ class CardGenerator {
 
         console.log('Card information loaded');
         for (let card of cards) {
-            let simplifiedText = card.text.split(card.name).join('$this');
+            let baseName = card.name.replace(/ *\(Evil Twin\)/, '');
+            let simplifiedText = card.text.split(baseName).join('$this');
             let data = {
                 name: this.camelCase(card.name),
                 card: card,
@@ -147,7 +148,7 @@ class CardGenerator {
             .toLowerCase()
             .replace(/^[0-9]/, (m) => digitStrings[parseInt(m)])
             .replace('æ', 'a')
-            .replace(/['’]/g, '')
+            .replace(/[()'’]/g, '')
             .replace(/\b([A-Za-z])/g, (m, chr) => chr.toUpperCase())
             .replace(/[,?.!"„“” \-[\]]/g, '');
     }

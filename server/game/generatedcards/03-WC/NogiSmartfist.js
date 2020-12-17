@@ -8,7 +8,6 @@ class NogiSmartfist extends Card {
                 ability.actions.draw({ amount: 2 }),
                 ability.actions.discardAtRandom((context) => ({
                     amount: 2,
-                    location: 'hand',
                     target: context.player
                 }))
             ]

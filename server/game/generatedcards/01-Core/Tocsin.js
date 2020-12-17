@@ -4,10 +4,7 @@ class Tocsin extends Card {
     //Reap: Your opponent discards a random card from their hand.
     setupCardAbilities(ability) {
         this.reap({
-            gameAction: ability.actions.discardAtRandom({
-                amount: 1,
-                location: 'hand'
-            })
+            gameAction: ability.actions.discardAtRandom({ amount: 1 })
         });
     }
 }

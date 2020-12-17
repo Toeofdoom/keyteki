@@ -11,10 +11,7 @@ class AVinda extends Card {
             then: {
                 condition: (context) =>
                     context.preThenEvent.destroyEvent && context.preThenEvent.destroyEvent.resolved,
-                gameAction: ability.actions.discardAtRandom({
-                    amount: 1,
-                    location: 'hand'
-                })
+                gameAction: ability.actions.discardAtRandom({ amount: 1 })
             }
         });
     }

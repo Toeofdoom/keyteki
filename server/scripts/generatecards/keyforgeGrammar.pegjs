@@ -64,9 +64,9 @@ _ multiplier:Multiplier? [.;]? _ ReminderText? {
     return Object.assign({name: 'persistentEffect', multiplier, condition}, pe)
 }
 
-PersistentPlayerEffect = target:PlayerTarget? _ effect:SinglePersistentPlayerEffect {
+PersistentPlayerEffect = targetPlayer:PlayerTarget? _ effect:SinglePersistentPlayerEffect {
 	return {
-		target, 
+		targetPlayer, 
 		effects: [effect]
 	}
 } / SpecialPersistentPlayerEffect //For effects with more unique formats.
@@ -93,7 +93,7 @@ GeneralPersistentTrigger = ("Each time"i/"After"i) _ trigger:Trigger "," _ effec
 	return {name: "reaction", trigger, effect}
 }
 GeneralDurationTrigger = effect:SingleAction _ "each time"i _ trigger:Trigger {
-	return {name: "reaction", trigger, effect}
+	return {name: "reaction", trigger, effect: [effect]}
 }
 
 //Phase or turn based triggers use different wording
@@ -139,7 +139,9 @@ CardTriggerType = "is destroyed fighting $this" {return "destroyedFightingThis"}
 	/"is discarded from" _ playerTarget:PlayerTarget _ "hand" {return "discardedACard"}
 
 //Reminder text
-ReminderText = _ "(" [^)]+ ")" _ {
+ReminderText = _ ("(" [^)]+ ")"
+	/"This card is translated"i [^.]* "."?
+	/"This card is incomplete and subject to change"i "."?) _ {
 	return {name: "reminderText", keywords: [text()]}
 }
 
@@ -234,7 +236,7 @@ CardAction = StandardFormatCardAction/CardCapturesAction/GiveCounters
 
 StandardFormatCardAction = actions:CardActionList _ target:GeneralCardTarget 
 _ multiplier:Multiplier? _ splash:SplashSuffix?_ noPrevent:UnpreventableSuffix? _ AsIfItWereYours? {
-	let action = actions.length === 1 ? actions[0] : {name:"sequence", actions}
+	let action = actions.length === 1 ? actions[0] : {name:"sequential", actions}
 	return Object.assign(action, {target, splash, multiplier, noPrevent})
 }
 
@@ -254,7 +256,7 @@ CardCapturesAction = target:GeneralCardTarget _ "Captures"i _ amount:AmberCount
 }
 
 GiveCounters = "give"i _ target:GeneralCardTarget _ amount:Number _ "+1 power counter" "s"? {
-	return {name: 'addPowerCounters', amount, target};
+	return {name: 'addPowerCounter', amount, target};
 }
 
 //Standard formats
@@ -292,15 +294,17 @@ Heal = "heal"i _ amount:Number _ "damage from" {return {name: 'heal', amount }}
 FullyHeal = "Fully heal"i {	return {name: 'heal', fully: true }}
 
 //Card movement effects - these are worded in more complex ways than other card-related effects.
-MoveCardAction = MoveFromAToB
-
-MoveFromAToB = name:MoveCardActionType _ target:GeneralCardTarget _ 
-	locationA:("from" _ l:SpecificLocation {return l;})? _
-	locationB:(("to"/"into"/"on") _ l:SpecificLocation {return l;})? {
+MoveCardAction = name:MoveCardActionType _ target:GeneralCardTarget _ 
+	location:("from" _ l:SpecificLocation {return l;})? _
+	endLocation:(("to"/"into"/"on") _ l:SpecificLocation {return l;})? {
+    
+    //Archiving and discarding default to targetting a card from your hand
+    if (name === "archive" || name == "discard")
+    	location = location || {location: "hand", controller: "self"};
+    
 	return {
     	name,
-		target: locationA != null ? Object.assign(target, locationA) : target,
-		location: locationB
+		target: location != null ? Object.assign(target, location) : target,
     }
 }
 
@@ -310,7 +314,13 @@ SpecificLocation = sublocation:SubLocation? _ controller:(PlayerTarget/("an"/"a"
 }
 
 SubLocation = "the"? _ "top of"
-MoveCardActionType = "Return"i/"Shuffle"i/"Put"i/"Discard"i/"Purge"i/"Archive"i {return text().toLowerCase();}
+MoveCardActionType = "Return"i {return "returnToHand"}
+	/"Shuffle"i {return "returnToDeck"}
+	/"Put"i {return "returnToDeck"}
+	/"Discard"i {return "discard"}
+	/"Purge"i {return "purge"}
+	/"Archive"i {return "archive"}
+
 CardLocation = "hand"i "s"? {return "hand"}
 	/"deck"i "s"? {return "deck"}
 	/"discard pile"i "s"? {return "discard"}
@@ -408,22 +418,23 @@ DeckCard = "the top"i _ amount:Number? _ "card""s"? " of your deck" {
 }
 Self = "$this"
 UpgradedCreature = "this creature"i {return {mode: "upgradedCreature"}}
-NeighborTarget = "Each of $this’"i "s"? _ "neighbors" {
+NeighborTarget = "Each of $this"i [\'’s]* _ "neighbors" {
 	return Object.assign({type: "creature", conditions: [{name: "neighboring"}]});
 }
 ItTarget = ("it"i/"that"i _ CardType) {return {mode: "trigger"}}
 
 StandardCardTarget = targetCount:CardTargetCount  _ minmax:MostPowerful? _ other:OtherSpecifier? 
 	_ damaged:DamagedSpecifier? _ controller:ControllerSpecifier? _ neighbor:NeighborSpecifier? 
-	_ flank:FlankSpecifier? _ house:HouseSpecifier? _ base:BaseCardTarget 
-	_ nonFlank:NonFlankSpecifier? _center:CenterSpecifier? _ hasAmber:HasAmberSpecifier?
+	_ flank:FlankSpecifier? _ house:HouseSpecifier? _ stunned:StunnedSpecifier?
+	_ exhausted:ExhaustedSpecifier?
+	_ base:BaseCardTarget 
+	_ nonFlank:NonFlankSpecifier? _ center:CenterSpecifier? _ hasAmber:HasAmberSpecifier?
 	_ attached:AttachedToSpecifier? _ chosenHouse:ChosenHouseSpecifier? _ power:PowerSpecifier?
 	_ controlledBy:ControlledBySpecifier? {
 	return Object.assign({
     	type: base.type,
         controller: controller || controlledBy, 
-        location:location,
-        conditions: [minmax, other, damaged, neighbor, flank, nonFlank, _center, house, hasAmber, attached, chosenHouse, power].concat(base.conditions).filter(x => x !== null)
+        conditions: [minmax, other, damaged, neighbor, flank, nonFlank, stunned, exhausted, center, house, hasAmber, attached, chosenHouse, power].concat(base.conditions).filter(x => x !== null)
     }, targetCount)
 }
 
@@ -432,8 +443,9 @@ BaseCardTarget = trait:TraitSpecifier? _ house:HouseSpecifier? _ type:CardType {
 	t:TraitSpecifier {return{conditions:[t], type:"creature"};}
 
 //How many targets?
-CardTargetCount = OneTarget / UpToTargets / NoTargets / AtLeastTargets / EachTarget
-EachTarget = ("each"i/"all"i)? {return {mode: "all"}}
+CardTargetCount = count:(EachTarget / OneTarget / UpToTargets / NoTargets / AtLeastTargets)? 	{return count || "all";}
+
+EachTarget = ("each"i/"all"i) {return {mode: "all"}}
 NoTargets = ("no"i) {return {mode:"exactly", count:0}}
 OneTarget = ("an"i / "a"i / "the"i) {return {mode:"exactly", count:1}}
 UpToTargets = "up to"i _ count:Number {return {mode:"upTo", count}}
@@ -442,6 +454,8 @@ AtLeastTargets = count:Number _ "or more" {return {mode:"atLeast", count}}
 //Conditions before card
 OtherSpecifier = "other" {return {name: "other"};}
 FlankSpecifier = "flank"i {	return {name: "flank"};}
+StunnedSpecifier = "stunned"i {	return {name: "stunned"};}
+ExhaustedSpecifier = "exhausted"i {	return {name: "exhausted"};}
 NeighborSpecifier = "neighboring"i {return {name: "neighboring"};}
 MostPowerful = ("most"/"least") _ "powerful"
 
@@ -514,14 +528,14 @@ Multiplier = "once"? _ "For"i _ (
 TriggerMultiplier = StandardCardTarget _ trigger:("healed this way")
 
 //Descriptors
-House = "brobnar"i / "dis"i / "logos"i / "mars"i / "sanctum"i / "shadows"i / "untamed"i 
-	/ "saurian"i / "star alliance"i / "unfathomable"i {
+House = ("brobnar"i / "dis"i / "logos"i / "mars"i / "sanctum"i / "shadows"i / "untamed"i 
+	/ "saurian"i / "star alliance"i / "unfathomable"i) {
 	return text().replace(" ", "");
 }
 
 //Creature traits only - split if artifact traits are needed.
 Trait = "mutant"i / "shard"i / "cat"i / "beast"i / "agent"i / "human"i / "scientist"i 
-	/"giant"i / "demon"i / "knight"i / "dinosaur"i / "thief"i / "martian"i / "robot"i 
+	/ "giant"i / "demon"i / "knight"i / "dinosaur"i / "thief"i / "martian"i / "robot"i 
 	/ "sin"i / "horseman"i {return text().toLowerCase();}
 
 CardType = "action"i _ "card"? "s"? {return "action";}

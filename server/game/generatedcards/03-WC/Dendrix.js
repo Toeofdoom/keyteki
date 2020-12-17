@@ -5,10 +5,7 @@ class Dendrix extends Card {
     //
     setupCardAbilities(ability) {
         this.fight({
-            gameAction: ability.actions.discardAtRandom({
-                amount: 1,
-                location: 'hand'
-            })
+            gameAction: ability.actions.discardAtRandom({ amount: 1 })
         });
     }
 }

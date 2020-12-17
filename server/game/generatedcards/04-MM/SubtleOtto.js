@@ -5,10 +5,7 @@ class SubtleOtto extends Card {
     //
     setupCardAbilities(ability) {
         this.play({
-            gameAction: ability.actions.discardAtRandom({
-                amount: 1,
-                location: 'hand'
-            })
+            gameAction: ability.actions.discardAtRandom({ amount: 1 })
         });
     }
 }
