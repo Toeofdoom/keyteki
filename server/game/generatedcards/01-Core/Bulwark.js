@@ -4,6 +4,7 @@ class Bulwark extends Card {
     //Each of $this’s neighbors gets +2 armor.
     setupCardAbilities(ability) {
         this.persistentEffect({
+            targetController: 'any',
             match: (card, context) =>
                 card.type === 'creature' && context.source.neighbors.includes(card),
             effect: ability.effects.modifyArmor(2)

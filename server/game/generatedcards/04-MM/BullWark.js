@@ -6,6 +6,7 @@ class BullWark extends Card {
     setupCardAbilities(ability) {
         //Keywords: assault 2
         this.persistentEffect({
+            targetController: 'any',
             match: (card, context) =>
                 card.type === 'creature' && context.source.neighbors.includes(card),
             effect: ability.effects.addKeyword({

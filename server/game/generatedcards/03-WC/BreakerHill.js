@@ -6,6 +6,7 @@ class BreakerHill extends Card {
     setupCardAbilities(ability) {
         //Keywords: elusive
         this.persistentEffect({
+            targetController: 'any',
             match: (card, context) =>
                 card.type === 'creature' && context.source.neighbors.includes(card),
             effect: ability.effects.gainAbility('action', {

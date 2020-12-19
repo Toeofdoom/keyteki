@@ -69,6 +69,8 @@ class CardGenerator {
         env.addFilter('itIs', itIs);
         env.addFilter('check', check);
         env.addFilter('then', then);
+        env.addFilter('filteredType', filteredType);
+        env.addFilter('isTargetted', isTargetted);
 
         console.log('Card information loaded');
         for (let card of cards) {
@@ -192,7 +194,8 @@ function sortEffects(effects) {
         targets: [],
         default: [],
         then: null,
-        unknown: []
+        unknown: [],
+        condition: null
     };
 
     let lastEffect = firstEffect;
@@ -206,7 +209,7 @@ function sortEffects(effects) {
                 effect.then ||
                 (previousEffects.length > 0 &&
                     !(isDamageEffect(effect) && previousEffects.some(isDamageEffect)) &&
-                    isTargetted(effect))
+                    (isTargetted(effect) || effect.condition))
             ) {
                 let newEffect = {
                     optional: false,
@@ -214,12 +217,14 @@ function sortEffects(effects) {
                     default: [],
                     then: null,
                     unknown: [],
-                    alwaysTriggers: !effect.then
+                    alwaysTriggers: !effect.then,
+                    condition: null
                 };
                 lastEffect.then = newEffect;
                 lastEffect = newEffect;
             }
             if (effect.optional) lastEffect.optional = true;
+            if (effect.condition) lastEffect.condition = effect.condition;
             if (isTargetted(effect)) {
                 lastEffect.targets.push(effect);
             } else {
@@ -239,10 +244,8 @@ function isReplacementEffect(effect) {
 }
 
 function isTargetted(effect) {
-    let untargettedModes = ['all', 'self', 'trigger'];
-    return (
-        effect.target && effect.target != '$this' && !untargettedModes.includes(effect.target.mode)
-    );
+    let untargettedModes = ['all', 'self', 'this', 'it'];
+    return effect.target && !untargettedModes.includes(effect.target.mode);
 }
 
 function baseRefs() {
@@ -251,7 +254,8 @@ function baseRefs() {
         it: 'context.target',
         check: 'card',
         thenDepth: 1,
-        thenContext: 'preThenContext'
+        thenContext: 'preThenContext',
+        filteredType: null
     };
 }
 
@@ -260,7 +264,7 @@ function upgradeRefs(refs) {
 }
 
 function itIs(refs, it) {
-    return Object.assign({}, refs, { it: it });
+    return Object.assign({}, refs, { it });
 }
 
 function check(refs, card) {
@@ -273,6 +277,10 @@ function then(refs) {
         thenDepth,
         thenContext: `preThen${thenDepth}Context`
     });
+}
+
+function filteredType(refs, filteredType) {
+    return Object.assign({}, refs, { filteredType });
 }
 
 module.exports = CardGenerator;

@@ -6,6 +6,7 @@ class OperationsOfficerYshi extends Card {
     setupCardAbilities(ability) {
         //Keywords: taunt
         this.persistentEffect({
+            targetController: 'any',
             match: (card, context) =>
                 card.type === 'creature' && context.source.neighbors.includes(card),
             effect: ability.effects.gainAbility('fight', {

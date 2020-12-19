@@ -10,7 +10,7 @@ class SongOfTheWild extends Card {
                 ),
                 effect: ability.effects.gainAbility('reap', {
                     gameAction: ability.actions.gainAmber({ amount: 1 })
-                }) /*{"this":"context.source","it":"context.target","check":"card","thenDepth":1,"thenContext":"preThenContext"}*/
+                })
             }))
         });
     }

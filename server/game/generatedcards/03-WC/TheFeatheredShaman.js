@@ -7,13 +7,11 @@ class TheFeatheredShaman extends Card {
         //Keywords: elusive
         this.fight({
             reap: true,
-            target: {
-                mode: '',
-                numCards: '',
-                cardType: 'creature',
-                cardCondition: (card, context) => context.source.neighbors.includes(card),
-                gameAction: ability.actions.ward()
-            }
+            gameAction: ability.actions.ward((context) => ({
+                target: context.game.creaturesInPlay.filter((card) =>
+                    context.source.neighbors.includes(card)
+                )
+            }))
         });
     }
 }

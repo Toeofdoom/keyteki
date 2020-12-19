@@ -172,14 +172,15 @@ condition2:IfCondition? {
     return Object.assign(effect, extras)
 }
 
-ChooseTarget = ("Choose a house"i/"Choose"i _ StandardCardTarget)
+ChooseTarget = "Choose a house"i {return {"target": {"mode": "house"}}}
+	/"Choose"i _ target:StandardCardTarget {return target}
 
 SingleSubsequentAction = then:ThenCondition? _ effect:SingleAction _ replacement:"instead"? {
     return Object.assign(effect, then, {replacement:replacement != null})
 }
 
 ThenCondition = condition:(
-	"If you do,"i {return null}/
+	"If" _ ("you"/"they") _ "do,"i {return null}/
     "Otherwise,"i {return {name:"otherwise"}}/
     "If this damage destroys that creature,"i {return {name:"destroysTarget"};}) {
     return {
@@ -204,7 +205,7 @@ PlayerAction = targetPlayer:PlayerTarget? _ effect:SinglePlayerAction _ multipli
 SinglePlayerAction = Forge / AmberAction / GainChains / DrawCards / DiscardRandomCards 
 
 Forge = "forge a key at current cost"i {
-	return {name: 'forgeAKey'}
+	return {name: 'forgeKey'}
 }
 
 AmberAction = type:AmberActionType _ amount:AmberCount {
@@ -286,7 +287,7 @@ Ward = "Ward"i {return {name: 'ward'}}
 RemoveWard = "Remove a ward from"i {return {name: 'removeWard'}}
 Enrage = "Enrage"i {return {name: 'enrage'}}
 Stun = "Stun"i {return {name: 'stun'}}
-Unstun = "Unstun"i {return {name: 'unstun'}}
+Unstun = "Unstun"i {return {name: 'removeStun'}}
 Exhaust = "Exhaust"i {return {name: 'exhaust'}}
 ArchiveTarget = "Archive"i {return {name: 'archive'}}
 Look = "Look at"i {return {name: 'look'}}
@@ -405,7 +406,8 @@ MayUse = "may use" { return {name: 'mayUse'}; }
 //Player targetting
 PlayerTarget = ("Your Opponent"i ['’s]* {return "opponent"}
 	/ "You"i "r"? {return "self"}
-	/ ("their owner"i ['’s]*/"each player"i ['’s]*/"they"i/"their"i) {return "any";}
+	/ ("their owner"i ['’s]*/"each player"i ['’s]*/"their"i) {return "any";}
+	/ "they"i  {return "they"}
 	/ "its owner" ['’s]* {return "owner"}
 	/ "its controller" ['’s]* {return "controller"}
 	/ "its opponent" ['’s]* {return "controllerOpponent"})
@@ -416,12 +418,12 @@ GeneralCardTarget = (DeckCard/NeighborTarget/Self/StandardCardTarget _ "and" _ S
 DeckCard = "the top"i _ amount:Number? _ "card""s"? " of your deck" {
 	return {name:"topdeck", amount}
 }
-Self = "$this"
-UpgradedCreature = "this creature"i {return {mode: "upgradedCreature"}}
+Self = "$this" {return {mode: "self"}}
+UpgradedCreature = "this creature"i {return {mode: "this"}}
 NeighborTarget = "Each of $this"i [\'’s]* _ "neighbors" {
-	return Object.assign({type: "creature", conditions: [{name: "neighboring"}]});
+	return Object.assign({mode:"all", type: "creature", conditions: [{name: "neighboring"}]});
 }
-ItTarget = ("it"i/"that"i _ CardType) {return {mode: "trigger"}}
+ItTarget = ("it"i/"that"i _ CardType) {return {mode: "it"}}
 
 StandardCardTarget = targetCount:CardTargetCount  _ minmax:MostPowerful? _ other:OtherSpecifier? 
 	_ damaged:DamagedSpecifier? _ controller:ControllerSpecifier? _ neighbor:NeighborSpecifier? 
@@ -434,8 +436,8 @@ StandardCardTarget = targetCount:CardTargetCount  _ minmax:MostPowerful? _ other
 	return Object.assign({
     	type: base.type,
         controller: controller || controlledBy, 
-        conditions: [minmax, other, damaged, neighbor, flank, nonFlank, stunned, exhausted, center, house, hasAmber, attached, chosenHouse, power].concat(base.conditions).filter(x => x !== null)
-    }, targetCount)
+        conditions: [other, damaged, neighbor, flank, nonFlank, stunned, exhausted, center, house, hasAmber, attached, chosenHouse, power].concat(base.conditions).filter(x => x !== null)
+	}, targetCount, minmax || {})
 }
 
 //The core card target - need to at least specify a card type or a trait that implies a card type
@@ -444,6 +446,12 @@ BaseCardTarget = trait:TraitSpecifier? _ house:HouseSpecifier? _ type:CardType {
 
 //How many targets?
 CardTargetCount = count:(EachTarget / OneTarget / UpToTargets / NoTargets / AtLeastTargets)? 	{return count || "all";}
+
+MostPowerful = cardStat:(
+	"most" {return {name: "power"};}
+	/"least" {return {name:"negative", quantity:{name: "power"}};}) _ "powerful" { 
+	return { mode: "mostStat", cardStat	}
+}
 
 EachTarget = ("each"i/"all"i) {return {mode: "all"}}
 NoTargets = ("no"i) {return {mode:"exactly", count:0}}
@@ -457,7 +465,7 @@ FlankSpecifier = "flank"i {	return {name: "flank"};}
 StunnedSpecifier = "stunned"i {	return {name: "stunned"};}
 ExhaustedSpecifier = "exhausted"i {	return {name: "exhausted"};}
 NeighborSpecifier = "neighboring"i {return {name: "neighboring"};}
-MostPowerful = ("most"/"least") _ "powerful"
+
 
 DamagedSpecifier = negate:"un"i? "damaged" {
 	let c = {name: "damaged"};
@@ -488,8 +496,12 @@ CenterSpecifier = "in the center of its controller’s battleline."i {
 	return {name: "center"}
 }
 
-PowerSpecifier = "with power" _ vs:Number _ "or" _ compare:("lower"/"higher") {
-	return {name: compare, check:"power", vs}
+PowerSpecifier = "with power" _ amount:Number _ "or" _ compare:("lower"/"higher") {
+	return {
+		name: "comparison", 
+		operator: compare == "lower" ? "<=" : ">=",
+		a: { name: "power" },
+		b: { name: "constant", amount}}
 }
 
 HasAmberSpecifier = "with" _ negate:"no"? _ "A on it"  {
@@ -508,14 +520,33 @@ IfCondition = "If"i _ c:Condition {return c;}
 WhileCondition = "While"i _ c:Condition {return c;}
 
 Condition = c:(
-	PlayerTarget _ ("has"i/"have"i) _ Number ("A"/"<A>")_ "or" _ ("more"/"less")"," /
-	"you control more creatures than your opponent"i /
+	AmberComparison /
+	CreatureComparison /
 	"it is not your turn,"i {return {name:"activePlayer", player:"opponent"}} /
 	StandardCardTarget _ "was destroyed this turn,"i/
 	"it is your turn,"i {return {name:"activePlayer", player:"self"}}/
 	"there are"i _ StandardCardTarget _ "in play"? ","i/
 	GeneralCardTarget _ "is in the center of your battleline,"i)
 	{return c;}
+    
+AmberComparison = player:PlayerTarget _ ("has"i/"have"i) _ amount:Number ("A"/"<A>")_ 
+"or" _ comparison:("more"/"less")"," {
+	return {
+    	name: "comparison",
+        operator: ">=",
+        a:{name:"amber", player},
+        b:{name:"constant", amount}
+    }
+}
+
+CreatureComparison = a:PlayerTarget _ "control" "s"? _ "more creatures than"i _ b:PlayerTarget {
+	return {
+    	name: "comparison",
+        operator: ">",
+        a:{name:"cards", type:'creature', controller:a},
+        b:{name:"cards", type:'creature', controller:b}
+    }
+}
 
 // Modifiers
 Multiplier = "once"? _ "For"i _ (
