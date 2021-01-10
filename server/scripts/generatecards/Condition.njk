@@ -60,6 +60,10 @@ event.location === '{{condition.location}}'
 {{controllerCondition(condition, refs)}}
     {%- elif condition.name == "turn" -%}
 {{formatPlayer(condition.player, refs)}} === this.game.activePlayer
+    {%- elif condition.name == "isTideHigh" -%}
+context.player.isTideHigh()
+    {%- elif condition.name == "isTideLow" -%}
+context.player.isTideLow()
     {%- elif condition.name == "attached" -%}
 {{formatAutomaticTarget(condition.target, refs)}}.upgrades.includes({{refs.check}}){# Not an elegant way to get a list of upgrades on a card #}
     {%- elif condition.name == "destroysTarget" -%}

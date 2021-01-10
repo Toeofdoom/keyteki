@@ -206,7 +206,8 @@ PlayerAndCardFocusedTrigger = eventPlayer:PlayerTarget _ trigger:PlayerCardTrigg
 	return {trigger, card, eventPlayer};
 }
 
-PlayerTriggerType = "forge" "s"? _ "a key" {return "forges"}
+PlayerTriggerType = "forge" "s"? _ "a key" {return "forges"}/
+"raise" "s"? _ "the tide" {return "onRaiseTide"}
 
 PlayerCardTriggerType = t:("play"i/"use"i/"fight with"i {return "fight"}/"reap with"i {return "reap"}) "s"? {return t}
 
@@ -300,7 +301,7 @@ PlayerAction = targetPlayer:PlayerTarget? _ effect:SinglePlayerAction _ multipli
 }
 
 //TODO: Add list support.
-SinglePlayerAction = Forge / AmberAction / GainChains / DrawCards / DiscardRandomCards 
+SinglePlayerAction = Forge / AmberAction / GainChains / DrawCards / DiscardRandomCards / RaiseTide
 
 Forge = "forge a key at current cost"i {
 	return {name: 'forgeKey'}
@@ -328,6 +329,10 @@ DiscardRandomCards = "Discard"i "s"? _ amount:Number _ "random card"i "s"? _ "fr
 
 GainChains = "Gain"i "s"? _ amount:Number _ "chain"i "s"? {
 	return {name: 'gainChains', amount}
+}
+
+RaiseTide = "Raise"i "s"? _ "the tide" {
+	return {name: 'raiseTide'}
 }
 
 //Card effects
@@ -366,7 +371,7 @@ GiveCounters = "give"i _ target:GeneralCardTarget _ amount:Number _ "+1 power co
 //Standard formats
 SingleCardAction = DealDamage / Ready / Use / Fight / Destroy / Sacrifice / Purge 
 	/ Exalt / Ward / RemoveWard / Enrage / Stun / Unstun / Exhaust / ArchiveTarget 
-	/ Heal / FullyHeal / MayFight / PutCounters
+	/ Heal / FullyHeal / MayFight / PutCounters / RemoveCounters
 
 DealDamage = "Deal"i _ amount:Number ("<D>"/"D") _ "to" {return {name: 'dealDamage', amount}}
 SplashSuffix = ", with" _ amount:Number ("<D>"/"D") _ "splash" {return amount; }
@@ -377,6 +382,10 @@ AsIfItWereYours = "as if it were yours"
 
 PutCounters = "Put"i _ amount:Number _ "+1 power counter" "s"? _ "on" {
 	return  {name: 'addPowerCounter', amount}
+}
+
+RemoveCounters = "Remove"i _ amount:Number _ "+1 power counter" "s"? _ "from" {
+	return  {name: 'removePowerCounter', amount}
 }
 
 Ready = "Ready"i {return {name: 'ready'}}
@@ -493,6 +502,7 @@ GainAbilityList = items:(e:GainSingleAbility _ And _ {return e;})* _ item:GainSi
 }
 GainSingleAbility = keywords:Keywords _{return Object.assign(keywords, {name: "gainKeywords"});} 
 	/ Quote ability:BoldAbility Quote {return {name: "gainAbility", ability};}
+    / Quote ability:PersistentEffect Quote {return {name: "gainAbility", ability};}
 
 //Enters play
 EntersPlayAbility = "enter" "s"? " play" _ states:CardStateList {
@@ -642,6 +652,8 @@ Condition = c:(
 	"it is not your turn,"i {return {name:"activePlayer", player:"opponent"}} /
 	CardEventCountComparison /
 	"it is your turn,"i {return {name:"activePlayer", player:"self"}}/
+	"the tide is high,"i {return {name:"isTideHigh"}}/
+	"the tide is low,"i {return {name:"isTideLow"}}/
 	CardCountComparison /
 	card:GeneralCardTarget _ "is in the center of your battleline,"i 
 	{return {name:"check", card, condition:{name:"center"}}})

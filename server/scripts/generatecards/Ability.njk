@@ -196,6 +196,10 @@ ability.actions.{{effect.name}}({{formatParams(effect, refs)}})
     {%- if effect.name == 'gainAbility' -%}
         {%- if effect.ability.name == 'bold' -%}
 ability.effects.gainAbility('{{effect.ability.trigger}}', {{ boldAbility(effect.ability, refs | gainAbility) }})
+        {%- elif effect.ability.name == 'persistentEffect' -%}
+ability.effects.gainAbility('persistentEffect', {
+    {{ persistentEffect(effect.ability, refs | gainAbility) | indent(4) }}
+})
         {%- endif -%}
     {%- elif effect.name == 'gainKeywords' -%}
 ability.effects.addKeyword({ 
