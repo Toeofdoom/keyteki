@@ -10,30 +10,6 @@ class SleepWithTheFishes extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "bold",
-    "trigger": "play",
-    "actions": {
-      "default": [
-        {
-          "name": "destroy",
-          "target": {
-            "type": "creature",
-            "conditions": [
-              {
-                "name": "exhausted"
-              }
-            ],
-            "mode": "all"
-          }
-        }
-      ]
-    }
-  }
-]
-*/
 
 SleepWithTheFishes.id = 'sleep-with-the-fishes';
 

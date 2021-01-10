@@ -17,40 +17,6 @@ class Humble extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "bold",
-    "trigger": "play",
-    "actions": {
-      "targets": [
-        {
-          "type": "creature",
-          "mode": "exactly",
-          "count": 1,
-          "actions": [
-            {
-              "name": "exhaust"
-            }
-          ]
-        }
-      ],
-      "then": {
-        "default": [
-          {
-            "amount": 3,
-            "target": {
-              "mode": "it"
-            },
-            "name": "removeAmber",
-            "then": true
-          }
-        ]
-      }
-    }
-  }
-]
-*/
 
 Humble.id = 'humble';
 

@@ -12,41 +12,6 @@ class TheHarderTheyCome extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "bold",
-    "trigger": "play",
-    "actions": {
-      "targets": [
-        {
-          "type": "creature",
-          "conditions": [
-            {
-              "name": "comparison",
-              "operator": ">=",
-              "a": {
-                "name": "power"
-              },
-              "b": {
-                "name": "constant",
-                "amount": 5
-              }
-            }
-          ],
-          "mode": "exactly",
-          "count": 1,
-          "actions": [
-            {
-              "name": "purge"
-            }
-          ]
-        }
-      ]
-    }
-  }
-]
-*/
 
 TheHarderTheyCome.id = 'the-harder-they-come';
 

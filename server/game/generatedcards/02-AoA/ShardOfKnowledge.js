@@ -15,33 +15,6 @@ class ShardOfKnowledge extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "bold",
-    "trigger": "action",
-    "actions": {
-      "default": [
-        {
-          "name": "draw",
-          "amount": 1,
-          "multiplier": {
-            "name": "cards",
-            "type": "creature",
-            "controller": "self",
-            "conditions": [
-              {
-                "name": "trait",
-                "trait": "shard"
-              }
-            ]
-          }
-        }
-      ]
-    }
-  }
-]
-*/
 
 ShardOfKnowledge.id = 'shard-of-knowledge';
 

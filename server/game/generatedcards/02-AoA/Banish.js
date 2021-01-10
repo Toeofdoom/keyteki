@@ -12,29 +12,6 @@ class Banish extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "bold",
-    "trigger": "play",
-    "actions": {
-      "targets": [
-        {
-          "type": "creature",
-          "controller": "opponent",
-          "mode": "exactly",
-          "count": 1,
-          "actions": [
-            {
-              "name": "archive"
-            }
-          ]
-        }
-      ]
-    }
-  }
-]
-*/
 
 Banish.id = 'banish';
 

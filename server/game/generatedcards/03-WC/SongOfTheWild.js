@@ -15,46 +15,6 @@ class SongOfTheWild extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "bold",
-    "trigger": "play",
-    "actions": {
-      "default": [
-        {
-          "name": "forRemainderOfTurn",
-          "durationEffect": {
-            "name": "persistentEffect",
-            "target": {
-              "type": "creature",
-              "controller": "self",
-              "mode": "all"
-            },
-            "effects": [
-              {
-                "name": "gainAbility",
-                "ability": {
-                  "name": "bold",
-                  "trigger": "reap",
-                  "actions": {
-                    "default": [
-                      {
-                        "name": "gainAmber",
-                        "amount": 1
-                      }
-                    ]
-                  }
-                }
-              }
-            ]
-          }
-        }
-      ]
-    }
-  }
-]
-*/
 
 SongOfTheWild.id = 'song-of-the-wild';
 

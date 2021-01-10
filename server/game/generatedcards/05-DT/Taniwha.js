@@ -14,38 +14,6 @@ class Taniwha extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "bold",
-    "trigger": "fight",
-    "extraTriggers": [
-      "reap"
-    ],
-    "actions": {
-      "targets": [
-        {
-          "type": "creature",
-          "controller": "self",
-          "mode": "exactly",
-          "count": 1,
-          "actions": [
-            {
-              "name": "destroy"
-            }
-          ]
-        }
-      ],
-      "default": [
-        {
-          "name": "gainAmber",
-          "amount": 1
-        }
-      ]
-    }
-  }
-]
-*/
 
 Taniwha.id = 'taniwha';
 

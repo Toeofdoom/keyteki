@@ -14,37 +14,6 @@ class TricerianLegionary extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "keywords",
-    "keywords": [
-      {
-        "name": "taunt"
-      }
-    ]
-  },
-  {
-    "name": "bold",
-    "trigger": "play",
-    "actions": {
-      "targets": [
-        {
-          "type": "creature",
-          "controller": "self",
-          "mode": "exactly",
-          "count": 1,
-          "actions": [
-            {
-              "name": "ward"
-            }
-          ]
-        }
-      ]
-    }
-  }
-]
-*/
 
 TricerianLegionary.id = 'tricerian-legionary';
 

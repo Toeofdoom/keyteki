@@ -12,37 +12,6 @@ class KalochStonefather extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "persistentEffect",
-    "condition": {
-      "name": "check",
-      "card": {
-        "mode": "self"
-      },
-      "condition": {
-        "name": "center"
-      }
-    },
-    "target": {
-      "type": "creature",
-      "controller": "self",
-      "mode": "all"
-    },
-    "effects": [
-      {
-        "name": "gainKeywords",
-        "keywords": [
-          {
-            "name": "skirmish"
-          }
-        ]
-      }
-    ]
-  }
-]
-*/
 
 KalochStonefather.id = 'kaloch-stonefather';
 

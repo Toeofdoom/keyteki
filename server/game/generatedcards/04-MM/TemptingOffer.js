@@ -20,47 +20,6 @@ class TemptingOffer extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "keywords",
-    "keywords": [
-      {
-        "name": "enhance"
-      }
-    ]
-  },
-  {
-    "name": "bold",
-    "trigger": "play",
-    "actions": {
-      "targets": [
-        {
-          "type": "creature",
-          "controller": "opponent",
-          "mode": "exactly",
-          "count": 1,
-          "actions": [
-            {
-              "name": "returnToHand"
-            }
-          ]
-        }
-      ],
-      "then": {
-        "default": [
-          {
-            "name": "gainAmber",
-            "amount": 1,
-            "targetPlayer": "opponent",
-            "then": true
-          }
-        ]
-      }
-    }
-  }
-]
-*/
 
 TemptingOffer.id = 'tempting-offer';
 

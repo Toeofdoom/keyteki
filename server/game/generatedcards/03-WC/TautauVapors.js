@@ -16,38 +16,6 @@ class TautauVapors extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "bold",
-    "trigger": "play",
-    "actions": {
-      "default": [
-        {
-          "name": "draw",
-          "amount": 2
-        }
-      ],
-      "then": {
-        "targets": [
-          {
-            "controller": "self",
-            "mode": "exactly",
-            "count": 1,
-            "location": "hand",
-            "actions": [
-              {
-                "name": "archive"
-              }
-            ]
-          }
-        ],
-        "alwaysTriggers": true
-      }
-    }
-  }
-]
-*/
 
 TautauVapors.id = 'tautau-vapors';
 

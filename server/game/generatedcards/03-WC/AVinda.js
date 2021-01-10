@@ -16,45 +16,6 @@ class AVinda extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "bold",
-    "trigger": "reap",
-    "actions": {
-      "targets": [
-        {
-          "type": "creature",
-          "mode": "exactly",
-          "count": 1,
-          "actions": [
-            {
-              "name": "dealDamage",
-              "amount": 1
-            }
-          ]
-        }
-      ],
-      "then": {
-        "default": [
-          {
-            "name": "discardAtRandom",
-            "amount": 1,
-            "targetPlayer": "opponent",
-            "condition": {
-              "name": "destroysTarget"
-            },
-            "then": true
-          }
-        ],
-        "condition": {
-          "name": "destroysTarget"
-        }
-      }
-    }
-  }
-]
-*/
 
 AVinda.id = 'a-vinda';
 

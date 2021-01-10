@@ -14,30 +14,6 @@ class EyeOfJudgment extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "bold",
-    "trigger": "action",
-    "actions": {
-      "targets": [
-        {
-          "type": "creature",
-          "controller": "any",
-          "mode": "exactly",
-          "count": 1,
-          "location": "discard",
-          "actions": [
-            {
-              "name": "purge"
-            }
-          ]
-        }
-      ]
-    }
-  }
-]
-*/
 
 EyeOfJudgment.id = 'eye-of-judgment';
 

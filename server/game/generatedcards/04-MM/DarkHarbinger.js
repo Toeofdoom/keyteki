@@ -17,36 +17,6 @@ class DarkHarbinger extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "reaction",
-    "trigger": {
-      "trigger": "play",
-      "card": {
-        "type": "action",
-        "conditions": [
-          {
-            "name": "house",
-            "house": "untamed"
-          }
-        ]
-      },
-      "eventPlayer": "self"
-    },
-    "actions": {
-      "default": [
-        {
-          "name": "ready",
-          "target": {
-            "mode": "self"
-          }
-        }
-      ]
-    }
-  }
-]
-*/
 
 DarkHarbinger.id = 'dark-harbinger';
 

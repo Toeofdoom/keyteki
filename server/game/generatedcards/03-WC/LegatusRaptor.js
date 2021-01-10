@@ -22,55 +22,6 @@ class LegatusRaptor extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "bold",
-    "trigger": "fight",
-    "actions": {
-      "optional": true,
-      "default": [
-        {
-          "name": "exalt",
-          "target": {
-            "mode": "self"
-          },
-          "optional": true
-        }
-      ],
-      "then": {
-        "targets": [
-          {
-            "type": "creature",
-            "controller": "self",
-            "conditions": [
-              {
-                "name": "other"
-              }
-            ],
-            "mode": "exactly",
-            "count": 1,
-            "actions": [
-              {
-                "name": "sequential",
-                "actions": [
-                  {
-                    "name": "ready"
-                  },
-                  {
-                    "name": "use"
-                  }
-                ],
-                "then": true
-              }
-            ]
-          }
-        ]
-      }
-    }
-  }
-]
-*/
 
 LegatusRaptor.id = 'legatus-raptor';
 

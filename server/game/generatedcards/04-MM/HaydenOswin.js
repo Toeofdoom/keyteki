@@ -14,34 +14,6 @@ class HaydenOswin extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "bold",
-    "trigger": "reap",
-    "actions": {
-      "default": [
-        {
-          "name": "gainAmber",
-          "amount": 1,
-          "multiplier": {
-            "name": "cards",
-            "type": "upgrade",
-            "conditions": [
-              {
-                "name": "attached",
-                "target": {
-                  "mode": "self"
-                }
-              }
-            ]
-          }
-        }
-      ]
-    }
-  }
-]
-*/
 
 HaydenOswin.id = 'hayden-oswin';
 

@@ -15,47 +15,6 @@ class BreakerHill extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "keywords",
-    "keywords": [
-      {
-        "name": "elusive"
-      }
-    ]
-  },
-  {
-    "name": "persistentEffect",
-    "target": {
-      "mode": "all",
-      "type": "creature",
-      "conditions": [
-        {
-          "name": "neighboring"
-        }
-      ]
-    },
-    "effects": [
-      {
-        "name": "gainAbility",
-        "ability": {
-          "name": "bold",
-          "trigger": "action",
-          "actions": {
-            "default": [
-              {
-                "name": "steal",
-                "amount": 1
-              }
-            ]
-          }
-        }
-      }
-    ]
-  }
-]
-*/
 
 BreakerHill.id = 'breaker-hill';
 

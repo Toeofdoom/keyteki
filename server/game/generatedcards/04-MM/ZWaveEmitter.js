@@ -13,32 +13,6 @@ class ZWaveEmitter extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "reaction",
-    "trigger": {
-      "trigger": "onBeginRound",
-      "conditions": [
-        {
-          "name": "turn",
-          "player": "self"
-        }
-      ]
-    },
-    "actions": {
-      "default": [
-        {
-          "name": "ward",
-          "target": {
-            "mode": "this"
-          }
-        }
-      ]
-    }
-  }
-]
-*/
 
 ZWaveEmitter.id = 'z-wave-emitter';
 

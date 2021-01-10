@@ -12,39 +12,6 @@ class AutoEncoder extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "reaction",
-    "trigger": {
-      "trigger": "onCardDiscarded",
-      "card": {},
-      "conditions": [
-        {
-          "name": "location",
-          "location": "hand"
-        },
-        {
-          "name": "controller",
-          "controller": "self"
-        }
-      ]
-    },
-    "actions": {
-      "default": [
-        {
-          "name": "archive",
-          "target": {
-            "mode": "topdeck",
-            "location": "hand",
-            "controller": "self"
-          }
-        }
-      ]
-    }
-  }
-]
-*/
 
 AutoEncoder.id = 'auto-encoder';
 

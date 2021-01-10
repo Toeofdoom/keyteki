@@ -16,34 +16,6 @@ class Commune extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "keywords",
-    "keywords": [
-      {
-        "name": "omega"
-      }
-    ]
-  },
-  {
-    "name": "bold",
-    "trigger": "play",
-    "actions": {
-      "default": [
-        {
-          "name": "loseAmber",
-          "amount": "all"
-        },
-        {
-          "name": "gainAmber",
-          "amount": 4
-        }
-      ]
-    }
-  }
-]
-*/
 
 Commune.id = 'commune';
 

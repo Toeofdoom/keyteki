@@ -23,57 +23,6 @@ class GreaterOxtet extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "keywords",
-    "keywords": [
-      {
-        "name": "taunt"
-      }
-    ]
-  },
-  {
-    "name": "reaction",
-    "trigger": {
-      "trigger": "onCardsReadied",
-      "conditions": [
-        {
-          "name": "turn",
-          "player": "self"
-        }
-      ]
-    },
-    "actions": {
-      "targets": [
-        {
-          "controller": "self",
-          "mode": "exactly",
-          "count": 1,
-          "location": "hand",
-          "actions": [
-            {
-              "name": "purge"
-            }
-          ]
-        }
-      ],
-      "then": {
-        "default": [
-          {
-            "name": "addPowerCounter",
-            "amount": 2,
-            "target": {
-              "mode": "self"
-            },
-            "then": true
-          }
-        ]
-      }
-    }
-  }
-]
-*/
 
 GreaterOxtet.id = 'greater-oxtet';
 

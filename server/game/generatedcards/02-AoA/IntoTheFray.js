@@ -14,55 +14,6 @@ class IntoTheFray extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "bold",
-    "trigger": "play",
-    "actions": {
-      "default": [
-        {
-          "name": "forRemainderOfTurn",
-          "durationEffect": {
-            "name": "persistentEffect",
-            "target": {
-              "type": "creature",
-              "controller": "self",
-              "conditions": [
-                {
-                  "name": "house",
-                  "house": "brobnar"
-                }
-              ],
-              "mode": "exactly",
-              "count": 1
-            },
-            "effects": [
-              {
-                "name": "gainAbility",
-                "ability": {
-                  "name": "bold",
-                  "trigger": "fight",
-                  "actions": {
-                    "default": [
-                      {
-                        "name": "ready",
-                        "target": {
-                          "mode": "this"
-                        }
-                      }
-                    ]
-                  }
-                }
-              }
-            ]
-          }
-        }
-      ]
-    }
-  }
-]
-*/
 
 IntoTheFray.id = 'into-the-fray';
 

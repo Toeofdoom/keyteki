@@ -45,63 +45,6 @@ class CincinnatusRex extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "comparison",
-    "operator": "===",
-    "b": {
-      "name": "constant",
-      "amount": 0
-    },
-    "a": {
-      "name": "cards",
-      "type": "creature",
-      "controller": "opponent"
-    }
-  },
-  " ",
-  {
-    "name": "destroy",
-    "target": {
-      "mode": "self"
-    }
-  },
-  {
-    "name": "bold",
-    "trigger": "fight",
-    "actions": {
-      "optional": true,
-      "default": [
-        {
-          "name": "exalt",
-          "target": {
-            "mode": "self"
-          },
-          "optional": true
-        }
-      ],
-      "then": {
-        "default": [
-          {
-            "name": "ready",
-            "target": {
-              "controller": "self",
-              "conditions": [
-                {
-                  "name": "other"
-                }
-              ],
-              "mode": "all"
-            },
-            "then": true
-          }
-        ]
-      }
-    }
-  }
-]
-*/
 
 CincinnatusRex.id = 'cincinnatus-rex';
 

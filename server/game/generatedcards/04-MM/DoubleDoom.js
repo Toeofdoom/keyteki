@@ -14,36 +14,6 @@ class DoubleDoom extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "bold",
-    "trigger": "play",
-    "actions": {
-      "targets": [
-        {
-          "type": "creature",
-          "controller": "opponent",
-          "mode": "exactly",
-          "count": 1,
-          "actions": [
-            {
-              "name": "returnToHand"
-            }
-          ]
-        }
-      ],
-      "default": [
-        {
-          "name": "discardAtRandom",
-          "amount": 1,
-          "targetPlayer": "opponent"
-        }
-      ]
-    }
-  }
-]
-*/
 
 DoubleDoom.id = 'double-doom';
 

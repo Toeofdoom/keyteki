@@ -11,36 +11,6 @@ class ObservUMax extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "persistentEffect",
-    "target": {
-      "mode": "this"
-    },
-    "effects": [
-      {
-        "name": "gainAbility",
-        "ability": {
-          "name": "bold",
-          "trigger": "fight",
-          "extraTriggers": [
-            "reap"
-          ],
-          "actions": {
-            "default": [
-              {
-                "name": "capture",
-                "amount": 1
-              }
-            ]
-          }
-        }
-      }
-    ]
-  }
-]
-*/
 
 ObservUMax.id = 'observ-u-max';
 

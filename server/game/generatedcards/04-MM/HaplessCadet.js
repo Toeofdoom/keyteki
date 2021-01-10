@@ -10,31 +10,6 @@ class HaplessCadet extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "keywords",
-    "keywords": [
-      {
-        "name": "taunt"
-      }
-    ]
-  },
-  {
-    "name": "bold",
-    "trigger": "destroyed",
-    "actions": {
-      "default": [
-        {
-          "name": "loseAmber",
-          "amount": 3,
-          "targetPlayer": "opponent"
-        }
-      ]
-    }
-  }
-]
-*/
 
 HaplessCadet.id = 'hapless-cadet';
 

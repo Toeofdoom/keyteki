@@ -14,36 +14,6 @@ class Timetraveller extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "bold",
-    "trigger": "play",
-    "actions": {
-      "default": [
-        {
-          "name": "draw",
-          "amount": 2
-        }
-      ]
-    }
-  },
-  {
-    "name": "bold",
-    "trigger": "action",
-    "actions": {
-      "default": [
-        {
-          "name": "returnToDeck",
-          "target": {
-            "mode": "self"
-          }
-        }
-      ]
-    }
-  }
-]
-*/
 
 Timetraveller.id = 'timetraveller';
 

@@ -16,43 +16,6 @@ class Soulkeeper extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "persistentEffect",
-    "target": {
-      "mode": "this"
-    },
-    "effects": [
-      {
-        "name": "gainAbility",
-        "ability": {
-          "name": "bold",
-          "trigger": "destroyed",
-          "actions": {
-            "targets": [
-              {
-                "type": "creature",
-                "controller": "opponent",
-                "mode": "mostStat",
-                "count": 1,
-                "cardStat": {
-                  "name": "power"
-                },
-                "actions": [
-                  {
-                    "name": "destroy"
-                  }
-                ]
-              }
-            ]
-          }
-        }
-      }
-    ]
-  }
-]
-*/
 
 Soulkeeper.id = 'soulkeeper';
 

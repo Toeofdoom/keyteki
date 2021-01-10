@@ -12,33 +12,6 @@ class Shorty extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "keywords",
-    "keywords": [
-      {
-        "name": "assault",
-        "count": 4
-      }
-    ]
-  },
-  {
-    "name": "bold",
-    "trigger": "reap",
-    "actions": {
-      "default": [
-        {
-          "name": "enrage",
-          "target": {
-            "mode": "self"
-          }
-        }
-      ]
-    }
-  }
-]
-*/
 
 Shorty.id = 'shorty';
 

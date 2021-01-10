@@ -8,23 +8,6 @@ class SubtleMaul extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "bold",
-    "trigger": "action",
-    "actions": {
-      "default": [
-        {
-          "name": "discardAtRandom",
-          "amount": 1,
-          "targetPlayer": "opponent"
-        }
-      ]
-    }
-  }
-]
-*/
 
 SubtleMaul.id = 'subtle-maul';
 

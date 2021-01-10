@@ -9,46 +9,6 @@ class Shooler extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "bold",
-    "trigger": "play",
-    "actions": {
-      "default": [
-        {
-          "name": "steal",
-          "amount": 1,
-          "condition": {
-            "name": "comparison",
-            "operator": ">=",
-            "a": {
-              "name": "amber",
-              "player": "opponent"
-            },
-            "b": {
-              "name": "constant",
-              "amount": 4
-            }
-          }
-        }
-      ],
-      "condition": {
-        "name": "comparison",
-        "operator": ">=",
-        "a": {
-          "name": "amber",
-          "player": "opponent"
-        },
-        "b": {
-          "name": "constant",
-          "amount": 4
-        }
-      }
-    }
-  }
-]
-*/
 
 Shooler.id = 'shooler';
 

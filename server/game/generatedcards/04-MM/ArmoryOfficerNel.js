@@ -13,35 +13,6 @@ class ArmoryOfficerNel extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "keywords",
-    "keywords": [
-      {
-        "name": "enhance"
-      }
-    ]
-  },
-  {
-    "name": "reaction",
-    "trigger": {
-      "trigger": "entersPlay",
-      "card": {
-        "type": "upgrade"
-      }
-    },
-    "actions": {
-      "default": [
-        {
-          "name": "draw",
-          "amount": 1
-        }
-      ]
-    }
-  }
-]
-*/
 
 ArmoryOfficerNel.id = 'armory-officer-nel';
 

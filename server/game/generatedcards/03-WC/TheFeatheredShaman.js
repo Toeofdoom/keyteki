@@ -15,41 +15,6 @@ class TheFeatheredShaman extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "keywords",
-    "keywords": [
-      {
-        "name": "elusive"
-      }
-    ]
-  },
-  {
-    "name": "bold",
-    "trigger": "fight",
-    "extraTriggers": [
-      "reap"
-    ],
-    "actions": {
-      "default": [
-        {
-          "name": "ward",
-          "target": {
-            "mode": "all",
-            "type": "creature",
-            "conditions": [
-              {
-                "name": "neighboring"
-              }
-            ]
-          }
-        }
-      ]
-    }
-  }
-]
-*/
 
 TheFeatheredShaman.id = 'the-feathered-shaman';
 

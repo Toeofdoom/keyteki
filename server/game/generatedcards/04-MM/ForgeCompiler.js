@@ -20,35 +20,6 @@ class ForgeCompiler extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "reaction",
-    "trigger": {
-      "trigger": "forges",
-      "eventPlayer": "opponent"
-    },
-    "actions": {
-      "default": [
-        {
-          "name": "destroy",
-          "target": {
-            "mode": "self"
-          }
-        },
-        {
-          "name": "ward",
-          "target": {
-            "type": "creature",
-            "controller": "self",
-            "mode": "all"
-          }
-        }
-      ]
-    }
-  }
-]
-*/
 
 ForgeCompiler.id = 'forge-compiler';
 

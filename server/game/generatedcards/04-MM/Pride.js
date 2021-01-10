@@ -13,32 +13,6 @@ class Pride extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "bold",
-    "trigger": "reap",
-    "actions": {
-      "default": [
-        {
-          "name": "ward",
-          "target": {
-            "type": "creature",
-            "controller": "self",
-            "conditions": [
-              {
-                "name": "trait",
-                "trait": "sin"
-              }
-            ],
-            "mode": "all"
-          }
-        }
-      ]
-    }
-  }
-]
-*/
 
 Pride.id = 'pride';
 

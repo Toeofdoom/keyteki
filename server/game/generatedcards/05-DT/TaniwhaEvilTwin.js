@@ -14,33 +14,6 @@ class TaniwhaEvilTwin extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "bold",
-    "trigger": "fight",
-    "extraTriggers": [
-      "reap"
-    ],
-    "actions": {
-      "targets": [
-        {
-          "type": "creature",
-          "controller": "self",
-          "mode": "exactly",
-          "count": 1,
-          "location": "discard",
-          "actions": [
-            {
-              "name": "returnToDeck"
-            }
-          ]
-        }
-      ]
-    }
-  }
-]
-*/
 
 TaniwhaEvilTwin.id = 'taniwha-evil-twin';
 

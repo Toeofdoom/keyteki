@@ -11,35 +11,6 @@ class DarkWave extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "bold",
-    "trigger": "play",
-    "actions": {
-      "default": [
-        {
-          "name": "dealDamage",
-          "amount": 2,
-          "target": {
-            "type": "creature",
-            "conditions": [
-              {
-                "name": "not",
-                "condition": {
-                  "name": "trait",
-                  "trait": "mutant"
-                }
-              }
-            ],
-            "mode": "all"
-          }
-        }
-      ]
-    }
-  }
-]
-*/
 
 DarkWave.id = 'dark-wave';
 

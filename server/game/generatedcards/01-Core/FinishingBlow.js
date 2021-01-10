@@ -15,42 +15,6 @@ class FinishingBlow extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "bold",
-    "trigger": "play",
-    "actions": {
-      "targets": [
-        {
-          "type": "creature",
-          "conditions": [
-            {
-              "name": "damaged"
-            }
-          ],
-          "mode": "exactly",
-          "count": 1,
-          "actions": [
-            {
-              "name": "destroy"
-            }
-          ]
-        }
-      ],
-      "then": {
-        "default": [
-          {
-            "name": "steal",
-            "amount": 1,
-            "then": true
-          }
-        ]
-      }
-    }
-  }
-]
-*/
 
 FinishingBlow.id = 'finishing-blow';
 

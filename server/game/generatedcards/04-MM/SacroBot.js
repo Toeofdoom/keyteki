@@ -15,38 +15,6 @@ class SacroBot extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "bold",
-    "trigger": "reap",
-    "actions": {
-      "targets": [
-        {
-          "controller": "self",
-          "mode": "exactly",
-          "count": 1,
-          "location": "hand",
-          "actions": [
-            {
-              "name": "discard"
-            }
-          ]
-        }
-      ],
-      "then": {
-        "default": [
-          {
-            "name": "draw",
-            "amount": 1,
-            "then": true
-          }
-        ]
-      }
-    }
-  }
-]
-*/
 
 SacroBot.id = 'sacro-bot';
 

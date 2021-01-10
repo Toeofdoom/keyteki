@@ -13,29 +13,6 @@ class HiddenStash extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "bold",
-    "trigger": "play",
-    "actions": {
-      "targets": [
-        {
-          "controller": "self",
-          "mode": "exactly",
-          "count": 1,
-          "location": "hand",
-          "actions": [
-            {
-              "name": "archive"
-            }
-          ]
-        }
-      ]
-    }
-  }
-]
-*/
 
 HiddenStash.id = 'hidden-stash';
 

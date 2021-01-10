@@ -22,41 +22,6 @@ class GrimReminder extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "bold",
-    "trigger": "play",
-    "actions": {
-      "targets": [
-        {
-          "mode": "house"
-        }
-      ],
-      "default": [
-        {
-          "name": "archive",
-          "target": {
-            "type": "creature",
-            "controller": "self",
-            "conditions": [
-              {
-                "name": "chosenHouse"
-              }
-            ],
-            "mode": "all",
-            "location": "discard"
-          }
-        },
-        {
-          "name": "gainChains",
-          "amount": 1
-        }
-      ]
-    }
-  }
-]
-*/
 
 GrimReminder.id = 'grim-reminder';
 

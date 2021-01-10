@@ -14,51 +14,6 @@ class EldestBear extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "keywords",
-    "keywords": [
-      {
-        "name": "assault",
-        "count": 3
-      }
-    ]
-  },
-  {
-    "name": "persistentEffect",
-    "condition": {
-      "name": "check",
-      "card": {
-        "mode": "self"
-      },
-      "condition": {
-        "name": "center"
-      }
-    },
-    "target": {
-      "mode": "it"
-    },
-    "effects": [
-      {
-        "name": "gainAbility",
-        "ability": {
-          "name": "bold",
-          "trigger": "beforeFight",
-          "actions": {
-            "default": [
-              {
-                "name": "gainAmber",
-                "amount": 2
-              }
-            ]
-          }
-        }
-      }
-    ]
-  }
-]
-*/
 
 EldestBear.id = 'eldest-bear';
 

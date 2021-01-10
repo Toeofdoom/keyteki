@@ -15,62 +15,6 @@ class GargantesScrapper extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "keywords",
-    "keywords": [
-      {
-        "name": "alpha"
-      }
-    ]
-  },
-  {
-    "name": "bold",
-    "trigger": "play",
-    "actions": {
-      "targets": [
-        {
-          "type": "creature",
-          "controller": "opponent",
-          "mode": "exactly",
-          "count": 1,
-          "actions": [
-            {
-              "name": "dealDamage",
-              "amount": 3,
-              "condition": {
-                "name": "comparison",
-                "operator": ">=",
-                "a": {
-                  "name": "amber",
-                  "player": "self"
-                },
-                "b": {
-                  "name": "constant",
-                  "amount": 3
-                }
-              }
-            }
-          ]
-        }
-      ],
-      "condition": {
-        "name": "comparison",
-        "operator": ">=",
-        "a": {
-          "name": "amber",
-          "player": "self"
-        },
-        "b": {
-          "name": "constant",
-          "amount": 3
-        }
-      }
-    }
-  }
-]
-*/
 
 GargantesScrapper.id = 'gargantes-scrapper';
 

@@ -15,27 +15,6 @@ class BrainEater extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "reaction",
-    "trigger": {
-      "trigger": "destroyedFightingThis",
-      "card": {
-        "type": "creature"
-      }
-    },
-    "actions": {
-      "default": [
-        {
-          "name": "draw",
-          "amount": 1
-        }
-      ]
-    }
-  }
-]
-*/
 
 BrainEater.id = 'brain-eater';
 

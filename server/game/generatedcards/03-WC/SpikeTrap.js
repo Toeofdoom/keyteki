@@ -16,42 +16,6 @@ class SpikeTrap extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "bold",
-    "trigger": "omni",
-    "actions": {
-      "default": [
-        {
-          "name": "destroy",
-          "target": {
-            "mode": "self"
-          }
-        }
-      ],
-      "then": {
-        "default": [
-          {
-            "name": "dealDamage",
-            "amount": 3,
-            "target": {
-              "type": "creature",
-              "conditions": [
-                {
-                  "name": "flank"
-                }
-              ],
-              "mode": "all"
-            },
-            "then": true
-          }
-        ]
-      }
-    }
-  }
-]
-*/
 
 SpikeTrap.id = 'spike-trap';
 

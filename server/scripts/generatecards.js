@@ -25,7 +25,7 @@ const optionsDefinition = [
     {
         name: 'comments',
         type: String,
-        defaultValue: 'short',
+        defaultValue: 'text',
         description: 'How much information to include in code comments: none, text, short or all'
     }
 ];

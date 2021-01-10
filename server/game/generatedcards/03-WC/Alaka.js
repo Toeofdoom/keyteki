@@ -13,35 +13,6 @@ class Alaka extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "persistentEffect",
-    "condition": {
-      "name": "comparison",
-      "operator": ">=",
-      "b": {
-        "name": "constant",
-        "amount": 1
-      },
-      "a": {
-        "name": "eventCount",
-        "eventPlayer": "self",
-        "action": "fight",
-        "type": "creature"
-      }
-    },
-    "target": {
-      "mode": "self"
-    },
-    "effects": [
-      {
-        "name": "entersPlayReady"
-      }
-    ]
-  }
-]
-*/
 
 Alaka.id = 'alaka';
 

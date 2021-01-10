@@ -15,35 +15,6 @@ class Charybdis extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "persistentEffect",
-    "target": {
-      "type": "creature",
-      "controller": "opponent",
-      "mode": "all"
-    },
-    "effects": [
-      {
-        "name": "gainAbility",
-        "ability": {
-          "name": "bold",
-          "trigger": "beforeFight",
-          "actions": {
-            "default": [
-              {
-                "name": "loseAmber",
-                "amount": 1
-              }
-            ]
-          }
-        }
-      }
-    ]
-  }
-]
-*/
 
 Charybdis.id = 'charybdis';
 

@@ -10,30 +10,6 @@ class Umbra extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "keywords",
-    "keywords": [
-      {
-        "name": "skirmish"
-      }
-    ]
-  },
-  {
-    "name": "bold",
-    "trigger": "fight",
-    "actions": {
-      "default": [
-        {
-          "name": "steal",
-          "amount": 1
-        }
-      ]
-    }
-  }
-]
-*/
 
 Umbra.id = 'umbra';
 

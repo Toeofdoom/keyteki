@@ -13,40 +13,6 @@ class IxxyxliFixfinger extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "keywords",
-    "keywords": [
-      {
-        "name": "elusive"
-      }
-    ]
-  },
-  {
-    "name": "persistentEffect",
-    "target": {
-      "type": "creature",
-      "conditions": [
-        {
-          "name": "other"
-        },
-        {
-          "name": "trait",
-          "trait": "martian"
-        }
-      ],
-      "mode": "all"
-    },
-    "effects": [
-      {
-        "name": "modifyArmor",
-        "amount": 1
-      }
-    ]
-  }
-]
-*/
 
 IxxyxliFixfinger.id = 'ixxyxli-fixfinger';
 

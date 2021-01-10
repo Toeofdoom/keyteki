@@ -17,38 +17,6 @@ class MedicIngram extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "bold",
-    "trigger": "play",
-    "extraTriggers": [
-      "fight",
-      "reap"
-    ],
-    "actions": {
-      "optional": true,
-      "targets": [
-        {
-          "type": "creature",
-          "mode": "exactly",
-          "count": 1,
-          "actions": [
-            {
-              "name": "heal",
-              "amount": 3,
-              "optional": true
-            },
-            {
-              "name": "ward"
-            }
-          ]
-        }
-      ]
-    }
-  }
-]
-*/
 
 MedicIngram.id = 'medic-ingram';
 

@@ -11,25 +11,6 @@ class TheCurator extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "persistentEffect",
-    "target": {
-      "0": "a",
-      "1": "l",
-      "2": "l",
-      "type": "artifact",
-      "controller": "self"
-    },
-    "effects": [
-      {
-        "name": "entersPlayReady"
-      }
-    ]
-  }
-]
-*/
 
 TheCurator.id = 'the-curator';
 

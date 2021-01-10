@@ -10,24 +10,6 @@ class GizelhartsZealot extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "persistentEffect",
-    "target": {
-      "mode": "self"
-    },
-    "effects": [
-      {
-        "name": "entersPlayReady"
-      },
-      {
-        "name": "entersPlayEnraged"
-      }
-    ]
-  }
-]
-*/
 
 GizelhartsZealot.id = 'gizelhart-s-zealot';
 

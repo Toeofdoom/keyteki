@@ -8,23 +8,6 @@ class Groke extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "bold",
-    "trigger": "fight",
-    "actions": {
-      "default": [
-        {
-          "name": "loseAmber",
-          "amount": 1,
-          "targetPlayer": "opponent"
-        }
-      ]
-    }
-  }
-]
-*/
 
 Groke.id = 'groke';
 

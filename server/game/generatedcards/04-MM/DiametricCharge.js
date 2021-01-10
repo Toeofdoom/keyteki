@@ -14,30 +14,6 @@ class DiametricCharge extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "bold",
-    "trigger": "play",
-    "actions": {
-      "targets": [
-        {
-          "type": "creature",
-          "mode": "exactly",
-          "count": 1,
-          "actions": [
-            {
-              "name": "dealDamage",
-              "amount": 1,
-              "splash": 2
-            }
-          ]
-        }
-      ]
-    }
-  }
-]
-*/
 
 DiametricCharge.id = 'diametric-charge';
 

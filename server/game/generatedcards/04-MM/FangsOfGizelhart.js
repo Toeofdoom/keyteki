@@ -14,31 +14,6 @@ class FangsOfGizelhart extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "bold",
-    "trigger": "play",
-    "actions": {
-      "targets": [
-        {
-          "type": "creature",
-          "mode": "mostStat",
-          "count": 1,
-          "cardStat": {
-            "name": "power"
-          },
-          "actions": [
-            {
-              "name": "purge"
-            }
-          ]
-        }
-      ]
-    }
-  }
-]
-*/
 
 FangsOfGizelhart.id = 'fangs-of-gizelhart';
 

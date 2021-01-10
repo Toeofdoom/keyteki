@@ -13,37 +13,6 @@ class CowardsEnd extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "bold",
-    "trigger": "play",
-    "actions": {
-      "default": [
-        {
-          "name": "destroy",
-          "target": {
-            "type": "creature",
-            "conditions": [
-              {
-                "name": "not",
-                "condition": {
-                  "name": "damaged"
-                }
-              }
-            ],
-            "mode": "all"
-          }
-        },
-        {
-          "name": "gainChains",
-          "amount": 3
-        }
-      ]
-    }
-  }
-]
-*/
 
 CowardsEnd.id = 'coward-s-end';
 

@@ -17,42 +17,6 @@ class FangtoothCavern extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "reaction",
-    "trigger": {
-      "trigger": "onRoundEnded",
-      "conditions": [
-        {
-          "name": "turn",
-          "player": "self"
-        }
-      ]
-    },
-    "actions": {
-      "targets": [
-        {
-          "type": "creature",
-          "mode": "mostStat",
-          "count": 1,
-          "cardStat": {
-            "name": "negative",
-            "quantity": {
-              "name": "power"
-            }
-          },
-          "actions": [
-            {
-              "name": "destroy"
-            }
-          ]
-        }
-      ]
-    }
-  }
-]
-*/
 
 FangtoothCavern.id = 'fangtooth-cavern';
 

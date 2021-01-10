@@ -14,37 +14,6 @@ class GravidCycle extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "keywords",
-    "keywords": [
-      {
-        "name": "omega"
-      }
-    ]
-  },
-  {
-    "name": "bold",
-    "trigger": "play",
-    "actions": {
-      "targets": [
-        {
-          "controller": "self",
-          "mode": "exactly",
-          "count": 1,
-          "location": "discard",
-          "actions": [
-            {
-              "name": "returnToHand"
-            }
-          ]
-        }
-      ]
-    }
-  }
-]
-*/
 
 GravidCycle.id = 'gravid-cycle';
 

@@ -13,35 +13,6 @@ class ShieldOfJustice extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "bold",
-    "trigger": "play",
-    "actions": {
-      "default": [
-        {
-          "name": "forRemainderOfTurn",
-          "durationEffect": {
-            "name": "persistentEffect",
-            "target": {
-              "type": "creature",
-              "controller": "self",
-              "mode": "all"
-            },
-            "effects": [
-              {
-                "name": "cardCannot",
-                "effect": "damage"
-              }
-            ]
-          }
-        }
-      ]
-    }
-  }
-]
-*/
 
 ShieldOfJustice.id = 'shield-of-justice';
 

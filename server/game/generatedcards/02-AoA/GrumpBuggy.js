@@ -13,66 +13,6 @@ class GrumpBuggy extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "persistentEffect",
-    "multiplier": {
-      "name": "cards",
-      "type": "creature",
-      "controller": "self",
-      "conditions": [
-        {
-          "name": "comparison",
-          "operator": ">=",
-          "a": {
-            "name": "power"
-          },
-          "b": {
-            "name": "constant",
-            "amount": 5
-          }
-        }
-      ]
-    },
-    "targetPlayer": "opponent",
-    "effects": [
-      {
-        "name": "modifyKeyCost",
-        "amount": 1
-      }
-    ]
-  },
-  {
-    "name": "persistentEffect",
-    "multiplier": {
-      "name": "cards",
-      "type": "creature",
-      "controller": "opponent",
-      "conditions": [
-        {
-          "name": "comparison",
-          "operator": ">=",
-          "a": {
-            "name": "power"
-          },
-          "b": {
-            "name": "constant",
-            "amount": 5
-          }
-        }
-      ]
-    },
-    "targetPlayer": "self",
-    "effects": [
-      {
-        "name": "modifyKeyCost",
-        "amount": 1
-      }
-    ]
-  }
-]
-*/
 
 GrumpBuggy.id = 'grump-buggy';
 

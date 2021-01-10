@@ -15,28 +15,6 @@ class ArmadroneEvilTwin extends Card {
         }*/
     }
 }
-/*
-[
-  {
-    "name": "bold",
-    "trigger": "fight",
-    "actions": {
-      "default": [
-        {
-          "name": "steal",
-          "amount": 2
-        }
-      ]
-    }
-  },
-  {
-    "name": "reminderText",
-    "keywords": [
-      "This card is incomplete and subject to change."
-    ]
-  }
-]
-*/
 
 ArmadroneEvilTwin.id = 'armadrone-evil-twin';
 

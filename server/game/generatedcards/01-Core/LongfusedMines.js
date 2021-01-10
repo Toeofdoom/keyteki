@@ -18,41 +18,6 @@ class LongfusedMines extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "bold",
-    "trigger": "omni",
-    "actions": {
-      "default": [
-        {
-          "name": "sacrifice",
-          "target": {
-            "mode": "self"
-          }
-        },
-        {
-          "name": "dealDamage",
-          "amount": 3,
-          "target": {
-            "type": "creature",
-            "controller": "opponent",
-            "conditions": [
-              {
-                "name": "not",
-                "condition": {
-                  "name": "flank"
-                }
-              }
-            ],
-            "mode": "all"
-          }
-        }
-      ]
-    }
-  }
-]
-*/
 
 LongfusedMines.id = 'longfused-mines';
 

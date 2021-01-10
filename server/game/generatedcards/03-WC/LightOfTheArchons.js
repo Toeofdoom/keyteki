@@ -8,50 +8,6 @@ class LightOfTheArchons extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "persistentEffect",
-    "target": {
-      "mode": "this"
-    },
-    "effects": [
-      {
-        "name": "modifyPower",
-        "amount": 1,
-        "multiplier": {
-          "name": "cards",
-          "type": "upgrade",
-          "conditions": [
-            {
-              "name": "attached",
-              "target": {
-                "mode": "it"
-              }
-            }
-          ]
-        }
-      },
-      {
-        "name": "modifyArmor",
-        "amount": 1,
-        "multiplier": {
-          "name": "cards",
-          "type": "upgrade",
-          "conditions": [
-            {
-              "name": "attached",
-              "target": {
-                "mode": "it"
-              }
-            }
-          ]
-        }
-      }
-    ]
-  }
-]
-*/
 
 LightOfTheArchons.id = 'light-of-the-archons';
 

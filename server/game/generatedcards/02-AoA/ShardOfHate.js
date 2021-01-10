@@ -13,40 +13,6 @@ class ShardOfHate extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "bold",
-    "trigger": "action",
-    "actions": {
-      "targets": [
-        {
-          "type": "creature",
-          "controller": "opponent",
-          "mode": "exactly",
-          "count": 1,
-          "actions": [
-            {
-              "name": "stun",
-              "multiplier": {
-                "name": "cards",
-                "type": "creature",
-                "controller": "self",
-                "conditions": [
-                  {
-                    "name": "trait",
-                    "trait": "shard"
-                  }
-                ]
-              }
-            }
-          ]
-        }
-      ]
-    }
-  }
-]
-*/
 
 ShardOfHate.id = 'shard-of-hate';
 

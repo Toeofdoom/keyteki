@@ -17,45 +17,6 @@ class Poke extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "bold",
-    "trigger": "play",
-    "actions": {
-      "targets": [
-        {
-          "type": "creature",
-          "controller": "opponent",
-          "mode": "exactly",
-          "count": 1,
-          "actions": [
-            {
-              "name": "dealDamage",
-              "amount": 1
-            }
-          ]
-        }
-      ],
-      "then": {
-        "default": [
-          {
-            "name": "draw",
-            "amount": 1,
-            "condition": {
-              "name": "destroysTarget"
-            },
-            "then": true
-          }
-        ],
-        "condition": {
-          "name": "destroysTarget"
-        }
-      }
-    }
-  }
-]
-*/
 
 Poke.id = 'poke';
 

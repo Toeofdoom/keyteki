@@ -16,41 +16,6 @@ class HeistNight extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "keywords",
-    "keywords": [
-      {
-        "name": "alpha"
-      }
-    ]
-  },
-  {
-    "name": "bold",
-    "trigger": "play",
-    "actions": {
-      "default": [
-        {
-          "name": "steal",
-          "amount": 1,
-          "multiplier": {
-            "name": "cards",
-            "type": "creature",
-            "controller": "self",
-            "conditions": [
-              {
-                "name": "trait",
-                "trait": "thief"
-              }
-            ]
-          }
-        }
-      ]
-    }
-  }
-]
-*/
 
 HeistNight.id = 'heist-night';
 

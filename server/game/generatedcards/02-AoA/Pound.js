@@ -14,30 +14,6 @@ class Pound extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "bold",
-    "trigger": "play",
-    "actions": {
-      "targets": [
-        {
-          "type": "creature",
-          "mode": "exactly",
-          "count": 1,
-          "actions": [
-            {
-              "name": "dealDamage",
-              "amount": 2,
-              "splash": 1
-            }
-          ]
-        }
-      ]
-    }
-  }
-]
-*/
 
 Pound.id = 'pound';
 

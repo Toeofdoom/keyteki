@@ -13,34 +13,6 @@ class ThievesBane extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "bold",
-    "trigger": "play",
-    "actions": {
-      "targets": [
-        {
-          "type": "creature",
-          "conditions": [
-            {
-              "name": "trait",
-              "trait": "thief"
-            }
-          ],
-          "mode": "exactly",
-          "count": 1,
-          "actions": [
-            {
-              "name": "destroy"
-            }
-          ]
-        }
-      ]
-    }
-  }
-]
-*/
 
 ThievesBane.id = 'thieves--bane';
 

@@ -23,51 +23,6 @@ class Gongoozle extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "bold",
-    "trigger": "play",
-    "actions": {
-      "targets": [
-        {
-          "type": "creature",
-          "mode": "exactly",
-          "count": 1,
-          "actions": [
-            {
-              "name": "dealDamage",
-              "amount": 3
-            }
-          ]
-        }
-      ],
-      "then": {
-        "default": [
-          {
-            "name": "discardAtRandom",
-            "amount": 1,
-            "targetPlayer": "owner",
-            "condition": {
-              "name": "not",
-              "condition": {
-                "name": "destroysTarget"
-              }
-            }
-          }
-        ],
-        "alwaysTriggers": true,
-        "condition": {
-          "name": "not",
-          "condition": {
-            "name": "destroysTarget"
-          }
-        }
-      }
-    }
-  }
-]
-*/
 
 Gongoozle.id = 'gongoozle';
 

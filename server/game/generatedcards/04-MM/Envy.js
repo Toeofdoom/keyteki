@@ -14,68 +14,6 @@ class Envy extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "keywords",
-    "keywords": [
-      {
-        "name": "elusive"
-      }
-    ]
-  },
-  {
-    "name": "bold",
-    "trigger": "reap",
-    "actions": {
-      "default": [
-        {
-          "name": "capture",
-          "amount": "all",
-          "condition": {
-            "name": "comparison",
-            "operator": "===",
-            "b": {
-              "name": "constant",
-              "amount": 2
-            },
-            "a": {
-              "name": "cards",
-              "type": "creature",
-              "controller": "self",
-              "conditions": [
-                {
-                  "name": "trait",
-                  "trait": "sin"
-                }
-              ]
-            }
-          }
-        }
-      ],
-      "condition": {
-        "name": "comparison",
-        "operator": "===",
-        "b": {
-          "name": "constant",
-          "amount": 2
-        },
-        "a": {
-          "name": "cards",
-          "type": "creature",
-          "controller": "self",
-          "conditions": [
-            {
-              "name": "trait",
-              "trait": "sin"
-            }
-          ]
-        }
-      }
-    }
-  }
-]
-*/
 
 Envy.id = 'envy';
 

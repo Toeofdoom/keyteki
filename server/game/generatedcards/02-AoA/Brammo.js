@@ -13,32 +13,6 @@ class Brammo extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "bold",
-    "trigger": "play",
-    "actions": {
-      "default": [
-        {
-          "name": "dealDamage",
-          "amount": 2,
-          "target": {
-            "type": "creature",
-            "controller": "opponent",
-            "conditions": [
-              {
-                "name": "flank"
-              }
-            ],
-            "mode": "all"
-          }
-        }
-      ]
-    }
-  }
-]
-*/
 
 Brammo.id = 'brammo';
 

@@ -11,25 +11,6 @@ class MindOverMatter extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "bold",
-    "trigger": "play",
-    "actions": {
-      "default": [
-        {
-          "name": "archive",
-          "target": {
-            "type": "creature",
-            "mode": "all"
-          }
-        }
-      ]
-    }
-  }
-]
-*/
 
 MindOverMatter.id = 'mind-over-matter';
 

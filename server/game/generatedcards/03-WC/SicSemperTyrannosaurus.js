@@ -20,36 +20,6 @@ class SicSemperTyrannosaurus extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "bold",
-    "trigger": "play",
-    "actions": {
-      "targets": [
-        {
-          "type": "creature",
-          "mode": "mostStat",
-          "count": 1,
-          "cardStat": {
-            "name": "power"
-          },
-          "actions": [
-            {
-              "amount": "all",
-              "name": "returnAmber",
-              "recipient": "self"
-            },
-            {
-              "name": "destroy"
-            }
-          ]
-        }
-      ]
-    }
-  }
-]
-*/
 
 SicSemperTyrannosaurus.id = 'sic-semper-tyrannosaurus';
 

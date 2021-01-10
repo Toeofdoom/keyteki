@@ -15,38 +15,6 @@ class Scylla extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "persistentEffect",
-    "target": {
-      "type": "creature",
-      "controller": "opponent",
-      "mode": "all"
-    },
-    "effects": [
-      {
-        "name": "gainAbility",
-        "ability": {
-          "name": "bold",
-          "trigger": "reap",
-          "actions": {
-            "default": [
-              {
-                "name": "dealDamage",
-                "amount": 4,
-                "target": {
-                  "mode": "this"
-                }
-              }
-            ]
-          }
-        }
-      }
-    ]
-  }
-]
-*/
 
 Scylla.id = 'scylla';
 

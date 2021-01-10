@@ -20,50 +20,6 @@ class BerserkerSlam extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "bold",
-    "trigger": "play",
-    "actions": {
-      "targets": [
-        {
-          "type": "creature",
-          "conditions": [
-            {
-              "name": "flank"
-            }
-          ],
-          "mode": "exactly",
-          "count": 1,
-          "actions": [
-            {
-              "name": "dealDamage",
-              "amount": 4
-            }
-          ]
-        }
-      ],
-      "then": {
-        "default": [
-          {
-            "name": "loseAmber",
-            "amount": 1,
-            "targetPlayer": "controller",
-            "condition": {
-              "name": "destroysTarget"
-            },
-            "then": true
-          }
-        ],
-        "condition": {
-          "name": "destroysTarget"
-        }
-      }
-    }
-  }
-]
-*/
 
 BerserkerSlam.id = 'berserker-slam';
 

@@ -13,34 +13,6 @@ class ScientistsBane extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "bold",
-    "trigger": "play",
-    "actions": {
-      "targets": [
-        {
-          "type": "creature",
-          "conditions": [
-            {
-              "name": "trait",
-              "trait": "scientist"
-            }
-          ],
-          "mode": "exactly",
-          "count": 1,
-          "actions": [
-            {
-              "name": "destroy"
-            }
-          ]
-        }
-      ]
-    }
-  }
-]
-*/
 
 ScientistsBane.id = 'scientists--bane';
 

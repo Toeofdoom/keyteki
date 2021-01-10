@@ -13,34 +13,6 @@ class SensorChiefGarcia extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "bold",
-    "trigger": "play",
-    "extraTriggers": [
-      "fight",
-      "reap"
-    ],
-    "actions": {
-      "default": [
-        {
-          "name": "lastingEffect",
-          "durationEffect": {
-            "name": "persistentEffect",
-            "effects": [
-              {
-                "name": "modifyKeyCost",
-                "amount": 2
-              }
-            ]
-          }
-        }
-      ]
-    }
-  }
-]
-*/
 
 SensorChiefGarcia.id = 'sensor-chief-garcia';
 

@@ -13,33 +13,6 @@ class Ambertracker extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "bold",
-    "trigger": "play",
-    "actions": {
-      "default": [
-        {
-          "name": "dealDamage",
-          "amount": 2,
-          "target": {
-            "type": "creature",
-            "controller": "opponent",
-            "conditions": [
-              {
-                "name": "hasAmber"
-              }
-            ],
-            "mode": "all"
-          },
-          "noPrevent": true
-        }
-      ]
-    }
-  }
-]
-*/
 
 Ambertracker.id = 'æmbertracker';
 

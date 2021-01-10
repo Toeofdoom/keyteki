@@ -11,23 +11,6 @@ class FuzzyGruen extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "bold",
-    "trigger": "play",
-    "actions": {
-      "default": [
-        {
-          "name": "gainAmber",
-          "amount": 1,
-          "targetPlayer": "opponent"
-        }
-      ]
-    }
-  }
-]
-*/
 
 FuzzyGruen.id = 'fuzzy-gruen';
 

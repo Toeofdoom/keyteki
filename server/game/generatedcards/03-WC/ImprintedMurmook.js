@@ -10,28 +10,6 @@ class ImprintedMurmook extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "keywords",
-    "keywords": [
-      {
-        "name": "elusive"
-      }
-    ]
-  },
-  {
-    "name": "persistentEffect",
-    "targetPlayer": "self",
-    "effects": [
-      {
-        "name": "modifyKeyCost",
-        "amount": -1
-      }
-    ]
-  }
-]
-*/
 
 ImprintedMurmook.id = 'imprinted-murmook';
 

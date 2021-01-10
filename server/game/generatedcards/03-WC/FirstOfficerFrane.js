@@ -14,34 +14,6 @@ class FirstOfficerFrane extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "bold",
-    "trigger": "play",
-    "extraTriggers": [
-      "fight",
-      "reap"
-    ],
-    "actions": {
-      "targets": [
-        {
-          "type": "creature",
-          "controller": "self",
-          "mode": "exactly",
-          "count": 1,
-          "actions": [
-            {
-              "name": "capture",
-              "amount": 1
-            }
-          ]
-        }
-      ]
-    }
-  }
-]
-*/
 
 FirstOfficerFrane.id = 'first-officer-frane';
 

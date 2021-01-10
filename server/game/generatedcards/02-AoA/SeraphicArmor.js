@@ -15,37 +15,6 @@ class SeraphicArmor extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "persistentEffect",
-    "target": {
-      "mode": "this"
-    },
-    "effects": [
-      {
-        "name": "modifyArmor",
-        "amount": 1
-      }
-    ]
-  },
-  {
-    "name": "bold",
-    "trigger": "play",
-    "actions": {
-      "default": [
-        {
-          "name": "heal",
-          "fully": true,
-          "target": {
-            "mode": "this"
-          }
-        }
-      ]
-    }
-  }
-]
-*/
 
 SeraphicArmor.id = 'seraphic-armor';
 

@@ -13,43 +13,6 @@ class LuckyDice extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "bold",
-    "trigger": "omni",
-    "actions": {
-      "default": [
-        {
-          "name": "destroy",
-          "target": {
-            "mode": "self"
-          }
-        },
-        {
-          "name": "lastingEffect",
-          "durationEffect": {
-            "name": "persistentEffect",
-            "target": {
-              "0": "a",
-              "1": "l",
-              "2": "l",
-              "type": "creature",
-              "controller": "self"
-            },
-            "effects": [
-              {
-                "name": "cardCannot",
-                "effect": "damage"
-              }
-            ]
-          }
-        }
-      ]
-    }
-  }
-]
-*/
 
 LuckyDice.id = 'lucky-dice';
 

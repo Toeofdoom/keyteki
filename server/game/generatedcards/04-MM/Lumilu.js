@@ -17,36 +17,6 @@ class Lumilu extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "bold",
-    "trigger": "reap",
-    "actions": {
-      "default": [
-        {
-          "name": "gainAmber",
-          "amount": 1,
-          "multiplier": {
-            "name": "cards",
-            "type": "creature",
-            "controller": "self",
-            "conditions": [
-              {
-                "name": "other"
-              },
-              {
-                "name": "trait",
-                "trait": "beast"
-              }
-            ]
-          }
-        }
-      ]
-    }
-  }
-]
-*/
 
 Lumilu.id = 'lumilu';
 

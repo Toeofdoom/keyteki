@@ -19,54 +19,6 @@ class DarkAmberVault extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "reaction",
-    "trigger": {
-      "trigger": "play",
-      "card": {
-        "type": "creature",
-        "conditions": [
-          {
-            "name": "trait",
-            "trait": "mutant"
-          }
-        ]
-      },
-      "eventPlayer": "self"
-    },
-    "actions": {
-      "default": [
-        {
-          "name": "draw",
-          "amount": 1
-        }
-      ]
-    }
-  },
-  {
-    "name": "persistentEffect",
-    "target": {
-      "type": "creature",
-      "controller": "self",
-      "conditions": [
-        {
-          "name": "trait",
-          "trait": "mutant"
-        }
-      ],
-      "mode": "all"
-    },
-    "effects": [
-      {
-        "name": "modifyPower",
-        "amount": 2
-      }
-    ]
-  }
-]
-*/
 
 DarkAmberVault.id = 'dark-æmber-vault';
 

@@ -18,51 +18,6 @@ class Archimedes extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "keywords",
-    "keywords": [
-      {
-        "name": "elusive"
-      }
-    ]
-  },
-  {
-    "name": "persistentEffect",
-    "target": {
-      "mode": "all",
-      "type": "creature",
-      "conditions": [
-        {
-          "name": "neighboring"
-        }
-      ]
-    },
-    "effects": [
-      {
-        "name": "gainAbility",
-        "ability": {
-          "name": "bold",
-          "trigger": "destroyed",
-          "actions": {
-            "default": [
-              {
-                "name": "archive",
-                "target": {
-                  "mode": "this",
-                  "location": "hand",
-                  "controller": "self"
-                }
-              }
-            ]
-          }
-        }
-      }
-    ]
-  }
-]
-*/
 
 Archimedes.id = 'archimedes';
 

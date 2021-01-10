@@ -14,52 +14,6 @@ class CarpetPhloxem extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "bold",
-    "trigger": "play",
-    "actions": {
-      "default": [
-        {
-          "name": "dealDamage",
-          "amount": 4,
-          "target": {
-            "type": "creature",
-            "mode": "all"
-          },
-          "condition": {
-            "name": "comparison",
-            "operator": "===",
-            "b": {
-              "name": "constant",
-              "amount": 0
-            },
-            "a": {
-              "name": "cards",
-              "type": "creature",
-              "controller": "self"
-            }
-          }
-        }
-      ],
-      "condition": {
-        "name": "comparison",
-        "operator": "===",
-        "b": {
-          "name": "constant",
-          "amount": 0
-        },
-        "a": {
-          "name": "cards",
-          "type": "creature",
-          "controller": "self"
-        }
-      }
-    }
-  }
-]
-*/
 
 CarpetPhloxem.id = 'carpet-phloxem';
 

@@ -23,58 +23,6 @@ class LegionsMarch extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "bold",
-    "trigger": "play",
-    "actions": {
-      "default": [
-        {
-          "name": "forRemainderOfTurn",
-          "durationEffect": {
-            "name": "reaction",
-            "trigger": {
-              "trigger": "use",
-              "card": {
-                "type": "creature",
-                "conditions": [
-                  {
-                    "name": "trait",
-                    "trait": "dinosaur"
-                  }
-                ]
-              },
-              "eventPlayer": "self"
-            },
-            "actions": {
-              "default": [
-                {
-                  "name": "dealDamage",
-                  "amount": 1,
-                  "target": {
-                    "type": "creature",
-                    "conditions": [
-                      {
-                        "name": "not",
-                        "condition": {
-                          "name": "trait",
-                          "trait": "dinosaur"
-                        }
-                      }
-                    ],
-                    "mode": "all"
-                  }
-                }
-              ]
-            }
-          }
-        }
-      ]
-    }
-  }
-]
-*/
 
 LegionsMarch.id = 'legion-s-march';
 

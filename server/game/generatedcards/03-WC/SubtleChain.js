@@ -9,23 +9,6 @@ class SubtleChain extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "bold",
-    "trigger": "play",
-    "actions": {
-      "default": [
-        {
-          "name": "discardAtRandom",
-          "amount": 1,
-          "targetPlayer": "opponent"
-        }
-      ]
-    }
-  }
-]
-*/
 
 SubtleChain.id = 'subtle-chain';
 

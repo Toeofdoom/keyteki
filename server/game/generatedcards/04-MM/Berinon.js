@@ -18,47 +18,6 @@ class Berinon extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "reaction",
-    "trigger": {
-      "trigger": "entersPlay",
-      "card": {
-        "type": "creature",
-        "conditions": [
-          {
-            "name": "trait",
-            "trait": "mutant"
-          }
-        ]
-      }
-    },
-    "actions": {
-      "default": [
-        {
-          "name": "enrage",
-          "target": {
-            "mode": "self"
-          }
-        }
-      ]
-    }
-  },
-  {
-    "name": "bold",
-    "trigger": "reap",
-    "actions": {
-      "default": [
-        {
-          "name": "capture",
-          "amount": 2
-        }
-      ]
-    }
-  }
-]
-*/
 
 Berinon.id = 'berinon';
 

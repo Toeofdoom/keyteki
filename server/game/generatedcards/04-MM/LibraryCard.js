@@ -18,48 +18,6 @@ class LibraryCard extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "bold",
-    "trigger": "action",
-    "actions": {
-      "default": [
-        {
-          "name": "purge",
-          "target": {
-            "mode": "self"
-          }
-        }
-      ],
-      "then": {
-        "default": [
-          {
-            "name": "forRemainderOfTurn",
-            "durationEffect": {
-              "name": "reaction",
-              "trigger": {
-                "trigger": "play",
-                "card": {},
-                "eventPlayer": "self"
-              },
-              "actions": {
-                "default": [
-                  {
-                    "name": "draw",
-                    "amount": 1
-                  }
-                ]
-              }
-            },
-            "then": true
-          }
-        ]
-      }
-    }
-  }
-]
-*/
 
 LibraryCard.id = 'library-card';
 

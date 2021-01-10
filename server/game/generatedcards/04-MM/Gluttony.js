@@ -22,57 +22,6 @@ class Gluttony extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "bold",
-    "trigger": "play",
-    "actions": {
-      "default": [
-        {
-          "name": "exalt",
-          "target": {
-            "mode": "self"
-          },
-          "multiplier": {
-            "name": "cards",
-            "type": "creature",
-            "controller": "self",
-            "conditions": [
-              {
-                "name": "trait",
-                "trait": "sin"
-              }
-            ]
-          }
-        }
-      ]
-    }
-  },
-  {
-    "name": "bold",
-    "trigger": "reap",
-    "actions": {
-      "targets": [
-        {
-          "0": "a",
-          "1": "l",
-          "2": "l",
-          "type": "creature",
-          "controller": "self",
-          "actions": [
-            {
-              "amount": "all",
-              "name": "returnAmber",
-              "recipient": "self"
-            }
-          ]
-        }
-      ]
-    }
-  }
-]
-*/
 
 Gluttony.id = 'gluttony';
 

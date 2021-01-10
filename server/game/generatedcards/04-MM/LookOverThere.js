@@ -20,50 +20,6 @@ class LookOverThere extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "bold",
-    "trigger": "play",
-    "actions": {
-      "targets": [
-        {
-          "type": "creature",
-          "mode": "exactly",
-          "count": 1,
-          "actions": [
-            {
-              "name": "dealDamage",
-              "amount": 2
-            }
-          ]
-        }
-      ],
-      "then": {
-        "default": [
-          {
-            "name": "steal",
-            "amount": 1,
-            "condition": {
-              "name": "not",
-              "condition": {
-                "name": "destroysTarget"
-              }
-            }
-          }
-        ],
-        "alwaysTriggers": true,
-        "condition": {
-          "name": "not",
-          "condition": {
-            "name": "destroysTarget"
-          }
-        }
-      }
-    }
-  }
-]
-*/
 
 LookOverThere.id = 'look-over-there';
 

@@ -13,32 +13,6 @@ class PsionicOfficerLang extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "reaction",
-    "trigger": {
-      "trigger": "reap",
-      "card": {
-        "type": "creature",
-        "controller": "opponent"
-      }
-    },
-    "actions": {
-      "default": [
-        {
-          "name": "archive",
-          "target": {
-            "mode": "topdeck",
-            "location": "hand",
-            "controller": "self"
-          }
-        }
-      ]
-    }
-  }
-]
-*/
 
 PsionicOfficerLang.id = 'psionic-officer-lang';
 

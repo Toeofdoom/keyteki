@@ -12,34 +12,6 @@ class BewareTheIdes extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "bold",
-    "trigger": "play",
-    "actions": {
-      "targets": [
-        {
-          "type": "creature",
-          "conditions": [
-            {
-              "name": "center"
-            }
-          ],
-          "mode": "exactly",
-          "count": 1,
-          "actions": [
-            {
-              "name": "dealDamage",
-              "amount": 23
-            }
-          ]
-        }
-      ]
-    }
-  }
-]
-*/
 
 BewareTheIdes.id = 'beware-the-ides';
 

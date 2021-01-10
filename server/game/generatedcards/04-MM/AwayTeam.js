@@ -13,33 +13,6 @@ class AwayTeam extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "bold",
-    "trigger": "destroyed",
-    "actions": {
-      "default": [
-        {
-          "name": "archive",
-          "target": {
-            "type": "upgrade",
-            "conditions": [
-              {
-                "name": "attached",
-                "target": {
-                  "mode": "self"
-                }
-              }
-            ],
-            "mode": "all"
-          }
-        }
-      ]
-    }
-  }
-]
-*/
 
 AwayTeam.id = 'away-team';
 

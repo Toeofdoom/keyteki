@@ -15,46 +15,6 @@ class DarkQueenGloriana extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "keywords",
-    "keywords": [
-      {
-        "name": "enhance"
-      }
-    ]
-  },
-  {
-    "name": "bold",
-    "trigger": "play",
-    "actions": {
-      "targets": [
-        {
-          "type": "creature",
-          "controller": "self",
-          "conditions": [
-            {
-              "name": "not",
-              "condition": {
-                "name": "house",
-                "house": "untamed"
-              }
-            }
-          ],
-          "mode": "exactly",
-          "count": 1,
-          "actions": [
-            {
-              "name": "returnToHand"
-            }
-          ]
-        }
-      ]
-    }
-  }
-]
-*/
 
 DarkQueenGloriana.id = 'dark-queen-gloriana';
 

@@ -16,43 +16,6 @@ class QuestorJarta extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "keywords",
-    "keywords": [
-      {
-        "name": "elusive"
-      }
-    ]
-  },
-  {
-    "name": "bold",
-    "trigger": "reap",
-    "actions": {
-      "optional": true,
-      "default": [
-        {
-          "name": "exalt",
-          "target": {
-            "mode": "self"
-          },
-          "optional": true
-        }
-      ],
-      "then": {
-        "default": [
-          {
-            "name": "gainAmber",
-            "amount": 1,
-            "then": true
-          }
-        ]
-      }
-    }
-  }
-]
-*/
 
 QuestorJarta.id = 'questor-jarta';
 

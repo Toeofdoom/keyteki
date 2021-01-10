@@ -13,35 +13,6 @@ class BackupCopy extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "persistentEffect",
-    "target": {
-      "mode": "this"
-    },
-    "effects": [
-      {
-        "name": "gainAbility",
-        "ability": {
-          "name": "bold",
-          "trigger": "destroyed",
-          "actions": {
-            "default": [
-              {
-                "name": "returnToDeck",
-                "target": {
-                  "mode": "this"
-                }
-              }
-            ]
-          }
-        }
-      }
-    ]
-  }
-]
-*/
 
 BackupCopy.id = 'backup-copy';
 

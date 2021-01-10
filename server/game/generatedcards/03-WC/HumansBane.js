@@ -13,34 +13,6 @@ class HumansBane extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "bold",
-    "trigger": "play",
-    "actions": {
-      "targets": [
-        {
-          "type": "creature",
-          "conditions": [
-            {
-              "name": "trait",
-              "trait": "human"
-            }
-          ],
-          "mode": "exactly",
-          "count": 1,
-          "actions": [
-            {
-              "name": "destroy"
-            }
-          ]
-        }
-      ]
-    }
-  }
-]
-*/
 
 HumansBane.id = 'humans--bane';
 

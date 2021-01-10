@@ -19,42 +19,6 @@ class StormCrawler extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "persistentEffect",
-    "target": {
-      "mode": "self"
-    },
-    "effects": [
-      {
-        "name": "limitFightDamage",
-        "amount": 1
-      }
-    ]
-  },
-  {
-    "name": "reaction",
-    "trigger": {
-      "trigger": "reap",
-      "card": {
-        "type": "creature",
-        "controller": "opponent"
-      }
-    },
-    "actions": {
-      "default": [
-        {
-          "name": "stun",
-          "target": {
-            "mode": "it"
-          }
-        }
-      ]
-    }
-  }
-]
-*/
 
 StormCrawler.id = 'storm-crawler';
 

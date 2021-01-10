@@ -13,27 +13,6 @@ class TheFittest extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "bold",
-    "trigger": "play",
-    "actions": {
-      "default": [
-        {
-          "name": "addPowerCounter",
-          "amount": 1,
-          "target": {
-            "type": "creature",
-            "controller": "self",
-            "mode": "all"
-          }
-        }
-      ]
-    }
-  }
-]
-*/
 
 TheFittest.id = 'the-fittest';
 

@@ -16,50 +16,6 @@ class OperationsOfficerYshi extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "keywords",
-    "keywords": [
-      {
-        "name": "taunt"
-      }
-    ]
-  },
-  {
-    "name": "persistentEffect",
-    "target": {
-      "mode": "all",
-      "type": "creature",
-      "conditions": [
-        {
-          "name": "neighboring"
-        }
-      ]
-    },
-    "effects": [
-      {
-        "name": "gainAbility",
-        "ability": {
-          "name": "bold",
-          "trigger": "fight",
-          "extraTriggers": [
-            "reap"
-          ],
-          "actions": {
-            "default": [
-              {
-                "name": "capture",
-                "amount": 1
-              }
-            ]
-          }
-        }
-      }
-    ]
-  }
-]
-*/
 
 OperationsOfficerYshi.id = 'operations-officer-yshi';
 

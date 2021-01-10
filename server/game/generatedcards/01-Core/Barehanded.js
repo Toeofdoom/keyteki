@@ -10,25 +10,6 @@ class Barehanded extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "bold",
-    "trigger": "play",
-    "actions": {
-      "default": [
-        {
-          "name": "returnToDeck",
-          "target": {
-            "type": "artifact",
-            "mode": "all"
-          }
-        }
-      ]
-    }
-  }
-]
-*/
 
 Barehanded.id = 'barehanded';
 

@@ -12,50 +12,6 @@ class Foozle extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "bold",
-    "trigger": "reap",
-    "actions": {
-      "default": [
-        {
-          "name": "gainAmber",
-          "amount": 1,
-          "condition": {
-            "name": "comparison",
-            "operator": ">=",
-            "b": {
-              "name": "constant",
-              "amount": 1
-            },
-            "a": {
-              "name": "eventCount",
-              "action": "destroyed",
-              "type": "creature",
-              "controller": "opponent"
-            }
-          }
-        }
-      ],
-      "condition": {
-        "name": "comparison",
-        "operator": ">=",
-        "b": {
-          "name": "constant",
-          "amount": 1
-        },
-        "a": {
-          "name": "eventCount",
-          "action": "destroyed",
-          "type": "creature",
-          "controller": "opponent"
-        }
-      }
-    }
-  }
-]
-*/
 
 Foozle.id = 'foozle';
 

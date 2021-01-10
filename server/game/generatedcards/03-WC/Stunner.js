@@ -16,44 +16,6 @@ class Stunner extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "persistentEffect",
-    "target": {
-      "mode": "this"
-    },
-    "effects": [
-      {
-        "name": "gainAbility",
-        "ability": {
-          "name": "bold",
-          "trigger": "fight",
-          "extraTriggers": [
-            "reap"
-          ],
-          "actions": {
-            "optional": true,
-            "targets": [
-              {
-                "type": "creature",
-                "mode": "exactly",
-                "count": 1,
-                "actions": [
-                  {
-                    "name": "stun",
-                    "optional": true
-                  }
-                ]
-              }
-            ]
-          }
-        }
-      }
-    ]
-  }
-]
-*/
 
 Stunner.id = 'stunner';
 

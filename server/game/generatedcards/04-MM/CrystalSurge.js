@@ -11,31 +11,6 @@ class CrystalSurge extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "bold",
-    "trigger": "play",
-    "actions": {
-      "default": [
-        {
-          "name": "exalt",
-          "target": {
-            "type": "creature",
-            "conditions": [
-              {
-                "name": "trait",
-                "trait": "mutant"
-              }
-            ],
-            "mode": "all"
-          }
-        }
-      ]
-    }
-  }
-]
-*/
 
 CrystalSurge.id = 'crystal-surge';
 

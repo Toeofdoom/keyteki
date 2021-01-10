@@ -13,33 +13,6 @@ class TheShadowsmith extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "persistentEffect",
-    "target": {
-      "type": "creature",
-      "conditions": [
-        {
-          "name": "trait",
-          "trait": "mutant"
-        }
-      ],
-      "mode": "all"
-    },
-    "effects": [
-      {
-        "name": "gainKeywords",
-        "keywords": [
-          {
-            "name": "elusive"
-          }
-        ]
-      }
-    ]
-  }
-]
-*/
 
 TheShadowsmith.id = 'the-shadowsmith';
 

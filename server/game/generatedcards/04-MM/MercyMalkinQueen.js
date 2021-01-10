@@ -27,69 +27,6 @@ class MercyMalkinQueen extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "keywords",
-    "keywords": [
-      {
-        "name": "skirmish"
-      }
-    ]
-  },
-  {
-    "name": "reaction",
-    "trigger": {
-      "trigger": "entersPlay",
-      "card": {
-        "type": "creature",
-        "controller": "self",
-        "conditions": [
-          {
-            "name": "trait",
-            "trait": "cat"
-          }
-        ]
-      }
-    },
-    "actions": {
-      "default": [
-        {
-          "name": "ward",
-          "target": {
-            "mode": "it"
-          }
-        }
-      ]
-    }
-  },
-  {
-    "name": "bold",
-    "trigger": "fight",
-    "actions": {
-      "targets": [
-        {
-          "type": "creature",
-          "controller": "self",
-          "conditions": [
-            {
-              "name": "trait",
-              "trait": "beast"
-            }
-          ],
-          "mode": "exactly",
-          "count": 1,
-          "actions": [
-            {
-              "name": "ready"
-            }
-          ]
-        }
-      ]
-    }
-  }
-]
-*/
 
 MercyMalkinQueen.id = 'mercy-malkin-queen';
 

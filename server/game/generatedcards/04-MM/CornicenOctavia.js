@@ -8,22 +8,6 @@ class CornicenOctavia extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "bold",
-    "trigger": "action",
-    "actions": {
-      "default": [
-        {
-          "name": "capture",
-          "amount": 2
-        }
-      ]
-    }
-  }
-]
-*/
 
 CornicenOctavia.id = 'cornicen-octavia';
 

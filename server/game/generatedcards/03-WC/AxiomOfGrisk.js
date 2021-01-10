@@ -17,49 +17,6 @@ class AxiomOfGrisk extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "bold",
-    "trigger": "play",
-    "actions": {
-      "targets": [
-        {
-          "type": "creature",
-          "mode": "exactly",
-          "count": 1,
-          "actions": [
-            {
-              "name": "ward"
-            }
-          ]
-        }
-      ],
-      "default": [
-        {
-          "name": "destroy",
-          "target": {
-            "type": "creature",
-            "conditions": [
-              {
-                "name": "not",
-                "condition": {
-                  "name": "hasAmber"
-                }
-              }
-            ],
-            "mode": "all"
-          }
-        },
-        {
-          "name": "gainChains",
-          "amount": 2
-        }
-      ]
-    }
-  }
-]
-*/
 
 AxiomOfGrisk.id = 'axiom-of-grisk';
 

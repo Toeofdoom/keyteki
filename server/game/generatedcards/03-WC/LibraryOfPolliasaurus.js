@@ -15,31 +15,6 @@ class LibraryOfPolliasaurus extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "bold",
-    "trigger": "action",
-    "actions": {
-      "targets": [
-        {
-          "type": "creature",
-          "controller": "self",
-          "mode": "exactly",
-          "count": 1,
-          "actions": [
-            {
-              "amount": 1,
-              "name": "returnAmber",
-              "recipient": "self"
-            }
-          ]
-        }
-      ]
-    }
-  }
-]
-*/
 
 LibraryOfPolliasaurus.id = 'library-of-polliasaurus';
 

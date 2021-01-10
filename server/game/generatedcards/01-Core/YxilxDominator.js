@@ -12,29 +12,6 @@ class YxilxDominator extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "keywords",
-    "keywords": [
-      {
-        "name": "taunt"
-      }
-    ]
-  },
-  {
-    "name": "persistentEffect",
-    "target": {
-      "mode": "self"
-    },
-    "effects": [
-      {
-        "name": "entersPlayStunned"
-      }
-    ]
-  }
-]
-*/
 
 YxilxDominator.id = 'yxilx-dominator';
 

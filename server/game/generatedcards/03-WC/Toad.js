@@ -10,22 +10,6 @@ class Toad extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "persistentEffect",
-    "target": {
-      "mode": "self"
-    },
-    "effects": [
-      {
-        "name": "cardCannot",
-        "effect": "reap"
-      }
-    ]
-  }
-]
-*/
 
 Toad.id = 'toad';
 

@@ -15,42 +15,6 @@ class BullWark extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "keywords",
-    "keywords": [
-      {
-        "name": "assault",
-        "count": 2
-      }
-    ]
-  },
-  {
-    "name": "persistentEffect",
-    "target": {
-      "mode": "all",
-      "type": "creature",
-      "conditions": [
-        {
-          "name": "neighboring"
-        }
-      ]
-    },
-    "effects": [
-      {
-        "name": "gainKeywords",
-        "keywords": [
-          {
-            "name": "assault",
-            "count": 2
-          }
-        ]
-      }
-    ]
-  }
-]
-*/
 
 BullWark.id = 'bull-wark';
 

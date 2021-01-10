@@ -14,30 +14,6 @@ class Flamethrower extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "bold",
-    "trigger": "action",
-    "actions": {
-      "targets": [
-        {
-          "type": "creature",
-          "mode": "exactly",
-          "count": 1,
-          "actions": [
-            {
-              "name": "dealDamage",
-              "amount": 1,
-              "splash": 1
-            }
-          ]
-        }
-      ]
-    }
-  }
-]
-*/
 
 Flamethrower.id = 'flamethrower';
 

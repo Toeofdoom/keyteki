@@ -13,40 +13,6 @@ class PrescriptiveGrammarbot extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "keywords",
-    "keywords": [
-      {
-        "name": "taunt"
-      },
-      {
-        "name": "hazardous",
-        "count": 3
-      }
-    ]
-  },
-  {
-    "name": "bold",
-    "trigger": "reap",
-    "actions": {
-      "targets": [
-        {
-          "type": "creature",
-          "mode": "exactly",
-          "count": 1,
-          "actions": [
-            {
-              "name": "enrage"
-            }
-          ]
-        }
-      ]
-    }
-  }
-]
-*/
 
 PrescriptiveGrammarbot.id = 'prescriptive-grammarbot';
 

@@ -24,62 +24,6 @@ class SpecialDelivery extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "bold",
-    "trigger": "omni",
-    "actions": {
-      "default": [
-        {
-          "name": "sacrifice",
-          "target": {
-            "mode": "self"
-          }
-        }
-      ],
-      "then": {
-        "targets": [
-          {
-            "type": "creature",
-            "conditions": [
-              {
-                "name": "flank"
-              }
-            ],
-            "mode": "exactly",
-            "count": 1,
-            "actions": [
-              {
-                "name": "dealDamage",
-                "amount": 3
-              }
-            ]
-          }
-        ],
-        "then": {
-          "default": [
-            {
-              "name": "purge",
-              "target": {
-                "mode": "it"
-              },
-              "condition": {
-                "name": "destroysTarget"
-              },
-              "then": true
-            }
-          ],
-          "condition": {
-            "name": "destroysTarget"
-          }
-        },
-        "alwaysTriggers": true
-      }
-    }
-  }
-]
-*/
 
 SpecialDelivery.id = 'special-delivery';
 

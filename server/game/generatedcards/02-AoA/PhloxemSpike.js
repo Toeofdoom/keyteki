@@ -13,59 +13,6 @@ class PhloxemSpike extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "bold",
-    "trigger": "play",
-    "actions": {
-      "default": [
-        {
-          "name": "destroy",
-          "target": {
-            "type": "creature",
-            "conditions": [
-              {
-                "name": "not",
-                "condition": {
-                  "name": "flank"
-                }
-              }
-            ],
-            "mode": "all"
-          },
-          "condition": {
-            "name": "comparison",
-            "operator": "===",
-            "b": {
-              "name": "constant",
-              "amount": 0
-            },
-            "a": {
-              "name": "cards",
-              "type": "creature",
-              "controller": "self"
-            }
-          }
-        }
-      ],
-      "condition": {
-        "name": "comparison",
-        "operator": "===",
-        "b": {
-          "name": "constant",
-          "amount": 0
-        },
-        "a": {
-          "name": "cards",
-          "type": "creature",
-          "controller": "self"
-        }
-      }
-    }
-  }
-]
-*/
 
 PhloxemSpike.id = 'phloxem-spike';
 

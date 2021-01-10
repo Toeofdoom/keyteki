@@ -39,46 +39,6 @@ class DoomSigil extends Card {
         }*/
     }
 }
-/*
-[
-  {
-    "name": "persistentEffect",
-    "target": {
-      "type": "creature",
-      "mode": "all"
-    },
-    "effects": [
-      {
-        "name": "gainKeywords",
-        "keywords": [
-          {
-            "name": "poison"
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "name": "comparison",
-    "operator": "===",
-    "b": {
-      "name": "constant",
-      "amount": 0
-    },
-    "a": {
-      "name": "cards",
-      "type": "creature"
-    }
-  },
-  " ",
-  {
-    "name": "destroy",
-    "target": {
-      "mode": "self"
-    }
-  }
-]
-*/
 
 DoomSigil.id = 'doom-sigil';
 

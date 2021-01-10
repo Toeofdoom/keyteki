@@ -14,43 +14,6 @@ class PraefectusLudo extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "persistentEffect",
-    "target": {
-      "type": "creature",
-      "controller": "self",
-      "conditions": [
-        {
-          "name": "other"
-        }
-      ],
-      "mode": "all"
-    },
-    "effects": [
-      {
-        "name": "gainAbility",
-        "ability": {
-          "name": "bold",
-          "trigger": "destroyed",
-          "actions": {
-            "default": [
-              {
-                "amount": "all",
-                "target": {
-                  "mode": "this"
-                },
-                "name": "removeAmber"
-              }
-            ]
-          }
-        }
-      }
-    ]
-  }
-]
-*/
 
 PraefectusLudo.id = 'praefectus-ludo';
 

@@ -10,38 +10,6 @@ class TheSpiritsWay extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "bold",
-    "trigger": "play",
-    "actions": {
-      "default": [
-        {
-          "name": "destroy",
-          "target": {
-            "type": "creature",
-            "conditions": [
-              {
-                "name": "comparison",
-                "operator": ">=",
-                "a": {
-                  "name": "power"
-                },
-                "b": {
-                  "name": "constant",
-                  "amount": 3
-                }
-              }
-            ],
-            "mode": "all"
-          }
-        }
-      ]
-    }
-  }
-]
-*/
 
 TheSpiritsWay.id = 'the-spirit-s-way';
 

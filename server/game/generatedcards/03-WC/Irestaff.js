@@ -14,32 +14,6 @@ class Irestaff extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "bold",
-    "trigger": "action",
-    "actions": {
-      "targets": [
-        {
-          "type": "creature",
-          "mode": "exactly",
-          "count": 1,
-          "actions": [
-            {
-              "name": "enrage"
-            },
-            {
-              "name": "addPowerCounter",
-              "amount": 1
-            }
-          ]
-        }
-      ]
-    }
-  }
-]
-*/
 
 Irestaff.id = 'irestaff';
 

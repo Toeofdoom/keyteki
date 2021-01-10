@@ -17,52 +17,6 @@ class UniversalTranslator extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "persistentEffect",
-    "target": {
-      "mode": "this"
-    },
-    "effects": [
-      {
-        "name": "gainAbility",
-        "ability": {
-          "name": "bold",
-          "trigger": "fight",
-          "extraTriggers": [
-            "reap"
-          ],
-          "actions": {
-            "targets": [
-              {
-                "type": "creature",
-                "controller": "self",
-                "conditions": [
-                  {
-                    "name": "not",
-                    "condition": {
-                      "name": "house",
-                      "house": "staralliance"
-                    }
-                  }
-                ],
-                "mode": "exactly",
-                "count": 1,
-                "actions": [
-                  {
-                    "name": "use"
-                  }
-                ]
-              }
-            ]
-          }
-        }
-      }
-    ]
-  }
-]
-*/
 
 UniversalTranslator.id = 'universal-translator';
 

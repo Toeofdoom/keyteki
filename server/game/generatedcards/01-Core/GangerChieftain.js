@@ -17,43 +17,6 @@ class GangerChieftain extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "bold",
-    "trigger": "play",
-    "actions": {
-      "optional": true,
-      "targets": [
-        {
-          "type": "creature",
-          "conditions": [
-            {
-              "name": "neighboring"
-            }
-          ],
-          "mode": "exactly",
-          "count": 1,
-          "actions": [
-            {
-              "name": "sequential",
-              "actions": [
-                {
-                  "name": "ready"
-                },
-                {
-                  "name": "fight"
-                }
-              ],
-              "optional": true
-            }
-          ]
-        }
-      ]
-    }
-  }
-]
-*/
 
 GangerChieftain.id = 'ganger-chieftain';
 

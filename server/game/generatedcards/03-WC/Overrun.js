@@ -12,51 +12,6 @@ class Overrun extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "bold",
-    "trigger": "play",
-    "actions": {
-      "default": [
-        {
-          "name": "loseAmber",
-          "amount": 2,
-          "targetPlayer": "opponent",
-          "condition": {
-            "name": "comparison",
-            "operator": "===",
-            "b": {
-              "name": "constant",
-              "amount": 3
-            },
-            "a": {
-              "name": "eventCount",
-              "action": "destroyed",
-              "type": "creature",
-              "controller": "opponent"
-            }
-          }
-        }
-      ],
-      "condition": {
-        "name": "comparison",
-        "operator": "===",
-        "b": {
-          "name": "constant",
-          "amount": 3
-        },
-        "a": {
-          "name": "eventCount",
-          "action": "destroyed",
-          "type": "creature",
-          "controller": "opponent"
-        }
-      }
-    }
-  }
-]
-*/
 
 Overrun.id = 'overrun';
 

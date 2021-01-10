@@ -15,32 +15,6 @@ class KeyCharge extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "bold",
-    "trigger": "play",
-    "actions": {
-      "default": [
-        {
-          "name": "loseAmber",
-          "amount": 1
-        }
-      ],
-      "then": {
-        "optional": true,
-        "default": [
-          {
-            "name": "forgeKey",
-            "optional": true,
-            "then": true
-          }
-        ]
-      }
-    }
-  }
-]
-*/
 
 KeyCharge.id = 'key-charge';
 

@@ -11,24 +11,6 @@ class MabTheMad extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "bold",
-    "trigger": "reap",
-    "actions": {
-      "default": [
-        {
-          "name": "returnToDeck",
-          "target": {
-            "mode": "self"
-          }
-        }
-      ]
-    }
-  }
-]
-*/
 
 MabTheMad.id = 'mab-the-mad';
 

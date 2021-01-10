@@ -14,35 +14,6 @@ class Bonesaw extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "persistentEffect",
-    "condition": {
-      "name": "comparison",
-      "operator": ">=",
-      "b": {
-        "name": "constant",
-        "amount": 1
-      },
-      "a": {
-        "name": "eventCount",
-        "action": "destroyed",
-        "type": "creature",
-        "controller": "self"
-      }
-    },
-    "target": {
-      "mode": "self"
-    },
-    "effects": [
-      {
-        "name": "entersPlayReady"
-      }
-    ]
-  }
-]
-*/
 
 Bonesaw.id = 'bonesaw';
 

@@ -18,51 +18,6 @@ class Commandeer extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "bold",
-    "trigger": "play",
-    "actions": {
-      "default": [
-        {
-          "name": "forRemainderOfTurn",
-          "durationEffect": {
-            "name": "reaction",
-            "trigger": {
-              "trigger": "play",
-              "card": {
-                "conditions": [
-                  {
-                    "name": "other"
-                  }
-                ]
-              },
-              "eventPlayer": "self"
-            },
-            "actions": {
-              "targets": [
-                {
-                  "type": "creature",
-                  "controller": "self",
-                  "mode": "exactly",
-                  "count": 1,
-                  "actions": [
-                    {
-                      "name": "capture",
-                      "amount": 1
-                    }
-                  ]
-                }
-              ]
-            }
-          }
-        }
-      ]
-    }
-  }
-]
-*/
 
 Commandeer.id = 'commandeer';
 

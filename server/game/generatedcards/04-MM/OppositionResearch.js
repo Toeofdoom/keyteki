@@ -12,45 +12,6 @@ class OppositionResearch extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "keywords",
-    "keywords": [
-      {
-        "name": "enhance"
-      }
-    ]
-  },
-  {
-    "name": "bold",
-    "trigger": "play",
-    "actions": {
-      "default": [
-        {
-          "name": "lastingEffect",
-          "durationEffect": {
-            "name": "persistentEffect",
-            "target": {
-              "0": "a",
-              "1": "l",
-              "2": "l",
-              "type": "creature",
-              "controller": "opponent"
-            },
-            "effects": [
-              {
-                "name": "cardCannot",
-                "effect": "reap"
-              }
-            ]
-          }
-        }
-      ]
-    }
-  }
-]
-*/
 
 OppositionResearch.id = 'opposition-research';
 

@@ -20,59 +20,6 @@ class CrashMuldoon extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "keywords",
-    "keywords": [
-      {
-        "name": "deploy"
-      }
-    ]
-  },
-  {
-    "name": "persistentEffect",
-    "target": {
-      "mode": "self"
-    },
-    "effects": [
-      {
-        "name": "entersPlayReady"
-      }
-    ]
-  },
-  {
-    "name": "bold",
-    "trigger": "action",
-    "actions": {
-      "targets": [
-        {
-          "type": "creature",
-          "conditions": [
-            {
-              "name": "neighboring"
-            },
-            {
-              "name": "not",
-              "condition": {
-                "name": "house",
-                "house": "staralliance"
-              }
-            }
-          ],
-          "mode": "exactly",
-          "count": 1,
-          "actions": [
-            {
-              "name": "use"
-            }
-          ]
-        }
-      ]
-    }
-  }
-]
-*/
 
 CrashMuldoon.id = 'crash-muldoon';
 

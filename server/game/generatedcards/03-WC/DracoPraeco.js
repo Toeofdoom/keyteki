@@ -21,47 +21,6 @@ class DracoPraeco extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "bold",
-    "trigger": "reap",
-    "actions": {
-      "optional": true,
-      "default": [
-        {
-          "name": "exalt",
-          "target": {
-            "mode": "self"
-          },
-          "optional": true
-        }
-      ],
-      "then": {
-        "targets": [
-          {
-            "mode": "house"
-          }
-        ],
-        "default": [
-          {
-            "name": "enrage",
-            "target": {
-              "type": "creature",
-              "conditions": [
-                {
-                  "name": "chosenHouse"
-                }
-              ],
-              "mode": "all"
-            }
-          }
-        ]
-      }
-    }
-  }
-]
-*/
 
 DracoPraeco.id = 'draco-praeco';
 

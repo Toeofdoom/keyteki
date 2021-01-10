@@ -11,30 +11,6 @@ class LashOfBrokenDreams extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "bold",
-    "trigger": "action",
-    "actions": {
-      "default": [
-        {
-          "name": "lastingEffect",
-          "durationEffect": {
-            "name": "persistentEffect",
-            "effects": [
-              {
-                "name": "modifyKeyCost",
-                "amount": 3
-              }
-            ]
-          }
-        }
-      ]
-    }
-  }
-]
-*/
 
 LashOfBrokenDreams.id = 'lash-of-broken-dreams';
 

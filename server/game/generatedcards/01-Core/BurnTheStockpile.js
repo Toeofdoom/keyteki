@@ -12,47 +12,6 @@ class BurnTheStockpile extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "bold",
-    "trigger": "play",
-    "actions": {
-      "default": [
-        {
-          "name": "loseAmber",
-          "amount": 4,
-          "targetPlayer": "they",
-          "condition": {
-            "name": "comparison",
-            "operator": ">=",
-            "a": {
-              "name": "amber",
-              "player": "opponent"
-            },
-            "b": {
-              "name": "constant",
-              "amount": 7
-            }
-          }
-        }
-      ],
-      "condition": {
-        "name": "comparison",
-        "operator": ">=",
-        "a": {
-          "name": "amber",
-          "player": "opponent"
-        },
-        "b": {
-          "name": "constant",
-          "amount": 7
-        }
-      }
-    }
-  }
-]
-*/
 
 BurnTheStockpile.id = 'burn-the-stockpile';
 

@@ -18,44 +18,6 @@ class Bumblebird extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "keywords",
-    "keywords": [
-      {
-        "name": "alpha"
-      }
-    ]
-  },
-  {
-    "name": "bold",
-    "trigger": "play",
-    "actions": {
-      "default": [
-        {
-          "name": "addPowerCounter",
-          "amount": 2,
-          "target": {
-            "type": "creature",
-            "controller": "self",
-            "conditions": [
-              {
-                "name": "other"
-              },
-              {
-                "name": "house",
-                "house": "untamed"
-              }
-            ],
-            "mode": "all"
-          }
-        }
-      ]
-    }
-  }
-]
-*/
 
 Bumblebird.id = 'bumblebird';
 

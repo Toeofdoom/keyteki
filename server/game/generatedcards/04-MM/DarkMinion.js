@@ -15,35 +15,6 @@ class DarkMinion extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "keywords",
-    "keywords": [
-      {
-        "name": "enhance"
-      }
-    ]
-  },
-  {
-    "name": "bold",
-    "trigger": "destroyed",
-    "actions": {
-      "default": [
-        {
-          "name": "dealDamage",
-          "amount": 1,
-          "target": {
-            "type": "creature",
-            "controller": "opponent",
-            "mode": "all"
-          }
-        }
-      ]
-    }
-  }
-]
-*/
 
 DarkMinion.id = 'dark-minion';
 

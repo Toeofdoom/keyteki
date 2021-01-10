@@ -10,38 +10,6 @@ class WarriorsRefrain extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "bold",
-    "trigger": "play",
-    "actions": {
-      "default": [
-        {
-          "name": "stun",
-          "target": {
-            "type": "creature",
-            "conditions": [
-              {
-                "name": "comparison",
-                "operator": "<=",
-                "a": {
-                  "name": "power"
-                },
-                "b": {
-                  "name": "constant",
-                  "amount": 3
-                }
-              }
-            ],
-            "mode": "all"
-          }
-        }
-      ]
-    }
-  }
-]
-*/
 
 WarriorsRefrain.id = 'warriors--refrain';
 

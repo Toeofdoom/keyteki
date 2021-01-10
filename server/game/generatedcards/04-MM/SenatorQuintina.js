@@ -14,29 +14,6 @@ class SenatorQuintina extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "reaction",
-    "trigger": {
-      "trigger": "reap",
-      "card": {
-        "type": "creature"
-      }
-    },
-    "actions": {
-      "default": [
-        {
-          "name": "exalt",
-          "target": {
-            "mode": "it"
-          }
-        }
-      ]
-    }
-  }
-]
-*/
 
 SenatorQuintina.id = 'senator-quintina';
 

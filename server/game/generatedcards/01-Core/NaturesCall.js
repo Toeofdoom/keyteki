@@ -13,28 +13,6 @@ class NaturesCall extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "bold",
-    "trigger": "play",
-    "actions": {
-      "targets": [
-        {
-          "type": "creature",
-          "mode": "upTo",
-          "count": 3,
-          "actions": [
-            {
-              "name": "returnToHand"
-            }
-          ]
-        }
-      ]
-    }
-  }
-]
-*/
 
 NaturesCall.id = 'nature-s-call';
 

@@ -15,30 +15,6 @@ class ZysysyxShockworm extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "reaction",
-    "trigger": {
-      "trigger": "reap",
-      "card": {
-        "type": "creature",
-        "controller": "opponent"
-      }
-    },
-    "actions": {
-      "default": [
-        {
-          "name": "stun",
-          "target": {
-            "mode": "it"
-          }
-        }
-      ]
-    }
-  }
-]
-*/
 
 ZysysyxShockworm.id = 'zysysyx-shockworm';
 

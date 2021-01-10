@@ -12,36 +12,6 @@ class QyxxlyxPlagueMaster extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "bold",
-    "trigger": "fight",
-    "extraTriggers": [
-      "reap"
-    ],
-    "actions": {
-      "default": [
-        {
-          "name": "dealDamage",
-          "amount": 3,
-          "target": {
-            "type": "creature",
-            "conditions": [
-              {
-                "name": "trait",
-                "trait": "human"
-              }
-            ],
-            "mode": "all"
-          },
-          "noPrevent": true
-        }
-      ]
-    }
-  }
-]
-*/
 
 QyxxlyxPlagueMaster.id = 'qyxxlyx-plague-master';
 

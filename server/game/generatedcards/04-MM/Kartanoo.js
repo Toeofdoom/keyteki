@@ -11,28 +11,6 @@ class Kartanoo extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "bold",
-    "trigger": "reap",
-    "actions": {
-      "targets": [
-        {
-          "type": "artifact",
-          "mode": "exactly",
-          "count": 1,
-          "actions": [
-            {
-              "name": "use"
-            }
-          ]
-        }
-      ]
-    }
-  }
-]
-*/
 
 Kartanoo.id = 'kartanoo';
 

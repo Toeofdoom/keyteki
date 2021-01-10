@@ -18,42 +18,6 @@ class TakeHostages extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "bold",
-    "trigger": "play",
-    "actions": {
-      "default": [
-        {
-          "name": "forRemainderOfTurn",
-          "durationEffect": {
-            "name": "reaction",
-            "trigger": {
-              "trigger": "fight",
-              "card": {
-                "type": "creature",
-                "controller": "self"
-              }
-            },
-            "actions": {
-              "default": [
-                {
-                  "name": "capture",
-                  "amount": 1,
-                  "target": {
-                    "mode": "it"
-                  }
-                }
-              ]
-            }
-          }
-        }
-      ]
-    }
-  }
-]
-*/
 
 TakeHostages.id = 'take-hostages';
 

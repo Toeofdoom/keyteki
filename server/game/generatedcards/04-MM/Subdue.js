@@ -14,32 +14,6 @@ class Subdue extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "bold",
-    "trigger": "play",
-    "actions": {
-      "targets": [
-        {
-          "type": "creature",
-          "mode": "exactly",
-          "count": 1,
-          "actions": [
-            {
-              "name": "dealDamage",
-              "amount": 1
-            },
-            {
-              "name": "stun"
-            }
-          ]
-        }
-      ]
-    }
-  }
-]
-*/
 
 Subdue.id = 'subdue';
 

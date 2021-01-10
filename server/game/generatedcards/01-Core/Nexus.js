@@ -14,37 +14,6 @@ class Nexus extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "keywords",
-    "keywords": [
-      {
-        "name": "elusive"
-      }
-    ]
-  },
-  {
-    "name": "bold",
-    "trigger": "reap",
-    "actions": {
-      "targets": [
-        {
-          "type": "artifact",
-          "controller": "opponent",
-          "mode": "exactly",
-          "count": 1,
-          "actions": [
-            {
-              "name": "use"
-            }
-          ]
-        }
-      ]
-    }
-  }
-]
-*/
 
 Nexus.id = 'nexus';
 

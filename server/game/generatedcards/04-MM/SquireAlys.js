@@ -8,22 +8,6 @@ class SquireAlys extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "bold",
-    "trigger": "play",
-    "actions": {
-      "default": [
-        {
-          "name": "capture",
-          "amount": 2
-        }
-      ]
-    }
-  }
-]
-*/
 
 SquireAlys.id = 'squire-alys';
 

@@ -16,58 +16,6 @@ class FontOfTheEye extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "bold",
-    "trigger": "omni",
-    "actions": {
-      "targets": [
-        {
-          "type": "creature",
-          "controller": "self",
-          "mode": "exactly",
-          "count": 1,
-          "actions": [
-            {
-              "name": "capture",
-              "amount": 1,
-              "condition": {
-                "name": "comparison",
-                "operator": ">=",
-                "b": {
-                  "name": "constant",
-                  "amount": 1
-                },
-                "a": {
-                  "name": "eventCount",
-                  "action": "destroyed",
-                  "type": "creature",
-                  "controller": "opponent"
-                }
-              }
-            }
-          ]
-        }
-      ],
-      "condition": {
-        "name": "comparison",
-        "operator": ">=",
-        "b": {
-          "name": "constant",
-          "amount": 1
-        },
-        "a": {
-          "name": "eventCount",
-          "action": "destroyed",
-          "type": "creature",
-          "controller": "opponent"
-        }
-      }
-    }
-  }
-]
-*/
 
 FontOfTheEye.id = 'font-of-the-eye';
 

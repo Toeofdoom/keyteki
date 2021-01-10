@@ -11,24 +11,6 @@ class SkyboosterSquadron extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "bold",
-    "trigger": "reap",
-    "actions": {
-      "default": [
-        {
-          "name": "returnToHand",
-          "target": {
-            "mode": "self"
-          }
-        }
-      ]
-    }
-  }
-]
-*/
 
 SkyboosterSquadron.id = 'skybooster-squadron';
 

@@ -8,22 +8,6 @@ class DetentionCoil extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "persistentEffect",
-    "target": {
-      "mode": "this"
-    },
-    "effects": [
-      {
-        "name": "cardCannot",
-        "effect": "fight"
-      }
-    ]
-  }
-]
-*/
 
 DetentionCoil.id = 'detention-coil';
 

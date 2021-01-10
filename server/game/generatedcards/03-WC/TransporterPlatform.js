@@ -12,47 +12,6 @@ class TransporterPlatform extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "bold",
-    "trigger": "action",
-    "actions": {
-      "targets": [
-        {
-          "0": {
-            "type": "creature",
-            "controller": "self",
-            "mode": "exactly",
-            "count": 1
-          },
-          "2": "and",
-          "3": [
-            " "
-          ],
-          "4": {
-            "type": "upgrade",
-            "conditions": [
-              {
-                "name": "attached",
-                "target": {
-                  "mode": "it"
-                }
-              }
-            ],
-            "mode": "all"
-          },
-          "actions": [
-            {
-              "name": "returnToHand"
-            }
-          ]
-        }
-      ]
-    }
-  }
-]
-*/
 
 TransporterPlatform.id = 'transporter-platform';
 

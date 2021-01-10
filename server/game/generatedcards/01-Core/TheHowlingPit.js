@@ -9,22 +9,6 @@ class TheHowlingPit extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "persistentEffect",
-    "target": {
-      "controller": "any"
-    },
-    "effects": [
-      {
-        "name": "modifyHandSize",
-        "amount": 1
-      }
-    ]
-  }
-]
-*/
 
 TheHowlingPit.id = 'the-howling-pit';
 

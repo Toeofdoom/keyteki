@@ -16,37 +16,6 @@ class AmberImp extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "keywords",
-    "keywords": [
-      {
-        "name": "elusive"
-      }
-    ]
-  },
-  {
-    "name": "reaction",
-    "trigger": {
-      "trigger": "reap",
-      "card": {
-        "type": "creature"
-      }
-    },
-    "actions": {
-      "default": [
-        {
-          "name": "stun",
-          "target": {
-            "mode": "it"
-          }
-        }
-      ]
-    }
-  }
-]
-*/
 
 AmberImp.id = 'æmber-imp';
 

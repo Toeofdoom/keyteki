@@ -13,33 +13,6 @@ class Trimble extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "persistentEffect",
-    "target": {
-      "type": "creature",
-      "conditions": [
-        {
-          "name": "trait",
-          "trait": "mutant"
-        }
-      ],
-      "mode": "all"
-    },
-    "effects": [
-      {
-        "name": "gainKeywords",
-        "keywords": [
-          {
-            "name": "skirmish"
-          }
-        ]
-      }
-    ]
-  }
-]
-*/
 
 Trimble.id = 'trimble';
 

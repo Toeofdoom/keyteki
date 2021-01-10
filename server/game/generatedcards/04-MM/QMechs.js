@@ -16,38 +16,6 @@ class QMechs extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "bold",
-    "trigger": "play",
-    "actions": {
-      "default": [
-        {
-          "name": "draw",
-          "amount": 1
-        }
-      ]
-    }
-  },
-  {
-    "name": "bold",
-    "trigger": "destroyed",
-    "actions": {
-      "default": [
-        {
-          "name": "archive",
-          "target": {
-            "mode": "self",
-            "location": "hand",
-            "controller": "self"
-          }
-        }
-      ]
-    }
-  }
-]
-*/
 
 QMechs.id = 'q-mechs';
 

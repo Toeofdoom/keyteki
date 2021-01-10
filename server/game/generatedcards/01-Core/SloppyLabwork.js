@@ -21,45 +21,6 @@ class SloppyLabwork extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "bold",
-    "trigger": "play",
-    "actions": {
-      "targets": [
-        {
-          "controller": "self",
-          "mode": "exactly",
-          "count": 1,
-          "location": "hand",
-          "actions": [
-            {
-              "name": "archive"
-            }
-          ]
-        }
-      ],
-      "then": {
-        "targets": [
-          {
-            "controller": "self",
-            "mode": "exactly",
-            "count": 1,
-            "location": "hand",
-            "actions": [
-              {
-                "name": "discard"
-              }
-            ]
-          }
-        ],
-        "alwaysTriggers": true
-      }
-    }
-  }
-]
-*/
 
 SloppyLabwork.id = 'sloppy-labwork';
 

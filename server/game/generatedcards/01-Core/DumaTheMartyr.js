@@ -16,36 +16,6 @@ class DumaTheMartyr extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "bold",
-    "trigger": "destroyed",
-    "actions": {
-      "default": [
-        {
-          "name": "heal",
-          "fully": true,
-          "target": {
-            "type": "creature",
-            "controller": "self",
-            "conditions": [
-              {
-                "name": "other"
-              }
-            ],
-            "mode": "all"
-          }
-        },
-        {
-          "name": "draw",
-          "amount": 2
-        }
-      ]
-    }
-  }
-]
-*/
 
 DumaTheMartyr.id = 'duma-the-martyr';
 

@@ -11,24 +11,6 @@ class BadPenny extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "bold",
-    "trigger": "destroyed",
-    "actions": {
-      "default": [
-        {
-          "name": "returnToHand",
-          "target": {
-            "mode": "self"
-          }
-        }
-      ]
-    }
-  }
-]
-*/
 
 BadPenny.id = 'bad-penny';
 

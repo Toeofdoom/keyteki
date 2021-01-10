@@ -11,30 +11,6 @@ class QuixoTheAdventurer extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "keywords",
-    "keywords": [
-      {
-        "name": "skirmish"
-      }
-    ]
-  },
-  {
-    "name": "bold",
-    "trigger": "fight",
-    "actions": {
-      "default": [
-        {
-          "name": "draw",
-          "amount": 1
-        }
-      ]
-    }
-  }
-]
-*/
 
 QuixoTheAdventurer.id = 'quixo-the-adventurer';
 

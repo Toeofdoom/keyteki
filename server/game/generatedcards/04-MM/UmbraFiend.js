@@ -10,30 +10,6 @@ class UmbraFiend extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "keywords",
-    "keywords": [
-      {
-        "name": "elusive"
-      }
-    ]
-  },
-  {
-    "name": "bold",
-    "trigger": "destroyed",
-    "actions": {
-      "default": [
-        {
-          "name": "steal",
-          "amount": 1
-        }
-      ]
-    }
-  }
-]
-*/
 
 UmbraFiend.id = 'umbra-fiend';
 

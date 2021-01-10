@@ -13,29 +13,6 @@ class Skullion extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "bold",
-    "trigger": "play",
-    "actions": {
-      "targets": [
-        {
-          "type": "creature",
-          "controller": "self",
-          "mode": "exactly",
-          "count": 1,
-          "actions": [
-            {
-              "name": "sacrifice"
-            }
-          ]
-        }
-      ]
-    }
-  }
-]
-*/
 
 Skullion.id = 'skullion';
 

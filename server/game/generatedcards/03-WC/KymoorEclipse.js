@@ -11,30 +11,6 @@ class KymoorEclipse extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "bold",
-    "trigger": "play",
-    "actions": {
-      "default": [
-        {
-          "name": "returnToDeck",
-          "target": {
-            "type": "creature",
-            "conditions": [
-              {
-                "name": "flank"
-              }
-            ],
-            "mode": "all"
-          }
-        }
-      ]
-    }
-  }
-]
-*/
 
 KymoorEclipse.id = 'kymoor-eclipse';
 

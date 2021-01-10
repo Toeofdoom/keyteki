@@ -22,45 +22,6 @@ class CaptainNoBeardEvilTwin extends Card {
         }*/
     }
 }
-/*
-[
-  {
-    "name": "keywords",
-    "keywords": [
-      {
-        "name": "taunt"
-      }
-    ]
-  },
-  {
-    "name": "bold",
-    "trigger": "destroyed",
-    "actions": {
-      "default": [
-        {
-          "name": "capture",
-          "amount": 1,
-          "target": {
-            "mode": "all",
-            "type": "creature",
-            "conditions": [
-              {
-                "name": "neighboring"
-              }
-            ]
-          }
-        }
-      ]
-    }
-  },
-  {
-    "name": "reminderText",
-    "keywords": [
-      "This card is incomplete and subject to change."
-    ]
-  }
-]
-*/
 
 CaptainNoBeardEvilTwin.id = 'captain-no-beard-evil-twin';
 

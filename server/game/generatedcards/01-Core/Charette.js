@@ -8,22 +8,6 @@ class Charette extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "bold",
-    "trigger": "play",
-    "actions": {
-      "default": [
-        {
-          "name": "capture",
-          "amount": 3
-        }
-      ]
-    }
-  }
-]
-*/
 
 Charette.id = 'charette';
 

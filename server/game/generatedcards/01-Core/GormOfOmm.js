@@ -18,39 +18,6 @@ class GormOfOmm extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "bold",
-    "trigger": "omni",
-    "actions": {
-      "default": [
-        {
-          "name": "destroy",
-          "target": {
-            "mode": "self"
-          }
-        }
-      ],
-      "then": {
-        "targets": [
-          {
-            "type": "artifact",
-            "mode": "exactly",
-            "count": 1,
-            "actions": [
-              {
-                "name": "destroy"
-              }
-            ]
-          }
-        ],
-        "alwaysTriggers": true
-      }
-    }
-  }
-]
-*/
 
 GormOfOmm.id = 'gorm-of-omm';
 

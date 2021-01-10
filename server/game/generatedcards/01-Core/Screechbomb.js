@@ -13,29 +13,6 @@ class Screechbomb extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "bold",
-    "trigger": "omni",
-    "actions": {
-      "default": [
-        {
-          "name": "sacrifice",
-          "target": {
-            "mode": "self"
-          }
-        },
-        {
-          "name": "loseAmber",
-          "amount": 2,
-          "targetPlayer": "opponent"
-        }
-      ]
-    }
-  }
-]
-*/
 
 Screechbomb.id = 'screechbomb';
 

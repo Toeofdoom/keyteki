@@ -16,30 +16,6 @@ class BilgumAvalanche extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "reaction",
-    "trigger": {
-      "trigger": "forges",
-      "eventPlayer": "self"
-    },
-    "actions": {
-      "default": [
-        {
-          "name": "dealDamage",
-          "amount": 2,
-          "target": {
-            "type": "creature",
-            "controller": "opponent",
-            "mode": "all"
-          }
-        }
-      ]
-    }
-  }
-]
-*/
 
 BilgumAvalanche.id = 'bilgum-avalanche';
 

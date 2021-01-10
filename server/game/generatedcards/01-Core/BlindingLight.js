@@ -13,35 +13,6 @@ class BlindingLight extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "bold",
-    "trigger": "play",
-    "actions": {
-      "targets": [
-        {
-          "mode": "house"
-        }
-      ],
-      "default": [
-        {
-          "name": "stun",
-          "target": {
-            "type": "creature",
-            "conditions": [
-              {
-                "name": "chosenHouse"
-              }
-            ],
-            "mode": "all"
-          }
-        }
-      ]
-    }
-  }
-]
-*/
 
 BlindingLight.id = 'blinding-light';
 

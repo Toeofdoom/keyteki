@@ -8,26 +8,6 @@ class ResearchSmoko extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "bold",
-    "trigger": "destroyed",
-    "actions": {
-      "default": [
-        {
-          "name": "archive",
-          "target": {
-            "mode": "topdeck",
-            "location": "hand",
-            "controller": "self"
-          }
-        }
-      ]
-    }
-  }
-]
-*/
 
 ResearchSmoko.id = 'research-smoko';
 

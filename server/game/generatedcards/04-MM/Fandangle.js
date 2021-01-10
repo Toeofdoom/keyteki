@@ -11,46 +11,6 @@ class Fandangle extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "persistentEffect",
-    "condition": {
-      "name": "comparison",
-      "operator": ">=",
-      "a": {
-        "name": "amber",
-        "player": "self"
-      },
-      "b": {
-        "name": "constant",
-        "amount": 4
-      }
-    },
-    "target": {
-      "0": "a",
-      "1": "l",
-      "2": "l",
-      "type": "creature",
-      "controller": "self",
-      "conditions": [
-        {
-          "name": "not",
-          "condition": {
-            "name": "house",
-            "house": "untamed"
-          }
-        }
-      ]
-    },
-    "effects": [
-      {
-        "name": "entersPlayReady"
-      }
-    ]
-  }
-]
-*/
 
 Fandangle.id = 'fandangle';
 

@@ -14,29 +14,6 @@ class CreepingOblivion extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "bold",
-    "trigger": "play",
-    "actions": {
-      "targets": [
-        {
-          "controller": "any",
-          "mode": "upTo",
-          "count": 2,
-          "location": "discard",
-          "actions": [
-            {
-              "name": "purge"
-            }
-          ]
-        }
-      ]
-    }
-  }
-]
-*/
 
 CreepingOblivion.id = 'creeping-oblivion';
 

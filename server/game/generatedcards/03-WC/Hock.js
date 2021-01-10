@@ -14,37 +14,6 @@ class Hock extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "bold",
-    "trigger": "play",
-    "actions": {
-      "targets": [
-        {
-          "type": "artifact",
-          "mode": "exactly",
-          "count": 1,
-          "actions": [
-            {
-              "name": "destroy"
-            }
-          ]
-        }
-      ],
-      "then": {
-        "default": [
-          {
-            "name": "gainAmber",
-            "amount": 1,
-            "then": true
-          }
-        ]
-      }
-    }
-  }
-]
-*/
 
 Hock.id = 'hock';
 

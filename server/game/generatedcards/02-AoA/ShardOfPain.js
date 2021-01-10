@@ -18,41 +18,6 @@ class ShardOfPain extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "bold",
-    "trigger": "action",
-    "actions": {
-      "targets": [
-        {
-          "type": "creature",
-          "controller": "opponent",
-          "mode": "exactly",
-          "count": 1,
-          "actions": [
-            {
-              "name": "dealDamage",
-              "amount": 1,
-              "multiplier": {
-                "name": "cards",
-                "type": "creature",
-                "controller": "self",
-                "conditions": [
-                  {
-                    "name": "trait",
-                    "trait": "shard"
-                  }
-                ]
-              }
-            }
-          ]
-        }
-      ]
-    }
-  }
-]
-*/
 
 ShardOfPain.id = 'shard-of-pain';
 

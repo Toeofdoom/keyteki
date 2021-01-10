@@ -11,30 +11,6 @@ class TheEvilEye extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "bold",
-    "trigger": "play",
-    "actions": {
-      "default": [
-        {
-          "name": "lastingEffect",
-          "durationEffect": {
-            "name": "persistentEffect",
-            "effects": [
-              {
-                "name": "modifyKeyCost",
-                "amount": 3
-              }
-            ]
-          }
-        }
-      ]
-    }
-  }
-]
-*/
 
 TheEvilEye.id = 'the-evil-eye';
 

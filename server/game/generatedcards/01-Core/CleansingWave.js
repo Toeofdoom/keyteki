@@ -21,41 +21,6 @@ class CleansingWave extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "bold",
-    "trigger": "play",
-    "actions": {
-      "default": [
-        {
-          "name": "heal",
-          "amount": 1,
-          "target": {
-            "type": "creature",
-            "mode": "all"
-          }
-        }
-      ],
-      "then": {
-        "default": [
-          {
-            "name": "gainAmber",
-            "amount": 1,
-            "multiplier": {
-              "name": "healedThisWay",
-              "card": {
-                "type": "creature"
-              }
-            }
-          }
-        ],
-        "alwaysTriggers": true
-      }
-    }
-  }
-]
-*/
 
 CleansingWave.id = 'cleansing-wave';
 

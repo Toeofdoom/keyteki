@@ -12,41 +12,6 @@ class Oubliette extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "bold",
-    "trigger": "play",
-    "actions": {
-      "targets": [
-        {
-          "type": "creature",
-          "conditions": [
-            {
-              "name": "comparison",
-              "operator": "<=",
-              "a": {
-                "name": "power"
-              },
-              "b": {
-                "name": "constant",
-                "amount": 3
-              }
-            }
-          ],
-          "mode": "exactly",
-          "count": 1,
-          "actions": [
-            {
-              "name": "purge"
-            }
-          ]
-        }
-      ]
-    }
-  }
-]
-*/
 
 Oubliette.id = 'oubliette';
 

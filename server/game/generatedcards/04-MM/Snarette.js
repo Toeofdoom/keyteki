@@ -18,45 +18,6 @@ class Snarette extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "reaction",
-    "trigger": {
-      "trigger": "onRoundEnded",
-      "conditions": [
-        {
-          "name": "turn",
-          "player": "self"
-        }
-      ]
-    },
-    "actions": {
-      "default": [
-        {
-          "name": "capture",
-          "amount": 1
-        }
-      ]
-    }
-  },
-  {
-    "name": "bold",
-    "trigger": "action",
-    "actions": {
-      "default": [
-        {
-          "amount": "all",
-          "target": {
-            "mode": "self"
-          },
-          "name": "removeAmber"
-        }
-      ]
-    }
-  }
-]
-*/
 
 Snarette.id = 'snarette';
 

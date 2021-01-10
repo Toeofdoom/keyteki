@@ -14,28 +14,6 @@ class SoulSnatcher extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "reaction",
-    "trigger": {
-      "trigger": "destroyed",
-      "card": {
-        "type": "creature"
-      }
-    },
-    "actions": {
-      "default": [
-        {
-          "name": "gainAmber",
-          "amount": 1,
-          "targetPlayer": "owner"
-        }
-      ]
-    }
-  }
-]
-*/
 
 SoulSnatcher.id = 'soul-snatcher';
 

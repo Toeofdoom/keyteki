@@ -22,35 +22,6 @@ class Eunoia extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "reaction",
-    "trigger": {
-      "trigger": "destroyedFightingThis",
-      "card": {
-        "type": "creature",
-        "controller": "opponent"
-      }
-    },
-    "actions": {
-      "default": [
-        {
-          "name": "gainAmber",
-          "amount": 1
-        },
-        {
-          "name": "heal",
-          "amount": 2,
-          "target": {
-            "mode": "self"
-          }
-        }
-      ]
-    }
-  }
-]
-*/
 
 Eunoia.id = 'eunoia';
 

@@ -13,33 +13,6 @@ class HonorableClaim extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "bold",
-    "trigger": "play",
-    "actions": {
-      "default": [
-        {
-          "name": "capture",
-          "amount": 1,
-          "target": {
-            "type": "creature",
-            "controller": "self",
-            "conditions": [
-              {
-                "name": "trait",
-                "trait": "knight"
-              }
-            ],
-            "mode": "all"
-          }
-        }
-      ]
-    }
-  }
-]
-*/
 
 HonorableClaim.id = 'honorable-claim';
 

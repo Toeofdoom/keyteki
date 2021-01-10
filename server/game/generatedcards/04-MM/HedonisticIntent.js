@@ -11,30 +11,6 @@ class HedonisticIntent extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "bold",
-    "trigger": "play",
-    "actions": {
-      "default": [
-        {
-          "name": "exalt",
-          "target": {
-            "type": "creature",
-            "conditions": [
-              {
-                "name": "flank"
-              }
-            ],
-            "mode": "all"
-          }
-        }
-      ]
-    }
-  }
-]
-*/
 
 HedonisticIntent.id = 'hedonistic-intent';
 

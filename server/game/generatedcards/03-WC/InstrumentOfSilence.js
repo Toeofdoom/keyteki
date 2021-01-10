@@ -15,41 +15,6 @@ class InstrumentOfSilence extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "persistentEffect",
-    "target": {
-      "mode": "this"
-    },
-    "effects": [
-      {
-        "name": "gainKeywords",
-        "keywords": [
-          {
-            "name": "skirmish"
-          }
-        ]
-      },
-      {
-        "name": "gainAbility",
-        "ability": {
-          "name": "bold",
-          "trigger": "fight",
-          "actions": {
-            "default": [
-              {
-                "name": "gainAmber",
-                "amount": 1
-              }
-            ]
-          }
-        }
-      }
-    ]
-  }
-]
-*/
 
 InstrumentOfSilence.id = 'instrument-of-silence';
 

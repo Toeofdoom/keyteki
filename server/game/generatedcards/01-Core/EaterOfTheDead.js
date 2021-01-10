@@ -20,45 +20,6 @@ class EaterOfTheDead extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "bold",
-    "trigger": "fight",
-    "extraTriggers": [
-      "reap"
-    ],
-    "actions": {
-      "targets": [
-        {
-          "type": "creature",
-          "controller": "any",
-          "mode": "exactly",
-          "count": 1,
-          "location": "discard",
-          "actions": [
-            {
-              "name": "purge"
-            }
-          ]
-        }
-      ],
-      "then": {
-        "default": [
-          {
-            "name": "addPowerCounter",
-            "amount": 1,
-            "target": {
-              "mode": "self"
-            },
-            "then": true
-          }
-        ]
-      }
-    }
-  }
-]
-*/
 
 EaterOfTheDead.id = 'eater-of-the-dead';
 

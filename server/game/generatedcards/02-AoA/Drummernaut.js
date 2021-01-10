@@ -16,42 +16,6 @@ class Drummernaut extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "bold",
-    "trigger": "play",
-    "extraTriggers": [
-      "fight",
-      "reap"
-    ],
-    "actions": {
-      "targets": [
-        {
-          "type": "creature",
-          "controller": "self",
-          "conditions": [
-            {
-              "name": "other"
-            },
-            {
-              "name": "trait",
-              "trait": "giant"
-            }
-          ],
-          "mode": "exactly",
-          "count": 1,
-          "actions": [
-            {
-              "name": "returnToHand"
-            }
-          ]
-        }
-      ]
-    }
-  }
-]
-*/
 
 Drummernaut.id = 'drummernaut';
 

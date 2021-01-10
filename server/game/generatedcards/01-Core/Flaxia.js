@@ -13,50 +13,6 @@ class Flaxia extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "bold",
-    "trigger": "play",
-    "actions": {
-      "default": [
-        {
-          "name": "gainAmber",
-          "amount": 2,
-          "condition": {
-            "name": "comparison",
-            "operator": ">",
-            "a": {
-              "name": "cards",
-              "type": "creature",
-              "controller": "self"
-            },
-            "b": {
-              "name": "cards",
-              "type": "creature",
-              "controller": "opponent"
-            }
-          }
-        }
-      ],
-      "condition": {
-        "name": "comparison",
-        "operator": ">",
-        "a": {
-          "name": "cards",
-          "type": "creature",
-          "controller": "self"
-        },
-        "b": {
-          "name": "cards",
-          "type": "creature",
-          "controller": "opponent"
-        }
-      }
-    }
-  }
-]
-*/
 
 Flaxia.id = 'flaxia';
 

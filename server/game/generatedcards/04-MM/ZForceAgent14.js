@@ -14,34 +14,6 @@ class ZForceAgent14 extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "bold",
-    "trigger": "fight",
-    "actions": {
-      "default": [
-        {
-          "name": "gainAmber",
-          "amount": 1,
-          "multiplier": {
-            "name": "cards",
-            "type": "upgrade",
-            "conditions": [
-              {
-                "name": "attached",
-                "target": {
-                  "mode": "self"
-                }
-              }
-            ]
-          }
-        }
-      ]
-    }
-  }
-]
-*/
 
 ZForceAgent14.id = 'z-force-agent-14';
 

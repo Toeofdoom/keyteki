@@ -21,34 +21,6 @@ class Hapsis extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "reaction",
-    "trigger": {
-      "trigger": "destroyedFightingThis",
-      "card": {
-        "type": "creature",
-        "controller": "opponent"
-      }
-    },
-    "actions": {
-      "default": [
-        {
-          "name": "ward",
-          "target": {
-            "mode": "self"
-          }
-        },
-        {
-          "name": "draw",
-          "amount": 1
-        }
-      ]
-    }
-  }
-]
-*/
 
 Hapsis.id = 'hapsis';
 

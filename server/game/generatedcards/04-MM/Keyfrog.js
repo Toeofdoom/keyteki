@@ -8,21 +8,6 @@ class Keyfrog extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "bold",
-    "trigger": "destroyed",
-    "actions": {
-      "default": [
-        {
-          "name": "forgeKey"
-        }
-      ]
-    }
-  }
-]
-*/
 
 Keyfrog.id = 'keyfrog';
 

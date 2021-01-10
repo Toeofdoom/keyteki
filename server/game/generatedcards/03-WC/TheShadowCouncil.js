@@ -14,50 +14,6 @@ class TheShadowCouncil extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "keywords",
-    "keywords": [
-      {
-        "name": "elusive"
-      }
-    ]
-  },
-  {
-    "name": "persistentEffect",
-    "condition": {
-      "name": "check",
-      "card": {
-        "mode": "self"
-      },
-      "condition": {
-        "name": "center"
-      }
-    },
-    "target": {
-      "mode": "it"
-    },
-    "effects": [
-      {
-        "name": "gainAbility",
-        "ability": {
-          "name": "bold",
-          "trigger": "action",
-          "actions": {
-            "default": [
-              {
-                "name": "steal",
-                "amount": 2
-              }
-            ]
-          }
-        }
-      }
-    ]
-  }
-]
-*/
 
 TheShadowCouncil.id = 'the-shadow-council';
 

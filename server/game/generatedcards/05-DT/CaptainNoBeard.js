@@ -17,44 +17,6 @@ class CaptainNoBeard extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "persistentEffect",
-    "target": {
-      "mode": "all",
-      "type": "creature",
-      "conditions": [
-        {
-          "name": "neighboring"
-        }
-      ]
-    },
-    "effects": [
-      {
-        "name": "gainKeywords",
-        "keywords": [
-          {
-            "name": "taunt"
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "name": "bold",
-    "trigger": "reap",
-    "actions": {
-      "default": [
-        {
-          "name": "capture",
-          "amount": 1
-        }
-      ]
-    }
-  }
-]
-*/
 
 CaptainNoBeard.id = 'captain-no-beard';
 

@@ -9,22 +9,6 @@ class AccessDenied extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "persistentEffect",
-    "target": {
-      "mode": "this"
-    },
-    "effects": [
-      {
-        "name": "cardCannot",
-        "effect": "reap"
-      }
-    ]
-  }
-]
-*/
 
 AccessDenied.id = 'access-denied';
 

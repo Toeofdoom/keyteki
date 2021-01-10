@@ -11,30 +11,6 @@ class Daughter extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "keywords",
-    "keywords": [
-      {
-        "name": "elusive"
-      }
-    ]
-  },
-  {
-    "name": "persistentEffect",
-    "target": {
-      "controller": "self"
-    },
-    "effects": [
-      {
-        "name": "modifyHandSize",
-        "amount": 1
-      }
-    ]
-  }
-]
-*/
 
 Daughter.id = 'daughter';
 

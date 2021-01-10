@@ -19,45 +19,6 @@ class HitAndRun extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "bold",
-    "trigger": "play",
-    "actions": {
-      "targets": [
-        {
-          "type": "creature",
-          "mode": "exactly",
-          "count": 1,
-          "actions": [
-            {
-              "name": "dealDamage",
-              "amount": 2
-            }
-          ]
-        }
-      ],
-      "then": {
-        "targets": [
-          {
-            "type": "creature",
-            "controller": "self",
-            "mode": "exactly",
-            "count": 1,
-            "actions": [
-              {
-                "name": "returnToHand"
-              }
-            ]
-          }
-        ],
-        "alwaysTriggers": true
-      }
-    }
-  }
-]
-*/
 
 HitAndRun.id = 'hit-and-run';
 

@@ -17,39 +17,6 @@ class MotherNorthelle extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "keywords",
-    "keywords": [
-      {
-        "name": "elusive"
-      }
-    ]
-  },
-  {
-    "name": "bold",
-    "trigger": "reap",
-    "actions": {
-      "targets": [
-        {
-          "type": "creature",
-          "controller": "self",
-          "mode": "exactly",
-          "count": 1,
-          "actions": [
-            {
-              "amount": 1,
-              "name": "returnAmber",
-              "recipient": "self"
-            }
-          ]
-        }
-      ]
-    }
-  }
-]
-*/
 
 MotherNorthelle.id = 'mother-northelle';
 

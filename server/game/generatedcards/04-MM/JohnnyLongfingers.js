@@ -11,41 +11,6 @@ class JohnnyLongfingers extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "persistentEffect",
-    "target": {
-      "type": "creature",
-      "controller": "self",
-      "conditions": [
-        {
-          "name": "trait",
-          "trait": "mutant"
-        }
-      ],
-      "mode": "all"
-    },
-    "effects": [
-      {
-        "name": "gainAbility",
-        "ability": {
-          "name": "bold",
-          "trigger": "destroyed",
-          "actions": {
-            "default": [
-              {
-                "name": "steal",
-                "amount": 1
-              }
-            ]
-          }
-        }
-      }
-    ]
-  }
-]
-*/
 
 JohnnyLongfingers.id = 'johnny-longfingers';
 

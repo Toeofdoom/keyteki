@@ -12,40 +12,6 @@ class ProfessorTerato extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "persistentEffect",
-    "target": {
-      "type": "creature",
-      "conditions": [
-        {
-          "name": "trait",
-          "trait": "mutant"
-        }
-      ],
-      "mode": "all"
-    },
-    "effects": [
-      {
-        "name": "gainAbility",
-        "ability": {
-          "name": "bold",
-          "trigger": "reap",
-          "actions": {
-            "default": [
-              {
-                "name": "draw",
-                "amount": 1
-              }
-            ]
-          }
-        }
-      }
-    ]
-  }
-]
-*/
 
 ProfessorTerato.id = 'professor-terato';
 

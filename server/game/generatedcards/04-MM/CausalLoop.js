@@ -17,39 +17,6 @@ class CausalLoop extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "bold",
-    "trigger": "play",
-    "actions": {
-      "targets": [
-        {
-          "controller": "self",
-          "mode": "exactly",
-          "count": 1,
-          "location": "hand",
-          "actions": [
-            {
-              "name": "archive"
-            }
-          ]
-        }
-      ],
-      "default": [
-        {
-          "name": "archive",
-          "target": {
-            "mode": "self",
-            "location": "hand",
-            "controller": "self"
-          }
-        }
-      ]
-    }
-  }
-]
-*/
 
 CausalLoop.id = 'causal-loop';
 

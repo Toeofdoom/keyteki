@@ -11,26 +11,6 @@ class BarristerJoya extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "persistentEffect",
-    "target": {
-      "0": "a",
-      "1": "l",
-      "2": "l",
-      "type": "creature",
-      "controller": "opponent"
-    },
-    "effects": [
-      {
-        "name": "cardCannot",
-        "effect": "reap"
-      }
-    ]
-  }
-]
-*/
 
 BarristerJoya.id = 'barrister-joya';
 

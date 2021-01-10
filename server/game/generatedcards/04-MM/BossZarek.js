@@ -13,41 +13,6 @@ class BossZarek extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "keywords",
-    "keywords": [
-      {
-        "name": "enhance"
-      }
-    ]
-  },
-  {
-    "name": "persistentEffect",
-    "target": {
-      "type": "creature",
-      "controller": "self",
-      "conditions": [
-        {
-          "name": "hasAmber"
-        }
-      ],
-      "mode": "all"
-    },
-    "effects": [
-      {
-        "name": "gainKeywords",
-        "keywords": [
-          {
-            "name": "elusive"
-          }
-        ]
-      }
-    ]
-  }
-]
-*/
 
 BossZarek.id = 'boss-zarek';
 

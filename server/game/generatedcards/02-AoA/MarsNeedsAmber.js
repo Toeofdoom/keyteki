@@ -17,40 +17,6 @@ class MarsNeedsAmber extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "bold",
-    "trigger": "play",
-    "actions": {
-      "default": [
-        {
-          "name": "capture",
-          "amount": 1,
-          "target": {
-            "type": "creature",
-            "controller": "opponent",
-            "conditions": [
-              {
-                "name": "damaged"
-              },
-              {
-                "name": "not",
-                "condition": {
-                  "name": "house",
-                  "house": "mars"
-                }
-              }
-            ],
-            "mode": "all"
-          },
-          "player": "opponent"
-        }
-      ]
-    }
-  }
-]
-*/
 
 MarsNeedsAmber.id = 'mars-needs-æmber';
 

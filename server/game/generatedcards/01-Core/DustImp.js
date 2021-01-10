@@ -8,22 +8,6 @@ class DustImp extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "bold",
-    "trigger": "destroyed",
-    "actions": {
-      "default": [
-        {
-          "name": "gainAmber",
-          "amount": 2
-        }
-      ]
-    }
-  }
-]
-*/
 
 DustImp.id = 'dust-imp';
 

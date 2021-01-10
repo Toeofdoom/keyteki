@@ -14,43 +14,6 @@ class Floomf extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "keywords",
-    "keywords": [
-      {
-        "name": "skirmish"
-      }
-    ]
-  },
-  {
-    "name": "bold",
-    "trigger": "fight",
-    "actions": {
-      "targets": [
-        {
-          "type": "creature",
-          "conditions": [
-            {
-              "name": "trait",
-              "trait": "beast"
-            }
-          ],
-          "mode": "exactly",
-          "count": 1,
-          "actions": [
-            {
-              "name": "addPowerCounter",
-              "amount": 2
-            }
-          ]
-        }
-      ]
-    }
-  }
-]
-*/
 
 Floomf.id = 'floomf';
 

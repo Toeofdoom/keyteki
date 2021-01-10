@@ -17,43 +17,6 @@ class MarsFirst extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "bold",
-    "trigger": "play",
-    "actions": {
-      "targets": [
-        {
-          "type": "creature",
-          "controller": "self",
-          "conditions": [
-            {
-              "name": "house",
-              "house": "mars"
-            }
-          ],
-          "mode": "exactly",
-          "count": 1,
-          "actions": [
-            {
-              "name": "sequential",
-              "actions": [
-                {
-                  "name": "ready"
-                },
-                {
-                  "name": "use"
-                }
-              ]
-            }
-          ]
-        }
-      ]
-    }
-  }
-]
-*/
 
 MarsFirst.id = 'mars-first';
 

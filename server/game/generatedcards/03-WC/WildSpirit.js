@@ -10,33 +10,6 @@ class WildSpirit extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "persistentEffect",
-    "target": {
-      "mode": "this"
-    },
-    "effects": [
-      {
-        "name": "gainAbility",
-        "ability": {
-          "name": "bold",
-          "trigger": "reap",
-          "actions": {
-            "default": [
-              {
-                "name": "capture",
-                "amount": 1
-              }
-            ]
-          }
-        }
-      }
-    ]
-  }
-]
-*/
 
 WildSpirit.id = 'wild-spirit';
 

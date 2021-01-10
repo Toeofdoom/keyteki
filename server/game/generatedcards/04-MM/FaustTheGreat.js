@@ -18,51 +18,6 @@ class FaustTheGreat extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "persistentEffect",
-    "multiplier": {
-      "name": "cards",
-      "type": "creature",
-      "controller": "self",
-      "conditions": [
-        {
-          "name": "hasAmber"
-        }
-      ]
-    },
-    "targetPlayer": "opponent",
-    "effects": [
-      {
-        "name": "modifyKeyCost",
-        "amount": 1
-      }
-    ]
-  },
-  {
-    "name": "bold",
-    "trigger": "play",
-    "actions": {
-      "optional": true,
-      "targets": [
-        {
-          "type": "creature",
-          "controller": "self",
-          "mode": "exactly",
-          "count": 1,
-          "actions": [
-            {
-              "name": "exalt",
-              "optional": true
-            }
-          ]
-        }
-      ]
-    }
-  }
-]
-*/
 
 FaustTheGreat.id = 'faust-the-great';
 

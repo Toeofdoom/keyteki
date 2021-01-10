@@ -10,26 +10,6 @@ class BoNithing extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "bold",
-    "trigger": "play",
-    "actions": {
-      "default": [
-        {
-          "name": "steal",
-          "amount": 1,
-          "multiplier": {
-            "name": "keyCount",
-            "player": "opponent"
-          }
-        }
-      ]
-    }
-  }
-]
-*/
 
 BoNithing.id = 'bo-nithing';
 

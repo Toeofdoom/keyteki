@@ -13,33 +13,6 @@ class UnlockedGateway extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "keywords",
-    "keywords": [
-      {
-        "name": "omega"
-      }
-    ]
-  },
-  {
-    "name": "bold",
-    "trigger": "play",
-    "actions": {
-      "default": [
-        {
-          "name": "destroy",
-          "target": {
-            "type": "creature",
-            "mode": "all"
-          }
-        }
-      ]
-    }
-  }
-]
-*/
 
 UnlockedGateway.id = 'unlocked-gateway';
 

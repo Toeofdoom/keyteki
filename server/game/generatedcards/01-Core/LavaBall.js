@@ -14,30 +14,6 @@ class LavaBall extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "bold",
-    "trigger": "play",
-    "actions": {
-      "targets": [
-        {
-          "type": "creature",
-          "mode": "exactly",
-          "count": 1,
-          "actions": [
-            {
-              "name": "dealDamage",
-              "amount": 4,
-              "splash": 2
-            }
-          ]
-        }
-      ]
-    }
-  }
-]
-*/
 
 LavaBall.id = 'lava-ball';
 

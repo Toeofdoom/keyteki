@@ -15,38 +15,6 @@ class BoobyTrap extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "bold",
-    "trigger": "play",
-    "actions": {
-      "targets": [
-        {
-          "type": "creature",
-          "conditions": [
-            {
-              "name": "not",
-              "condition": {
-                "name": "flank"
-              }
-            }
-          ],
-          "mode": "exactly",
-          "count": 1,
-          "actions": [
-            {
-              "name": "dealDamage",
-              "amount": 4,
-              "splash": 2
-            }
-          ]
-        }
-      ]
-    }
-  }
-]
-*/
 
 BoobyTrap.id = 'booby-trap';
 

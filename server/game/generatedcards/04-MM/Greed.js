@@ -9,33 +9,6 @@ class Greed extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "persistentEffect",
-    "target": {
-      "controller": "self"
-    },
-    "effects": [
-      {
-        "name": "modifyHandSize",
-        "amount": 1,
-        "multiplier": {
-          "name": "cards",
-          "type": "creature",
-          "controller": "self",
-          "conditions": [
-            {
-              "name": "trait",
-              "trait": "sin"
-            }
-          ]
-        }
-      }
-    ]
-  }
-]
-*/
 
 Greed.id = 'greed';
 

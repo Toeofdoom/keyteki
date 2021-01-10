@@ -13,27 +13,6 @@ class MushroomWithAView extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "bold",
-    "trigger": "omni",
-    "actions": {
-      "default": [
-        {
-          "name": "heal",
-          "amount": 1,
-          "target": {
-            "type": "creature",
-            "controller": "self",
-            "mode": "all"
-          }
-        }
-      ]
-    }
-  }
-]
-*/
 
 MushroomWithAView.id = 'mushroom-with-a-view';
 

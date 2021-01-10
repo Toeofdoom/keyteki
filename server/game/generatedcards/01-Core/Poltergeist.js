@@ -14,31 +14,6 @@ class Poltergeist extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "bold",
-    "trigger": "play",
-    "actions": {
-      "targets": [
-        {
-          "type": "artifact",
-          "mode": "exactly",
-          "count": 1,
-          "actions": [
-            {
-              "name": "use"
-            },
-            {
-              "name": "destroy"
-            }
-          ]
-        }
-      ]
-    }
-  }
-]
-*/
 
 Poltergeist.id = 'poltergeist';
 

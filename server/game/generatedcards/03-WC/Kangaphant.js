@@ -15,36 +15,6 @@ class Kangaphant extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "persistentEffect",
-    "target": {
-      "type": "creature",
-      "mode": "all"
-    },
-    "effects": [
-      {
-        "name": "gainAbility",
-        "ability": {
-          "name": "bold",
-          "trigger": "reap",
-          "actions": {
-            "default": [
-              {
-                "name": "destroy",
-                "target": {
-                  "mode": "this"
-                }
-              }
-            ]
-          }
-        }
-      }
-    ]
-  }
-]
-*/
 
 Kangaphant.id = 'kangaphant';
 

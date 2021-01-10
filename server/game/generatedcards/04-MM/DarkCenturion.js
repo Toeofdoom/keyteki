@@ -16,48 +16,6 @@ class DarkCenturion extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "keywords",
-    "keywords": [
-      {
-        "name": "enhance"
-      }
-    ]
-  },
-  {
-    "name": "bold",
-    "trigger": "action",
-    "actions": {
-      "targets": [
-        {
-          "type": "creature",
-          "mode": "exactly",
-          "count": 1,
-          "actions": [
-            {
-              "amount": 1,
-              "name": "removeAmber"
-            }
-          ]
-        }
-      ],
-      "then": {
-        "default": [
-          {
-            "name": "ward",
-            "target": {
-              "mode": "it"
-            },
-            "then": true
-          }
-        ]
-      }
-    }
-  }
-]
-*/
 
 DarkCenturion.id = 'dark-centurion';
 

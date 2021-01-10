@@ -15,31 +15,6 @@ class LieutenantGorvenal extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "reaction",
-    "trigger": {
-      "trigger": "fight",
-      "card": {
-        "type": "creature"
-      },
-      "eventPlayer": "self"
-    },
-    "actions": {
-      "default": [
-        {
-          "name": "capture",
-          "amount": 1,
-          "target": {
-            "mode": "self"
-          }
-        }
-      ]
-    }
-  }
-]
-*/
 
 LieutenantGorvenal.id = 'lieutenant-gorvenal';
 

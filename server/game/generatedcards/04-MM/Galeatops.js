@@ -9,22 +9,6 @@ class Galeatops extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "persistentEffect",
-    "target": {
-      "mode": "self"
-    },
-    "effects": [
-      {
-        "name": "limitFightDamage",
-        "amount": 4
-      }
-    ]
-  }
-]
-*/
 
 Galeatops.id = 'galeatops';
 

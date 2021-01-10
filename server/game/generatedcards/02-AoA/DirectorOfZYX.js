@@ -13,42 +13,6 @@ class DirectorOfZYX extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "keywords",
-    "keywords": [
-      {
-        "name": "elusive"
-      }
-    ]
-  },
-  {
-    "name": "reaction",
-    "trigger": {
-      "trigger": "onBeginRound",
-      "conditions": [
-        {
-          "name": "turn",
-          "player": "self"
-        }
-      ]
-    },
-    "actions": {
-      "default": [
-        {
-          "name": "archive",
-          "target": {
-            "mode": "topdeck",
-            "location": "hand",
-            "controller": "self"
-          }
-        }
-      ]
-    }
-  }
-]
-*/
 
 DirectorOfZYX.id = 'director-of-zyx';
 

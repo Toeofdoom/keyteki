@@ -9,20 +9,6 @@ class TheVaultkeeper extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "persistentEffect",
-    "targetPlayer": "self",
-    "effects": [
-      {
-        "name": "playerCannot",
-        "effect": "steal"
-      }
-    ]
-  }
-]
-*/
 
 TheVaultkeeper.id = 'the-vaultkeeper';
 

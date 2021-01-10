@@ -17,43 +17,6 @@ class NurseSoto extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "keywords",
-    "keywords": [
-      {
-        "name": "deploy"
-      }
-    ]
-  },
-  {
-    "name": "bold",
-    "trigger": "play",
-    "extraTriggers": [
-      "fight",
-      "reap"
-    ],
-    "actions": {
-      "default": [
-        {
-          "name": "heal",
-          "amount": 3,
-          "target": {
-            "mode": "all",
-            "type": "creature",
-            "conditions": [
-              {
-                "name": "neighboring"
-              }
-            ]
-          }
-        }
-      ]
-    }
-  }
-]
-*/
 
 NurseSoto.id = 'nurse-soto';
 

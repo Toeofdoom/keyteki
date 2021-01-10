@@ -10,30 +10,6 @@ class KingOfTheCrag extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "persistentEffect",
-    "target": {
-      "type": "creature",
-      "controller": "opponent",
-      "conditions": [
-        {
-          "name": "house",
-          "house": "brobnar"
-        }
-      ],
-      "mode": "all"
-    },
-    "effects": [
-      {
-        "name": "modifyPower",
-        "amount": -2
-      }
-    ]
-  }
-]
-*/
 
 KingOfTheCrag.id = 'king-of-the-crag';
 

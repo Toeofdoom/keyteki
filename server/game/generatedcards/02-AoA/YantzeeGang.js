@@ -8,22 +8,6 @@ class YantzeeGang extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "bold",
-    "trigger": "action",
-    "actions": {
-      "default": [
-        {
-          "name": "steal",
-          "amount": 1
-        }
-      ]
-    }
-  }
-]
-*/
 
 YantzeeGang.id = 'yantzee-gang';
 

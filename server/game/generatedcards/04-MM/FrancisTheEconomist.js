@@ -16,36 +16,6 @@ class FrancisTheEconomist extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "keywords",
-    "keywords": [
-      {
-        "name": "skirmish"
-      }
-    ]
-  },
-  {
-    "name": "bold",
-    "trigger": "fight",
-    "actions": {
-      "default": [
-        {
-          "name": "gainAmber",
-          "amount": 1,
-          "targetPlayer": "self"
-        },
-        {
-          "name": "gainAmber",
-          "amount": 1,
-          "targetPlayer": "opponent"
-        }
-      ]
-    }
-  }
-]
-*/
 
 FrancisTheEconomist.id = 'francis-the-economist';
 

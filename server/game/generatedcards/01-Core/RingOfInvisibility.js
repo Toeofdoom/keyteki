@@ -16,34 +16,6 @@ class RingOfInvisibility extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "persistentEffect",
-    "target": {
-      "mode": "this"
-    },
-    "effects": [
-      {
-        "name": "gainKeywords",
-        "keywords": [
-          {
-            "name": "elusive"
-          }
-        ]
-      },
-      {
-        "name": "gainKeywords",
-        "keywords": [
-          {
-            "name": "skirmish"
-          }
-        ]
-      }
-    ]
-  }
-]
-*/
 
 RingOfInvisibility.id = 'ring-of-invisibility';
 

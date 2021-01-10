@@ -10,30 +10,6 @@ class DarkFaerie extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "keywords",
-    "keywords": [
-      {
-        "name": "skirmish"
-      }
-    ]
-  },
-  {
-    "name": "bold",
-    "trigger": "fight",
-    "actions": {
-      "default": [
-        {
-          "name": "gainAmber",
-          "amount": 2
-        }
-      ]
-    }
-  }
-]
-*/
 
 DarkFaerie.id = 'dark-faerie';
 

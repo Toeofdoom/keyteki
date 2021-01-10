@@ -19,46 +19,6 @@ class Ant110ny extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "bold",
-    "trigger": "play",
-    "actions": {
-      "default": [
-        {
-          "name": "capture",
-          "amount": "all"
-        }
-      ]
-    }
-  },
-  {
-    "name": "reaction",
-    "trigger": {
-      "trigger": "onRoundEnded",
-      "conditions": [
-        {
-          "name": "turn",
-          "player": "self"
-        }
-      ]
-    },
-    "actions": {
-      "default": [
-        {
-          "amount": 1,
-          "target": {
-            "mode": "self"
-          },
-          "name": "returnAmber",
-          "recipient": "opponent"
-        }
-      ]
-    }
-  }
-]
-*/
 
 Ant110ny.id = 'ant1-10ny';
 

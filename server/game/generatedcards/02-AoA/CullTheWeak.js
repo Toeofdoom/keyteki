@@ -14,35 +14,6 @@ class CullTheWeak extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "bold",
-    "trigger": "play",
-    "actions": {
-      "targets": [
-        {
-          "type": "creature",
-          "controller": "opponent",
-          "mode": "mostStat",
-          "count": 1,
-          "cardStat": {
-            "name": "negative",
-            "quantity": {
-              "name": "power"
-            }
-          },
-          "actions": [
-            {
-              "name": "destroy"
-            }
-          ]
-        }
-      ]
-    }
-  }
-]
-*/
 
 CullTheWeak.id = 'cull-the-weak';
 

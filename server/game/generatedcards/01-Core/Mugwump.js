@@ -25,38 +25,6 @@ class Mugwump extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "reaction",
-    "trigger": {
-      "trigger": "destroyedFightingThis",
-      "card": {
-        "type": "creature",
-        "controller": "opponent"
-      }
-    },
-    "actions": {
-      "default": [
-        {
-          "name": "heal",
-          "fully": true,
-          "target": {
-            "mode": "self"
-          }
-        },
-        {
-          "name": "addPowerCounter",
-          "amount": 1,
-          "target": {
-            "mode": "it"
-          }
-        }
-      ]
-    }
-  }
-]
-*/
 
 Mugwump.id = 'mugwump';
 

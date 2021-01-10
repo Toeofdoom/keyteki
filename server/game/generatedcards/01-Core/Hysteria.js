@@ -11,25 +11,6 @@ class Hysteria extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "bold",
-    "trigger": "play",
-    "actions": {
-      "default": [
-        {
-          "name": "returnToHand",
-          "target": {
-            "type": "creature",
-            "mode": "all"
-          }
-        }
-      ]
-    }
-  }
-]
-*/
 
 Hysteria.id = 'hysteria';
 

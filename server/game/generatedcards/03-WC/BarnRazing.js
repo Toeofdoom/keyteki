@@ -15,40 +15,6 @@ class BarnRazing extends Card {
         });
     }
 }
-/*
-[
-  {
-    "name": "bold",
-    "trigger": "play",
-    "actions": {
-      "default": [
-        {
-          "name": "forRemainderOfTurn",
-          "durationEffect": {
-            "name": "reaction",
-            "trigger": {
-              "trigger": "fight",
-              "card": {
-                "type": "creature",
-                "controller": "self"
-              }
-            },
-            "actions": {
-              "default": [
-                {
-                  "name": "loseAmber",
-                  "amount": 1,
-                  "targetPlayer": "opponent"
-                }
-              ]
-            }
-          }
-        }
-      ]
-    }
-  }
-]
-*/
 
 BarnRazing.id = 'barn-razing';
 
