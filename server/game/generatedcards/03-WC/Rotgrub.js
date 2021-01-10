@@ -9,7 +9,8 @@ class Rotgrub extends Card {
         });
         this.reap({
             gameAction: ability.actions.archive((context) => ({
-                target: context.source
+                target: context.source,
+                location: 'hand'
             }))
         });
     }

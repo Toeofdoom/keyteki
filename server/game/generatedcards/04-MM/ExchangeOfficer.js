@@ -9,7 +9,7 @@ class ExchangeOfficer extends Card {
             reap: true,
             target: {
                 controller: 'self',
-                cardCondition: (card) => card.exhausted === false && card.hasHouse('staralliance'),
+                cardCondition: (card) => card.hasHouse('staralliance'),
                 gameAction: ability.actions.use()
             }
         });

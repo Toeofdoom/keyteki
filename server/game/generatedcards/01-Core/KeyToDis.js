@@ -4,14 +4,14 @@ class KeyToDis extends Card {
     //Omni: Sacrifice $this. Destroy each creature.
     setupCardAbilities(ability) {
         this.omni({
-            gameAction: [
+            gameAction: ability.actions.sequential([
                 ability.actions.sacrifice((context) => ({
                     target: context.source
                 })),
                 ability.actions.destroy((context) => ({
                     target: context.game.creaturesInPlay
                 }))
-            ]
+            ])
         });
     }
 }

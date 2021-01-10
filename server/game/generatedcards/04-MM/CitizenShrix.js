@@ -5,12 +5,12 @@ class CitizenShrix extends Card {
     setupCardAbilities(ability) {
         this.play({
             reap: true,
-            gameAction: [
+            gameAction: ability.actions.sequential([
                 ability.actions.exalt((context) => ({
                     target: context.source
                 })),
                 ability.actions.steal({ amount: 1 })
-            ]
+            ])
         });
     }
 }

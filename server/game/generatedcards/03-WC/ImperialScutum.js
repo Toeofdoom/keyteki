@@ -7,7 +7,10 @@ class ImperialScutum extends Card {
             effect: [
                 ability.effects.modifyArmor(2),
                 ability.effects.gainAbility('destroyed', {
-                    gameAction: ability.actions.removeAmber({ all: true })
+                    gameAction: ability.actions.removeAmber((context) => ({
+                        target: context.source,
+                        all: true
+                    }))
                 })
             ]
         });

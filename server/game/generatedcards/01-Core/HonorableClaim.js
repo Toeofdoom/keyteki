@@ -8,8 +8,7 @@ class HonorableClaim extends Card {
                 target: context.game.creaturesInPlay.filter(
                     (card) => card.controller === context.player && card.hasTrait('knight')
                 ),
-                amount: 1,
-                player: context.target.controller.opponent
+                amount: 1
             }))
         });
     }

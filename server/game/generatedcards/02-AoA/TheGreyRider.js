@@ -8,8 +8,8 @@ class TheGreyRider extends Card {
         this.play({
             fight: true,
             reap: true,
-            optional: true,
             target: {
+                optional: true,
                 cardType: 'creature',
                 cardCondition: (card, context) => context.source.neighbors.includes(card),
                 gameAction: ability.actions.sequential([

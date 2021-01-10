@@ -8,7 +8,7 @@ class Labwork extends Card {
             target: {
                 controller: 'self',
                 location: 'hand',
-                gameAction: ability.actions.archive()
+                gameAction: ability.actions.archive({ location: 'hand' })
             }
         });
     }

@@ -8,10 +8,11 @@ class CausalLoop extends Card {
             target: {
                 controller: 'self',
                 location: 'hand',
-                gameAction: ability.actions.archive()
+                gameAction: ability.actions.archive({ location: 'hand' })
             },
             gameAction: ability.actions.archive((context) => ({
-                target: context.source
+                target: context.source,
+                location: 'hand'
             }))
         });
     }

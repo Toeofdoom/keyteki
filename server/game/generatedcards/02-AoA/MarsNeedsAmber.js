@@ -12,7 +12,7 @@ class MarsNeedsAmber extends Card {
                         !card.hasHouse('mars')
                 ),
                 amount: 1,
-                player: context.target.controller
+                player: context.player.opponent
             }))
         });
     }

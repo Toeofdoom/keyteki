@@ -12,6 +12,7 @@ class CardGenerator {
         this.fullOutputDir = fullOutputDir;
         this.partialOutputDir = partialOutputDir;
         this.template = 'Card.njk';
+        this.dataDump = 'abilities.json';
         this.comments = comments;
         try {
             console.log('Starting card parser');
@@ -64,22 +65,29 @@ class CardGenerator {
         var env = new nunjucks.Environment(new nunjucks.FileSystemLoader(__dirname), {
             autoescape: false
         });
-        env.addFilter('sortEffects', sortEffects);
-        env.addFilter('upgradeRefs', upgradeRefs);
+
+        env.addFilter('gainAbility', gainAbility);
         env.addFilter('itIs', itIs);
+        env.addFilter('eventPlayerIs', eventPlayerIs);
         env.addFilter('check', check);
+        env.addFilter('targetted', targetted);
         env.addFilter('then', then);
         env.addFilter('filteredType', filteredType);
         env.addFilter('isTargetted', isTargetted);
+        env.addFilter('findEventListeners', findEventListeners);
 
         console.log('Card information loaded');
+
+        let allAbilities = {};
         for (let card of cards) {
             let baseName = card.name.replace(/ *\(Evil Twin\)/, '');
             let simplifiedText = card.text.split(baseName).join('$this');
+            let abilities = this.parseAbilities(simplifiedText);
             let data = {
                 name: this.camelCase(card.name),
                 card: card,
-                abilities: this.parseAbilities(simplifiedText),
+                abilities: abilities,
+                shortAbilities: JSON.stringify(abilities, replacer, 2),
                 text: simplifiedText.split(/[\n\r]+/g),
                 comments: this.comments,
                 refs: baseRefs()
@@ -90,6 +98,8 @@ class CardGenerator {
                 this.error++;
                 continue;
             }
+
+            allAbilities[card.name] = data.abilities;
 
             let complete = isComplete(data.abilities);
             let skippable = ['reminderText', 'keywords'];
@@ -115,6 +125,7 @@ class CardGenerator {
                 this.error++;
             }
         }
+        fs.writeFileSync(this.dataDump, JSON.stringify(allAbilities, replacer, 2));
         console.info(this.complete + ' cards completely converted');
         console.info(this.partial + ' cards partially converted');
         console.info(this.skipped + ' cards skipped');
@@ -156,6 +167,12 @@ class CardGenerator {
     }
 }
 
+function replacer(key, value) {
+    if (value === null || value === false || (Array.isArray(value) && value.length == 0))
+        return undefined;
+    return value;
+}
+
 function ensureDirectoryExistence(filePath) {
     var dirname = path.dirname(filePath);
     if (fs.existsSync(dirname)) {
@@ -167,81 +184,61 @@ function ensureDirectoryExistence(filePath) {
 
 function isComplete(abilities) {
     try {
-        return (
-            abilities === null ||
-            typeof abilities === 'string' ||
-            typeof abilities === 'number' ||
-            typeof abilities === 'boolean' ||
-            (abilities.name !== 'unknown' && Object.values(abilities).every(isComplete))
-        );
+        return isCompleteInternal(abilities);
     } catch (err) {
-        console.log(abilities);
+        console.log(JSON.stringify(abilities, null, 2));
         console.log(err);
     }
 }
 
-function sortEffects(effects) {
-    //This function will need to get smarter to support other cards.
-    //Actual rules should be:
-    //Sentence by sentence.
-    //Some sentences combine.
-    // * Choose + effect. (Probably combined in parser?)
-    // * Something + instead.
-    // * Damage sentences (e.g. they're everywhere.)
-    // Effects will be chained using Then.
-    let firstEffect = {
-        optional: false,
-        targets: [],
-        default: [],
-        then: null,
-        unknown: [],
-        condition: null
-    };
-
-    let lastEffect = firstEffect;
-
-    for (let effect of effects) {
-        if (isReplacementEffect(effect)) {
-            //Handle replacement effect logic?
-        } else {
-            let previousEffects = lastEffect.targets.concat(lastEffect.default);
-            if (
-                effect.then ||
-                (previousEffects.length > 0 &&
-                    !(isDamageEffect(effect) && previousEffects.some(isDamageEffect)) &&
-                    (isTargetted(effect) || effect.condition))
-            ) {
-                let newEffect = {
-                    optional: false,
-                    targets: [],
-                    default: [],
-                    then: null,
-                    unknown: [],
-                    alwaysTriggers: !effect.then,
-                    condition: null
-                };
-                lastEffect.then = newEffect;
-                lastEffect = newEffect;
-            }
-            if (effect.optional) lastEffect.optional = true;
-            if (effect.condition) lastEffect.condition = effect.condition;
-            if (isTargetted(effect)) {
-                lastEffect.targets.push(effect);
-            } else {
-                lastEffect.default.push(effect);
-            }
-        }
-    }
-    return firstEffect;
+function isCompleteInternal(abilities) {
+    return (
+        abilities === null ||
+        typeof abilities === 'string' ||
+        typeof abilities === 'number' ||
+        typeof abilities === 'boolean' ||
+        (abilities.name !== 'unknown' && Object.values(abilities).every(isCompleteInternal))
+    );
 }
 
-function isDamageEffect(effect) {
-    return effect.name === 'dealDamage';
-}
+/*
 
-function isReplacementEffect(effect) {
-    return effect.name === 'instead'; //Not implemented yet
-}
+Raw syntax tree 
+->
+Ability tree
+
+EFFECTS are longer lasting
+ACTIONS are instantaneous
+
+Arrays of effects don't really need sorting out, timewise... but may still reference previous effects.
+
+Arrays of actions do.
+
+Ordering matters - they should be (somewhat) sequential.
+
+
+Actions can be manually or automatically targetted. They can be conditional. Some automatically targetted abilities require that automatic target to be resolved. 
+Manually targetted abilities must be structured so that they prompt the player correctly.
+
+
+
+Ideally, most (or all) of this process should be in the parsing stage so that the produced metadata is correct.
+
+References to previous targets affect sequencing in a variety of ways.
+
+One tricky thing is...
+Combining the "boxes" or "trigger points" that contain multiple actions, when the cards aren't worded that way. Code actions don't easily support targets, sequencing or conditions. But card actions do. So a card action maps closest to a "CardAbility"?
+
+Step 1 - FULLY understand requirements of a given action, not just a basic scan. Requirements include: New, explicit target. Explicit or implicit sequencing. Implicit reliance on another target. Conditions.
+
+Explicit target: Choose/a creature etc.
+Implicit target: That creature/it.
+
+Explicit, strong sequencing: If you do/then.
+Implicit, strong sequencing: Reliance on event information, or a target chosen after the effect.
+Implicit weak sequencing: Important action like ready + fight.
+
+step 2 - using that, construct card abilities, then, targets, arrays etc.*/
 
 function isTargetted(effect) {
     let untargettedModes = ['all', 'self', 'this', 'it'];
@@ -252,19 +249,26 @@ function baseRefs() {
     return {
         this: 'context.source',
         it: 'context.target',
+        eventPlayer: 'event.player',
+        attached: 'context.source.parent',
         check: 'card',
         thenDepth: 1,
-        thenContext: 'preThenContext',
+        thenContext: null,
+        nextThenContext: 'preThenContext',
         filteredType: null
     };
 }
 
-function upgradeRefs(refs) {
-    return Object.assign({}, refs, { this: 'this' });
+function gainAbility(refs) {
+    return Object.assign({}, refs, { this: 'this', attached: 'context.source' });
 }
 
 function itIs(refs, it) {
     return Object.assign({}, refs, { it });
+}
+
+function eventPlayerIs(refs, eventPlayer) {
+    return Object.assign({}, refs, { eventPlayer });
 }
 
 function check(refs, card) {
@@ -275,12 +279,24 @@ function then(refs) {
     let thenDepth = refs.thenDepth + 1;
     return Object.assign({}, refs, {
         thenDepth,
-        thenContext: `preThen${thenDepth}Context`
+        thenContext: refs.nextThenContext,
+        nextThenContext: `preThen${thenDepth}Context`
     });
+}
+
+function targetted(refs, target) {
+    return Object.assign({}, refs, { location: target.location });
 }
 
 function filteredType(refs, filteredType) {
     return Object.assign({}, refs, { filteredType });
+}
+
+function findEventListeners(abilities) {
+    if (abilities === null || typeof abilities !== 'object') return [];
+    let listeners = Object.values(abilities).flatMap(findEventListeners);
+    if (abilities.name === 'eventCount') listeners.push(abilities.action);
+    return listeners;
 }
 
 module.exports = CardGenerator;

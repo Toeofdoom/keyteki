@@ -8,14 +8,14 @@ class SloppyLabwork extends Card {
             target: {
                 controller: 'self',
                 location: 'hand',
-                gameAction: ability.actions.archive()
+                gameAction: ability.actions.archive({ location: 'hand' })
             },
             then: {
                 alwaysTriggers: true,
                 target: {
                     controller: 'self',
                     location: 'hand',
-                    gameAction: ability.actions.discard()
+                    gameAction: ability.actions.discard({ location: 'hand' })
                 }
             }
         });

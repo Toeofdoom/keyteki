@@ -5,7 +5,7 @@ class TheCommonCold extends Card {
     setupCardAbilities(ability) {
         this.play({
             optional: true,
-            gameAction: [
+            gameAction: ability.actions.sequential([
                 ability.actions.dealDamage((context) => ({
                     target: context.game.creaturesInPlay,
                     amount: 1
@@ -13,7 +13,7 @@ class TheCommonCold extends Card {
                 ability.actions.destroy((context) => ({
                     target: context.game.creaturesInPlay.filter((card) => card.hasHouse('mars'))
                 }))
-            ]
+            ])
         });
     }
 }

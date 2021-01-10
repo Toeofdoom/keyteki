@@ -7,8 +7,8 @@ class Stunner extends Card {
         this.whileAttached({
             effect: ability.effects.gainAbility('fight', {
                 reap: true,
-                optional: true,
                 target: {
+                    optional: true,
                     cardType: 'creature',
                     gameAction: ability.actions.stun()
                 }

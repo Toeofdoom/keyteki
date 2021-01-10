@@ -8,7 +8,6 @@ class DominatorBauble extends Card {
             target: {
                 cardType: 'creature',
                 controller: 'self',
-                cardCondition: (card) => card.exhausted === false,
                 gameAction: ability.actions.use()
             }
         });

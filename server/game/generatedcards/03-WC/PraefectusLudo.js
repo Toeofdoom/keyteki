@@ -6,7 +6,10 @@ class PraefectusLudo extends Card {
         this.persistentEffect({
             match: (card, context) => card.type === 'creature' && card !== context.source,
             effect: ability.effects.gainAbility('destroyed', {
-                gameAction: ability.actions.removeAmber({ all: true })
+                gameAction: ability.actions.removeAmber((context) => ({
+                    target: context.source,
+                    all: true
+                }))
             })
         });
     }

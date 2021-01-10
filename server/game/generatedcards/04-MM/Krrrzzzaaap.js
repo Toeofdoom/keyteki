@@ -4,12 +4,12 @@ class Krrrzzzaaap extends Card {
     //Play: Destroy each non-Mutant creature. Gain 1 chain.
     setupCardAbilities(ability) {
         this.play({
-            gameAction: [
+            gameAction: ability.actions.sequential([
                 ability.actions.destroy((context) => ({
                     target: context.game.creaturesInPlay.filter((card) => !card.hasTrait('mutant'))
                 })),
                 ability.actions.gainChains({ amount: 1 })
-            ]
+            ])
         });
     }
 }

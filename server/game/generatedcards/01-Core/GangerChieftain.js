@@ -5,8 +5,8 @@ class GangerChieftain extends Card {
     //
     setupCardAbilities(ability) {
         this.play({
-            optional: true,
             target: {
+                optional: true,
                 cardType: 'creature',
                 cardCondition: (card, context) => context.source.neighbors.includes(card),
                 gameAction: ability.actions.sequential([

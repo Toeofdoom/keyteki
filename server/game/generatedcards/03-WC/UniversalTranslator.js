@@ -10,8 +10,7 @@ class UniversalTranslator extends Card {
                 target: {
                     cardType: 'creature',
                     controller: 'self',
-                    cardCondition: (card) =>
-                        card.exhausted === false && !card.hasHouse('staralliance'),
+                    cardCondition: (card) => !card.hasHouse('staralliance'),
                     gameAction: ability.actions.use()
                 }
             })

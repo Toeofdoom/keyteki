@@ -8,7 +8,7 @@ class TechnoFiend extends Card {
             target: {
                 controller: 'self',
                 location: 'hand',
-                gameAction: ability.actions.discard()
+                gameAction: ability.actions.discard({ location: 'hand' })
             },
             then: {
                 gameAction: ability.actions.draw({ amount: 1 })

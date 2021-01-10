@@ -7,10 +7,7 @@ class SkeletonKey extends Card {
             target: {
                 cardType: 'creature',
                 controller: 'self',
-                gameAction: ability.actions.capture((context) => ({
-                    amount: 1,
-                    player: context.target.controller.opponent
-                }))
+                gameAction: ability.actions.capture({ amount: 1 })
             }
         });
     }

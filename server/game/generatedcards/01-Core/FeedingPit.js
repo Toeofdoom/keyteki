@@ -8,7 +8,7 @@ class FeedingPit extends Card {
                 cardType: 'creature',
                 controller: 'self',
                 location: 'hand',
-                gameAction: ability.actions.discard()
+                gameAction: ability.actions.discard({ location: 'hand' })
             },
             then: {
                 gameAction: ability.actions.gainAmber({ amount: 1 })

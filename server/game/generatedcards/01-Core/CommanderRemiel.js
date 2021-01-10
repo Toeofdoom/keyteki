@@ -7,7 +7,7 @@ class CommanderRemiel extends Card {
             target: {
                 cardType: 'creature',
                 controller: 'self',
-                cardCondition: (card) => card.exhausted === false && !card.hasHouse('sanctum'),
+                cardCondition: (card) => !card.hasHouse('sanctum'),
                 gameAction: ability.actions.use()
             }
         });

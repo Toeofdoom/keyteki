@@ -10,7 +10,8 @@ class QMechs extends Card {
         });
         this.destroyed({
             gameAction: ability.actions.archive((context) => ({
-                target: context.source
+                target: context.source,
+                location: 'hand'
             }))
         });
     }
