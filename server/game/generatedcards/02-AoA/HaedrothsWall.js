@@ -9,6 +9,29 @@ class HaedrothsWall extends Card {
         });
     }
 }
+/*
+[
+  {
+    "name": "persistentEffect",
+    "target": {
+      "type": "creature",
+      "controller": "self",
+      "conditions": [
+        {
+          "name": "flank"
+        }
+      ],
+      "mode": "all"
+    },
+    "effects": [
+      {
+        "name": "modifyPower",
+        "amount": 2
+      }
+    ]
+  }
+]
+*/
 
 HaedrothsWall.id = 'haedroth-s-wall';
 

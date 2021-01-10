@@ -16,6 +16,44 @@ class SeekerNeedle extends Card {
         });
     }
 }
+/*
+[
+  {
+    "name": "bold",
+    "trigger": "action",
+    "actions": {
+      "targets": [
+        {
+          "type": "creature",
+          "mode": "exactly",
+          "count": 1,
+          "actions": [
+            {
+              "name": "dealDamage",
+              "amount": 1
+            }
+          ]
+        }
+      ],
+      "then": {
+        "default": [
+          {
+            "name": "gainAmber",
+            "amount": 1,
+            "condition": {
+              "name": "destroysTarget"
+            },
+            "then": true
+          }
+        ],
+        "condition": {
+          "name": "destroysTarget"
+        }
+      }
+    }
+  }
+]
+*/
 
 SeekerNeedle.id = 'seeker-needle';
 

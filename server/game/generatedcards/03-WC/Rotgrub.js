@@ -15,6 +15,39 @@ class Rotgrub extends Card {
         });
     }
 }
+/*
+[
+  {
+    "name": "bold",
+    "trigger": "play",
+    "actions": {
+      "default": [
+        {
+          "name": "loseAmber",
+          "amount": 1,
+          "targetPlayer": "opponent"
+        }
+      ]
+    }
+  },
+  {
+    "name": "bold",
+    "trigger": "reap",
+    "actions": {
+      "default": [
+        {
+          "name": "archive",
+          "target": {
+            "mode": "self",
+            "location": "hand",
+            "controller": "self"
+          }
+        }
+      ]
+    }
+  }
+]
+*/
 
 Rotgrub.id = 'rotgrub';
 

@@ -9,6 +9,23 @@ class Dendrix extends Card {
         });
     }
 }
+/*
+[
+  {
+    "name": "bold",
+    "trigger": "fight",
+    "actions": {
+      "default": [
+        {
+          "name": "discardAtRandom",
+          "amount": 1,
+          "targetPlayer": "opponent"
+        }
+      ]
+    }
+  }
+]
+*/
 
 Dendrix.id = 'dendrix';
 

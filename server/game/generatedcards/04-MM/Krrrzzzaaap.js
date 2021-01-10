@@ -13,6 +13,38 @@ class Krrrzzzaaap extends Card {
         });
     }
 }
+/*
+[
+  {
+    "name": "bold",
+    "trigger": "play",
+    "actions": {
+      "default": [
+        {
+          "name": "destroy",
+          "target": {
+            "type": "creature",
+            "conditions": [
+              {
+                "name": "not",
+                "condition": {
+                  "name": "trait",
+                  "trait": "mutant"
+                }
+              }
+            ],
+            "mode": "all"
+          }
+        },
+        {
+          "name": "gainChains",
+          "amount": 1
+        }
+      ]
+    }
+  }
+]
+*/
 
 Krrrzzzaaap.id = 'krrrzzzaaap';
 

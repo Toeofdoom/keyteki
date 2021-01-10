@@ -13,6 +13,27 @@ class CityStateInterest extends Card {
         });
     }
 }
+/*
+[
+  {
+    "name": "bold",
+    "trigger": "play",
+    "actions": {
+      "default": [
+        {
+          "name": "capture",
+          "amount": 1,
+          "target": {
+            "type": "creature",
+            "controller": "self",
+            "mode": "all"
+          }
+        }
+      ]
+    }
+  }
+]
+*/
 
 CityStateInterest.id = 'city-state-interest';
 

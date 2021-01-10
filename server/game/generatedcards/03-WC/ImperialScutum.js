@@ -16,6 +16,40 @@ class ImperialScutum extends Card {
         });
     }
 }
+/*
+[
+  {
+    "name": "persistentEffect",
+    "target": {
+      "mode": "this"
+    },
+    "effects": [
+      {
+        "name": "modifyArmor",
+        "amount": 2
+      },
+      {
+        "name": "gainAbility",
+        "ability": {
+          "name": "bold",
+          "trigger": "destroyed",
+          "actions": {
+            "default": [
+              {
+                "amount": "all",
+                "target": {
+                  "mode": "this"
+                },
+                "name": "removeAmber"
+              }
+            ]
+          }
+        }
+      }
+    ]
+  }
+]
+*/
 
 ImperialScutum.id = 'imperial-scutum';
 

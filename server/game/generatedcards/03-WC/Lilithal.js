@@ -9,6 +9,25 @@ class Lilithal extends Card {
         });
     }
 }
+/*
+[
+  {
+    "name": "bold",
+    "trigger": "fight",
+    "extraTriggers": [
+      "reap"
+    ],
+    "actions": {
+      "default": [
+        {
+          "name": "capture",
+          "amount": 1
+        }
+      ]
+    }
+  }
+]
+*/
 
 Lilithal.id = 'lilithal';
 

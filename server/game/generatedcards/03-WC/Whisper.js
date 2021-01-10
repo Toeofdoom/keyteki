@@ -19,6 +19,45 @@ class Whisper extends Card {
         });
     }
 }
+/*
+[
+  {
+    "name": "keywords",
+    "keywords": [
+      {
+        "name": "elusive"
+      }
+    ]
+  },
+  {
+    "name": "bold",
+    "trigger": "action",
+    "actions": {
+      "default": [
+        {
+          "name": "loseAmber",
+          "amount": 1
+        }
+      ],
+      "then": {
+        "targets": [
+          {
+            "type": "creature",
+            "mode": "exactly",
+            "count": 1,
+            "actions": [
+              {
+                "name": "destroy",
+                "then": true
+              }
+            ]
+          }
+        ]
+      }
+    }
+  }
+]
+*/
 
 Whisper.id = 'whisper';
 

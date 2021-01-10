@@ -20,6 +20,55 @@ class TheGreyRider extends Card {
         });
     }
 }
+/*
+[
+  {
+    "name": "keywords",
+    "keywords": [
+      {
+        "name": "deploy"
+      }
+    ]
+  },
+  {
+    "name": "bold",
+    "trigger": "play",
+    "extraTriggers": [
+      "fight",
+      "reap"
+    ],
+    "actions": {
+      "optional": true,
+      "targets": [
+        {
+          "type": "creature",
+          "conditions": [
+            {
+              "name": "neighboring"
+            }
+          ],
+          "mode": "exactly",
+          "count": 1,
+          "actions": [
+            {
+              "name": "sequential",
+              "actions": [
+                {
+                  "name": "ready"
+                },
+                {
+                  "name": "fight"
+                }
+              ],
+              "optional": true
+            }
+          ]
+        }
+      ]
+    }
+  }
+]
+*/
 
 TheGreyRider.id = 'the-grey-rider';
 

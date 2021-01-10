@@ -16,6 +16,40 @@ class CANDLEUnit extends Card {
         });
     }
 }
+/*
+[
+  {
+    "name": "reaction",
+    "trigger": {
+      "trigger": "reap",
+      "card": {
+        "type": "creature",
+        "controller": "opponent"
+      }
+    },
+    "actions": {
+      "default": [
+        {
+          "name": "draw",
+          "amount": 1
+        }
+      ]
+    }
+  },
+  {
+    "name": "bold",
+    "trigger": "action",
+    "actions": {
+      "default": [
+        {
+          "name": "capture",
+          "amount": 1
+        }
+      ]
+    }
+  }
+]
+*/
 
 CANDLEUnit.id = 'cændle-unit';
 

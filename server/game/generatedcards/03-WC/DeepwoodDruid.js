@@ -15,6 +15,45 @@ class DeepwoodDruid extends Card {
         });
     }
 }
+/*
+[
+  {
+    "name": "keywords",
+    "keywords": [
+      {
+        "name": "deploy"
+      }
+    ]
+  },
+  {
+    "name": "bold",
+    "trigger": "play",
+    "extraTriggers": [
+      "reap"
+    ],
+    "actions": {
+      "targets": [
+        {
+          "type": "creature",
+          "conditions": [
+            {
+              "name": "neighboring"
+            }
+          ],
+          "mode": "exactly",
+          "count": 1,
+          "actions": [
+            {
+              "name": "heal",
+              "fully": true
+            }
+          ]
+        }
+      ]
+    }
+  }
+]
+*/
 
 DeepwoodDruid.id = 'deepwood-druid';
 

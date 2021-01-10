@@ -16,6 +16,36 @@ class Tolas extends Card {
         });
     }
 }
+/*
+[
+  {
+    "name": "keywords",
+    "keywords": [
+      {
+        "name": "elusive"
+      }
+    ]
+  },
+  {
+    "name": "reaction",
+    "trigger": {
+      "trigger": "destroyed",
+      "card": {
+        "type": "creature"
+      }
+    },
+    "actions": {
+      "default": [
+        {
+          "name": "gainAmber",
+          "amount": 1,
+          "targetPlayer": "controllerOpponent"
+        }
+      ]
+    }
+  }
+]
+*/
 
 Tolas.id = 'tolas';
 

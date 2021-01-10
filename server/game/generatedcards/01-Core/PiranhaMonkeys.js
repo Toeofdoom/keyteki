@@ -12,6 +12,34 @@ class PiranhaMonkeys extends Card {
         });
     }
 }
+/*
+[
+  {
+    "name": "bold",
+    "trigger": "play",
+    "extraTriggers": [
+      "reap"
+    ],
+    "actions": {
+      "default": [
+        {
+          "name": "dealDamage",
+          "amount": 2,
+          "target": {
+            "type": "creature",
+            "conditions": [
+              {
+                "name": "other"
+              }
+            ],
+            "mode": "all"
+          }
+        }
+      ]
+    }
+  }
+]
+*/
 
 PiranhaMonkeys.id = 'piranha-monkeys';
 

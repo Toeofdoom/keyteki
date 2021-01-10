@@ -17,6 +17,48 @@ class GizelhartsStandard extends Card {
         });
     }
 }
+/*
+[
+  {
+    "name": "persistentEffect",
+    "target": {
+      "type": "creature",
+      "controller": "self",
+      "conditions": [
+        {
+          "name": "hasAmber"
+        }
+      ],
+      "mode": "all"
+    },
+    "effects": [
+      {
+        "name": "modifyArmor",
+        "amount": 1
+      }
+    ]
+  },
+  {
+    "name": "bold",
+    "trigger": "play",
+    "actions": {
+      "targets": [
+        {
+          "type": "creature",
+          "controller": "self",
+          "mode": "exactly",
+          "count": 1,
+          "actions": [
+            {
+              "name": "exalt"
+            }
+          ]
+        }
+      ]
+    }
+  }
+]
+*/
 
 GizelhartsStandard.id = 'gizelhart-s-standard';
 

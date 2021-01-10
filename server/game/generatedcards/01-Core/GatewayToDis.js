@@ -13,6 +13,29 @@ class GatewayToDis extends Card {
         });
     }
 }
+/*
+[
+  {
+    "name": "bold",
+    "trigger": "play",
+    "actions": {
+      "default": [
+        {
+          "name": "destroy",
+          "target": {
+            "type": "creature",
+            "mode": "all"
+          }
+        },
+        {
+          "name": "gainChains",
+          "amount": 3
+        }
+      ]
+    }
+  }
+]
+*/
 
 GatewayToDis.id = 'gateway-to-dis';
 

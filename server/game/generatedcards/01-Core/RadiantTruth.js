@@ -13,6 +13,34 @@ class RadiantTruth extends Card {
         });
     }
 }
+/*
+[
+  {
+    "name": "bold",
+    "trigger": "play",
+    "actions": {
+      "default": [
+        {
+          "name": "stun",
+          "target": {
+            "type": "creature",
+            "controller": "opponent",
+            "conditions": [
+              {
+                "name": "not",
+                "condition": {
+                  "name": "flank"
+                }
+              }
+            ],
+            "mode": "all"
+          }
+        }
+      ]
+    }
+  }
+]
+*/
 
 RadiantTruth.id = 'radiant-truth';
 

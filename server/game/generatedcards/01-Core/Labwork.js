@@ -13,6 +13,29 @@ class Labwork extends Card {
         });
     }
 }
+/*
+[
+  {
+    "name": "bold",
+    "trigger": "play",
+    "actions": {
+      "targets": [
+        {
+          "controller": "self",
+          "mode": "exactly",
+          "count": 1,
+          "location": "hand",
+          "actions": [
+            {
+              "name": "archive"
+            }
+          ]
+        }
+      ]
+    }
+  }
+]
+*/
 
 Labwork.id = 'labwork';
 

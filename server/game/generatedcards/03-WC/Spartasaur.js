@@ -18,6 +18,52 @@ class Spartasaur extends Card {
         });
     }
 }
+/*
+[
+  {
+    "name": "reaction",
+    "trigger": {
+      "trigger": "destroyed",
+      "card": {
+        "type": "creature",
+        "controller": "self"
+      }
+    },
+    "actions": {
+      "default": [
+        {
+          "name": "destroy",
+          "target": {
+            "type": "creature",
+            "conditions": [
+              {
+                "name": "not",
+                "condition": {
+                  "name": "trait",
+                  "trait": "dinosaur"
+                }
+              }
+            ],
+            "mode": "all"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "name": "bold",
+    "trigger": "fight",
+    "actions": {
+      "default": [
+        {
+          "name": "gainAmber",
+          "amount": 2
+        }
+      ]
+    }
+  }
+]
+*/
 
 Spartasaur.id = 'spartasaur';
 

@@ -18,6 +18,52 @@ class JVinda extends Card {
         });
     }
 }
+/*
+[
+  {
+    "name": "keywords",
+    "keywords": [
+      {
+        "name": "elusive"
+      }
+    ]
+  },
+  {
+    "name": "bold",
+    "trigger": "reap",
+    "actions": {
+      "targets": [
+        {
+          "type": "creature",
+          "mode": "exactly",
+          "count": 1,
+          "actions": [
+            {
+              "name": "dealDamage",
+              "amount": 1
+            }
+          ]
+        }
+      ],
+      "then": {
+        "default": [
+          {
+            "name": "steal",
+            "amount": 1,
+            "condition": {
+              "name": "destroysTarget"
+            },
+            "then": true
+          }
+        ],
+        "condition": {
+          "name": "destroysTarget"
+        }
+      }
+    }
+  }
+]
+*/
 
 JVinda.id = 'j-vinda';
 

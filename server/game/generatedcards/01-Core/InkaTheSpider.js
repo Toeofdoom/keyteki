@@ -15,6 +15,39 @@ class InkaTheSpider extends Card {
         });
     }
 }
+/*
+[
+  {
+    "name": "keywords",
+    "keywords": [
+      {
+        "name": "poison"
+      }
+    ]
+  },
+  {
+    "name": "bold",
+    "trigger": "play",
+    "extraTriggers": [
+      "reap"
+    ],
+    "actions": {
+      "targets": [
+        {
+          "type": "creature",
+          "mode": "exactly",
+          "count": 1,
+          "actions": [
+            {
+              "name": "stun"
+            }
+          ]
+        }
+      ]
+    }
+  }
+]
+*/
 
 InkaTheSpider.id = 'inka-the-spider';
 

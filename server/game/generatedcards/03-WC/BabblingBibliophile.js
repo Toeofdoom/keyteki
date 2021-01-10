@@ -8,6 +8,22 @@ class BabblingBibliophile extends Card {
         });
     }
 }
+/*
+[
+  {
+    "name": "bold",
+    "trigger": "reap",
+    "actions": {
+      "default": [
+        {
+          "name": "draw",
+          "amount": 2
+        }
+      ]
+    }
+  }
+]
+*/
 
 BabblingBibliophile.id = 'babbling-bibliophile';
 

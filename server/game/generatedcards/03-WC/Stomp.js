@@ -20,6 +20,51 @@ class Stomp extends Card {
         });
     }
 }
+/*
+[
+  {
+    "name": "bold",
+    "trigger": "play",
+    "actions": {
+      "targets": [
+        {
+          "type": "creature",
+          "mode": "exactly",
+          "count": 1,
+          "actions": [
+            {
+              "name": "dealDamage",
+              "amount": 5
+            }
+          ]
+        }
+      ],
+      "then": {
+        "targets": [
+          {
+            "type": "creature",
+            "controller": "self",
+            "mode": "exactly",
+            "count": 1,
+            "actions": [
+              {
+                "name": "exalt",
+                "condition": {
+                  "name": "destroysTarget"
+                },
+                "then": true
+              }
+            ]
+          }
+        ],
+        "condition": {
+          "name": "destroysTarget"
+        }
+      }
+    }
+  }
+]
+*/
 
 Stomp.id = 'stomp';
 

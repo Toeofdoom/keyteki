@@ -10,6 +10,30 @@ class BordanTheRedeemed extends Card {
         });
     }
 }
+/*
+[
+  {
+    "name": "keywords",
+    "keywords": [
+      {
+        "name": "elusive"
+      }
+    ]
+  },
+  {
+    "name": "bold",
+    "trigger": "action",
+    "actions": {
+      "default": [
+        {
+          "name": "capture",
+          "amount": 2
+        }
+      ]
+    }
+  }
+]
+*/
 
 BordanTheRedeemed.id = 'bordan-the-redeemed';
 

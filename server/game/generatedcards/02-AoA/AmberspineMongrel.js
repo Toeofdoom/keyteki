@@ -14,6 +14,37 @@ class AmberspineMongrel extends Card {
         });
     }
 }
+/*
+[
+  {
+    "name": "keywords",
+    "keywords": [
+      {
+        "name": "hazardous",
+        "count": 3
+      }
+    ]
+  },
+  {
+    "name": "reaction",
+    "trigger": {
+      "trigger": "reap",
+      "card": {
+        "type": "creature",
+        "controller": "opponent"
+      }
+    },
+    "actions": {
+      "default": [
+        {
+          "name": "gainAmber",
+          "amount": 1
+        }
+      ]
+    }
+  }
+]
+*/
 
 AmberspineMongrel.id = 'æmberspine-mongrel';
 

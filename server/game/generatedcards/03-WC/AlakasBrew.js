@@ -11,6 +11,29 @@ class AlakasBrew extends Card {
         });
     }
 }
+/*
+[
+  {
+    "name": "bold",
+    "trigger": "play",
+    "actions": {
+      "targets": [
+        {
+          "type": "creature",
+          "mode": "exactly",
+          "count": 1,
+          "actions": [
+            {
+              "name": "addPowerCounter",
+              "amount": 2
+            }
+          ]
+        }
+      ]
+    }
+  }
+]
+*/
 
 AlakasBrew.id = 'alaka-s-brew';
 

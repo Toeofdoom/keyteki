@@ -296,7 +296,7 @@ function findEventListeners(abilities) {
     if (abilities === null || typeof abilities !== 'object') return [];
     let listeners = Object.values(abilities).flatMap(findEventListeners);
     if (abilities.name === 'eventCount') listeners.push(abilities.action);
-    return listeners;
+    return _.uniq(listeners);
 }
 
 module.exports = CardGenerator;

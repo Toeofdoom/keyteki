@@ -9,7 +9,7 @@ class {{ name }} extends Card {
 {%- endif %}
     setupCardAbilities(ability) {
 {%- for eventListener in abilities | findEventListeners %}
-        this.{{eventListener}}Tracker = {events: [] }
+        this.{{eventListener}}Tracker = { events: [] }
 {%- endfor %}
         {%- for ability in abilities %}
         {{Ability.formatAbility(ability, refs) | indent(8)}}

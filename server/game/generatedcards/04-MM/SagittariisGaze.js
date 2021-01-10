@@ -14,6 +14,41 @@ class SagittariisGaze extends Card {
         });
     }
 }
+/*
+[
+  {
+    "name": "keywords",
+    "keywords": [
+      {
+        "name": "enhance"
+      }
+    ]
+  },
+  {
+    "name": "bold",
+    "trigger": "play",
+    "actions": {
+      "targets": [
+        {
+          "type": "creature",
+          "conditions": [
+            {
+              "name": "damaged"
+            }
+          ],
+          "mode": "exactly",
+          "count": 1,
+          "actions": [
+            {
+              "name": "exalt"
+            }
+          ]
+        }
+      ]
+    }
+  }
+]
+*/
 
 SagittariisGaze.id = 'sagittarii-s-gaze';
 

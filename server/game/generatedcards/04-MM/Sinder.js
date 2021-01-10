@@ -14,6 +14,37 @@ class Sinder extends Card {
         });
     }
 }
+/*
+[
+  {
+    "name": "keywords",
+    "keywords": [
+      {
+        "name": "taunt"
+      }
+    ]
+  },
+  {
+    "name": "bold",
+    "trigger": "reap",
+    "actions": {
+      "targets": [
+        {
+          "type": "creature",
+          "controller": "self",
+          "mode": "exactly",
+          "count": 1,
+          "actions": [
+            {
+              "name": "destroy"
+            }
+          ]
+        }
+      ]
+    }
+  }
+]
+*/
 
 Sinder.id = 'sinder';
 

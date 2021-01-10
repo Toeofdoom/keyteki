@@ -15,6 +15,31 @@ class KeyToDis extends Card {
         });
     }
 }
+/*
+[
+  {
+    "name": "bold",
+    "trigger": "omni",
+    "actions": {
+      "default": [
+        {
+          "name": "sacrifice",
+          "target": {
+            "mode": "self"
+          }
+        },
+        {
+          "name": "destroy",
+          "target": {
+            "type": "creature",
+            "mode": "all"
+          }
+        }
+      ]
+    }
+  }
+]
+*/
 
 KeyToDis.id = 'key-to-dis';
 

@@ -14,6 +14,26 @@ class NogiSmartfist extends Card {
         });
     }
 }
+/*
+[
+  {
+    "name": "bold",
+    "trigger": "fight",
+    "actions": {
+      "default": [
+        {
+          "name": "draw",
+          "amount": 2
+        },
+        {
+          "name": "discardAtRandom",
+          "amount": 2
+        }
+      ]
+    }
+  }
+]
+*/
 
 NogiSmartfist.id = 'nogi-smartfist';
 

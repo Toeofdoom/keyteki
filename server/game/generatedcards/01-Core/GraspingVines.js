@@ -13,6 +13,28 @@ class GraspingVines extends Card {
         });
     }
 }
+/*
+[
+  {
+    "name": "bold",
+    "trigger": "play",
+    "actions": {
+      "targets": [
+        {
+          "type": "artifact",
+          "mode": "upTo",
+          "count": 3,
+          "actions": [
+            {
+              "name": "returnToHand"
+            }
+          ]
+        }
+      ]
+    }
+  }
+]
+*/
 
 GraspingVines.id = 'grasping-vines';
 

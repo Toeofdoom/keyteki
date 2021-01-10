@@ -20,6 +20,56 @@ class Ghostform extends Card {
         });
     }
 }
+/*
+[
+  {
+    "name": "persistentEffect",
+    "target": {
+      "mode": "this"
+    },
+    "effects": [
+      {
+        "name": "gainKeywords",
+        "keywords": [
+          {
+            "name": "invulnerable"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "persistentEffect",
+    "target": {
+      "mode": "this"
+    },
+    "effects": [
+      {
+        "name": "gainAbility",
+        "ability": {
+          "name": "bold",
+          "trigger": "fight",
+          "extraTriggers": [
+            "reap"
+          ],
+          "actions": {
+            "default": [
+              {
+                "name": "archive",
+                "target": {
+                  "mode": "self",
+                  "location": "hand",
+                  "controller": "self"
+                }
+              }
+            ]
+          }
+        }
+      }
+    ]
+  }
+]
+*/
 
 Ghostform.id = 'ghostform';
 

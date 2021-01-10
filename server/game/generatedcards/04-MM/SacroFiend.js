@@ -8,6 +8,22 @@ class SacroFiend extends Card {
         });
     }
 }
+/*
+[
+  {
+    "name": "bold",
+    "trigger": "destroyed",
+    "actions": {
+      "default": [
+        {
+          "name": "steal",
+          "amount": 1
+        }
+      ]
+    }
+  }
+]
+*/
 
 SacroFiend.id = 'sacro-fiend';
 

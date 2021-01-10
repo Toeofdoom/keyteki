@@ -13,6 +13,36 @@ class DrainingTouch extends Card {
         });
     }
 }
+/*
+[
+  {
+    "name": "bold",
+    "trigger": "play",
+    "actions": {
+      "targets": [
+        {
+          "type": "creature",
+          "conditions": [
+            {
+              "name": "not",
+              "condition": {
+                "name": "hasAmber"
+              }
+            }
+          ],
+          "mode": "exactly",
+          "count": 1,
+          "actions": [
+            {
+              "name": "destroy"
+            }
+          ]
+        }
+      ]
+    }
+  }
+]
+*/
 
 DrainingTouch.id = 'draining-touch';
 

@@ -14,6 +14,29 @@ class OrbOfInvidius extends Card {
         });
     }
 }
+/*
+[
+  {
+    "name": "reaction",
+    "trigger": {
+      "trigger": "reap",
+      "card": {
+        "type": "creature"
+      }
+    },
+    "actions": {
+      "default": [
+        {
+          "name": "stun",
+          "target": {
+            "mode": "it"
+          }
+        }
+      ]
+    }
+  }
+]
+*/
 
 OrbOfInvidius.id = 'orb-of-invidius';
 

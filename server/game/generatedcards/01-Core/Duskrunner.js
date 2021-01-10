@@ -10,6 +10,33 @@ class Duskrunner extends Card {
         });
     }
 }
+/*
+[
+  {
+    "name": "persistentEffect",
+    "target": {
+      "mode": "this"
+    },
+    "effects": [
+      {
+        "name": "gainAbility",
+        "ability": {
+          "name": "bold",
+          "trigger": "reap",
+          "actions": {
+            "default": [
+              {
+                "name": "steal",
+                "amount": 1
+              }
+            ]
+          }
+        }
+      }
+    ]
+  }
+]
+*/
 
 Duskrunner.id = 'duskrunner';
 

@@ -14,6 +14,31 @@ class CitizenShrix extends Card {
         });
     }
 }
+/*
+[
+  {
+    "name": "bold",
+    "trigger": "play",
+    "extraTriggers": [
+      "reap"
+    ],
+    "actions": {
+      "default": [
+        {
+          "name": "exalt",
+          "target": {
+            "mode": "self"
+          }
+        },
+        {
+          "name": "steal",
+          "amount": 1
+        }
+      ]
+    }
+  }
+]
+*/
 
 CitizenShrix.id = 'citizen-shrix';
 

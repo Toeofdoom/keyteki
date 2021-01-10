@@ -13,6 +13,31 @@ class AncientPower extends Card {
         });
     }
 }
+/*
+[
+  {
+    "name": "bold",
+    "trigger": "play",
+    "actions": {
+      "default": [
+        {
+          "name": "ward",
+          "target": {
+            "type": "creature",
+            "controller": "self",
+            "conditions": [
+              {
+                "name": "hasAmber"
+              }
+            ],
+            "mode": "all"
+          }
+        }
+      ]
+    }
+  }
+]
+*/
 
 AncientPower.id = 'ancient-power';
 

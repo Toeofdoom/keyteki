@@ -17,6 +17,46 @@ class TechnoBeast extends Card {
         });
     }
 }
+/*
+[
+  {
+    "name": "keywords",
+    "keywords": [
+      {
+        "name": "skirmish"
+      }
+    ]
+  },
+  {
+    "name": "bold",
+    "trigger": "reap",
+    "actions": {
+      "targets": [
+        {
+          "controller": "self",
+          "mode": "exactly",
+          "count": 1,
+          "location": "hand",
+          "actions": [
+            {
+              "name": "discard"
+            }
+          ]
+        }
+      ],
+      "then": {
+        "default": [
+          {
+            "name": "draw",
+            "amount": 1,
+            "then": true
+          }
+        ]
+      }
+    }
+  }
+]
+*/
 
 TechnoBeast.id = 'techno-beast';
 

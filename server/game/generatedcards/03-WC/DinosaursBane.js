@@ -13,6 +13,34 @@ class DinosaursBane extends Card {
         });
     }
 }
+/*
+[
+  {
+    "name": "bold",
+    "trigger": "play",
+    "actions": {
+      "targets": [
+        {
+          "type": "creature",
+          "conditions": [
+            {
+              "name": "trait",
+              "trait": "dinosaur"
+            }
+          ],
+          "mode": "exactly",
+          "count": 1,
+          "actions": [
+            {
+              "name": "destroy"
+            }
+          ]
+        }
+      ]
+    }
+  }
+]
+*/
 
 DinosaursBane.id = 'dinosaurs--bane';
 

@@ -8,6 +8,22 @@ class DamoKnight extends Card {
         });
     }
 }
+/*
+[
+  {
+    "name": "bold",
+    "trigger": "destroyed",
+    "actions": {
+      "default": [
+        {
+          "name": "steal",
+          "amount": 1
+        }
+      ]
+    }
+  }
+]
+*/
 
 DamoKnight.id = 'dæmo-knight';
 

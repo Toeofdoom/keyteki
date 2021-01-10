@@ -9,6 +9,22 @@ class LibraryOfBabble extends Card {
         });
     }
 }
+/*
+[
+  {
+    "name": "bold",
+    "trigger": "action",
+    "actions": {
+      "default": [
+        {
+          "name": "draw",
+          "amount": 1
+        }
+      ]
+    }
+  }
+]
+*/
 
 LibraryOfBabble.id = 'library-of-babble';
 

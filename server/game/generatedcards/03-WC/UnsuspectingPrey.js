@@ -14,6 +14,37 @@ class UnsuspectingPrey extends Card {
         });
     }
 }
+/*
+[
+  {
+    "name": "bold",
+    "trigger": "play",
+    "actions": {
+      "targets": [
+        {
+          "type": "creature",
+          "conditions": [
+            {
+              "name": "not",
+              "condition": {
+                "name": "damaged"
+              }
+            }
+          ],
+          "mode": "upTo",
+          "count": 3,
+          "actions": [
+            {
+              "name": "dealDamage",
+              "amount": 2
+            }
+          ]
+        }
+      ]
+    }
+  }
+]
+*/
 
 UnsuspectingPrey.id = 'unsuspecting-prey';
 

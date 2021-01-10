@@ -18,6 +18,48 @@ class WarGrumpus extends Card {
         });
     }
 }
+/*
+[
+  {
+    "name": "bold",
+    "trigger": "fight",
+    "extraTriggers": [
+      "reap"
+    ],
+    "actions": {
+      "targets": [
+        {
+          "type": "creature",
+          "conditions": [
+            {
+              "name": "neighboring"
+            },
+            {
+              "name": "trait",
+              "trait": "giant"
+            }
+          ],
+          "mode": "exactly",
+          "count": 1,
+          "actions": [
+            {
+              "name": "sequential",
+              "actions": [
+                {
+                  "name": "ready"
+                },
+                {
+                  "name": "fight"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  }
+]
+*/
 
 WarGrumpus.id = 'war-grumpus';
 

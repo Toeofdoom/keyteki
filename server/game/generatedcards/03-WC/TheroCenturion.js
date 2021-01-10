@@ -9,6 +9,25 @@ class TheroCenturion extends Card {
         });
     }
 }
+/*
+[
+  {
+    "name": "bold",
+    "trigger": "play",
+    "extraTriggers": [
+      "fight"
+    ],
+    "actions": {
+      "default": [
+        {
+          "name": "capture",
+          "amount": 1
+        }
+      ]
+    }
+  }
+]
+*/
 
 TheroCenturion.id = 'thero-centurion';
 

@@ -13,6 +13,32 @@ class CallToAction extends Card {
         });
     }
 }
+/*
+[
+  {
+    "name": "bold",
+    "trigger": "play",
+    "actions": {
+      "default": [
+        {
+          "name": "ready",
+          "target": {
+            "type": "creature",
+            "controller": "self",
+            "conditions": [
+              {
+                "name": "trait",
+                "trait": "knight"
+              }
+            ],
+            "mode": "all"
+          }
+        }
+      ]
+    }
+  }
+]
+*/
 
 CallToAction.id = 'call-to-action';
 

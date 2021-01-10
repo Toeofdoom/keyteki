@@ -10,6 +10,30 @@ class DamoThief extends Card {
         });
     }
 }
+/*
+[
+  {
+    "name": "keywords",
+    "keywords": [
+      {
+        "name": "elusive"
+      }
+    ]
+  },
+  {
+    "name": "bold",
+    "trigger": "destroyed",
+    "actions": {
+      "default": [
+        {
+          "name": "steal",
+          "amount": 1
+        }
+      ]
+    }
+  }
+]
+*/
 
 DamoThief.id = 'dæmo-thief';
 

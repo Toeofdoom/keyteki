@@ -12,6 +12,28 @@ class Teliga extends Card {
         });
     }
 }
+/*
+[
+  {
+    "name": "reaction",
+    "trigger": {
+      "trigger": "play",
+      "card": {
+        "type": "creature"
+      },
+      "eventPlayer": "opponent"
+    },
+    "actions": {
+      "default": [
+        {
+          "name": "gainAmber",
+          "amount": 1
+        }
+      ]
+    }
+  }
+]
+*/
 
 Teliga.id = 'teliga';
 

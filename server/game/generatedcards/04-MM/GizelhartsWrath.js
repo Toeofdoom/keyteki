@@ -10,6 +10,31 @@ class GizelhartsWrath extends Card {
         });
     }
 }
+/*
+[
+  {
+    "name": "bold",
+    "trigger": "play",
+    "actions": {
+      "default": [
+        {
+          "name": "destroy",
+          "target": {
+            "type": "creature",
+            "conditions": [
+              {
+                "name": "trait",
+                "trait": "mutant"
+              }
+            ],
+            "mode": "all"
+          }
+        }
+      ]
+    }
+  }
+]
+*/
 
 GizelhartsWrath.id = 'gizelhart-s-wrath';
 

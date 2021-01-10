@@ -12,6 +12,28 @@ class Hologrammophone extends Card {
         });
     }
 }
+/*
+[
+  {
+    "name": "bold",
+    "trigger": "action",
+    "actions": {
+      "targets": [
+        {
+          "type": "creature",
+          "mode": "exactly",
+          "count": 1,
+          "actions": [
+            {
+              "name": "ward"
+            }
+          ]
+        }
+      ]
+    }
+  }
+]
+*/
 
 Hologrammophone.id = 'hologrammophone';
 

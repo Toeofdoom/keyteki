@@ -17,6 +17,43 @@ class BrendTheFanatic extends Card {
         });
     }
 }
+/*
+[
+  {
+    "name": "keywords",
+    "keywords": [
+      {
+        "name": "skirmish"
+      }
+    ]
+  },
+  {
+    "name": "bold",
+    "trigger": "play",
+    "actions": {
+      "default": [
+        {
+          "name": "gainAmber",
+          "amount": 1,
+          "targetPlayer": "opponent"
+        }
+      ]
+    }
+  },
+  {
+    "name": "bold",
+    "trigger": "destroyed",
+    "actions": {
+      "default": [
+        {
+          "name": "steal",
+          "amount": 3
+        }
+      ]
+    }
+  }
+]
+*/
 
 BrendTheFanatic.id = 'brend-the-fanatic';
 

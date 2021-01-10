@@ -13,6 +13,30 @@ class ProtectTheWeak extends Card {
         });
     }
 }
+/*
+[
+  {
+    "name": "persistentEffect",
+    "target": {
+      "mode": "this"
+    },
+    "effects": [
+      {
+        "name": "modifyArmor",
+        "amount": 1
+      },
+      {
+        "name": "gainKeywords",
+        "keywords": [
+          {
+            "name": "taunt"
+          }
+        ]
+      }
+    ]
+  }
+]
+*/
 
 ProtectTheWeak.id = 'protect-the-weak';
 

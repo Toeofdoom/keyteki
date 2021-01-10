@@ -11,6 +11,23 @@ class FertilityChant extends Card {
         });
     }
 }
+/*
+[
+  {
+    "name": "bold",
+    "trigger": "play",
+    "actions": {
+      "default": [
+        {
+          "name": "gainAmber",
+          "amount": 2,
+          "targetPlayer": "opponent"
+        }
+      ]
+    }
+  }
+]
+*/
 
 FertilityChant.id = 'fertility-chant';
 

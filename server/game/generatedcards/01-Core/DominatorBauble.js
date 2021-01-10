@@ -13,6 +13,29 @@ class DominatorBauble extends Card {
         });
     }
 }
+/*
+[
+  {
+    "name": "bold",
+    "trigger": "action",
+    "actions": {
+      "targets": [
+        {
+          "type": "creature",
+          "controller": "self",
+          "mode": "exactly",
+          "count": 1,
+          "actions": [
+            {
+              "name": "use"
+            }
+          ]
+        }
+      ]
+    }
+  }
+]
+*/
 
 DominatorBauble.id = 'dominator-bauble';
 

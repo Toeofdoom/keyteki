@@ -12,6 +12,34 @@ class Mogghunter extends Card {
         });
     }
 }
+/*
+[
+  {
+    "name": "bold",
+    "trigger": "fight",
+    "actions": {
+      "targets": [
+        {
+          "type": "creature",
+          "conditions": [
+            {
+              "name": "flank"
+            }
+          ],
+          "mode": "exactly",
+          "count": 1,
+          "actions": [
+            {
+              "name": "dealDamage",
+              "amount": 2
+            }
+          ]
+        }
+      ]
+    }
+  }
+]
+*/
 
 Mogghunter.id = 'mogghunter';
 

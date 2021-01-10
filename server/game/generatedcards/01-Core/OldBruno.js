@@ -10,6 +10,30 @@ class OldBruno extends Card {
         });
     }
 }
+/*
+[
+  {
+    "name": "keywords",
+    "keywords": [
+      {
+        "name": "elusive"
+      }
+    ]
+  },
+  {
+    "name": "bold",
+    "trigger": "play",
+    "actions": {
+      "default": [
+        {
+          "name": "capture",
+          "amount": 3
+        }
+      ]
+    }
+  }
+]
+*/
 
 OldBruno.id = 'old-bruno';
 

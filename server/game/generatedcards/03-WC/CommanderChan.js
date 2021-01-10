@@ -15,6 +15,37 @@ class CommanderChan extends Card {
         });
     }
 }
+/*
+[
+  {
+    "name": "bold",
+    "trigger": "fight",
+    "extraTriggers": [
+      "reap"
+    ],
+    "actions": {
+      "targets": [
+        {
+          "type": "creature",
+          "controller": "self",
+          "conditions": [
+            {
+              "name": "other"
+            }
+          ],
+          "mode": "exactly",
+          "count": 1,
+          "actions": [
+            {
+              "name": "use"
+            }
+          ]
+        }
+      ]
+    }
+  }
+]
+*/
 
 CommanderChan.id = 'commander-chan';
 

@@ -15,6 +15,42 @@ class ArmsmasterMolina extends Card {
         });
     }
 }
+/*
+[
+  {
+    "name": "keywords",
+    "keywords": [
+      {
+        "name": "hazardous",
+        "count": 3
+      }
+    ]
+  },
+  {
+    "name": "persistentEffect",
+    "target": {
+      "mode": "all",
+      "type": "creature",
+      "conditions": [
+        {
+          "name": "neighboring"
+        }
+      ]
+    },
+    "effects": [
+      {
+        "name": "gainKeywords",
+        "keywords": [
+          {
+            "name": "hazardous",
+            "count": 3
+          }
+        ]
+      }
+    ]
+  }
+]
+*/
 
 ArmsmasterMolina.id = 'armsmaster-molina';
 

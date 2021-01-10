@@ -9,6 +9,23 @@ class SubtleOtto extends Card {
         });
     }
 }
+/*
+[
+  {
+    "name": "bold",
+    "trigger": "play",
+    "actions": {
+      "default": [
+        {
+          "name": "discardAtRandom",
+          "amount": 1,
+          "targetPlayer": "opponent"
+        }
+      ]
+    }
+  }
+]
+*/
 
 SubtleOtto.id = 'subtle-otto';
 

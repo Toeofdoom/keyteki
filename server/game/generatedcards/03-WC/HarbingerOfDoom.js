@@ -11,6 +11,25 @@ class HarbingerOfDoom extends Card {
         });
     }
 }
+/*
+[
+  {
+    "name": "bold",
+    "trigger": "destroyed",
+    "actions": {
+      "default": [
+        {
+          "name": "destroy",
+          "target": {
+            "type": "creature",
+            "mode": "all"
+          }
+        }
+      ]
+    }
+  }
+]
+*/
 
 HarbingerOfDoom.id = 'harbinger-of-doom';
 

@@ -11,6 +11,23 @@ class BindingIrons extends Card {
         });
     }
 }
+/*
+[
+  {
+    "name": "bold",
+    "trigger": "play",
+    "actions": {
+      "default": [
+        {
+          "name": "gainChains",
+          "amount": 3,
+          "targetPlayer": "opponent"
+        }
+      ]
+    }
+  }
+]
+*/
 
 BindingIrons.id = 'binding-irons';
 

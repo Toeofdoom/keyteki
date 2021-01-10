@@ -14,6 +14,38 @@ class SanitationEngineer extends Card {
         });
     }
 }
+/*
+[
+  {
+    "name": "keywords",
+    "keywords": [
+      {
+        "name": "hazardous",
+        "count": 1
+      }
+    ]
+  },
+  {
+    "name": "bold",
+    "trigger": "reap",
+    "actions": {
+      "targets": [
+        {
+          "controller": "self",
+          "mode": "exactly",
+          "count": 1,
+          "location": "hand",
+          "actions": [
+            {
+              "name": "discard"
+            }
+          ]
+        }
+      ]
+    }
+  }
+]
+*/
 
 SanitationEngineer.id = 'sanitation-engineer';
 

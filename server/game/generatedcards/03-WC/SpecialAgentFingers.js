@@ -10,6 +10,30 @@ class SpecialAgentFingers extends Card {
         });
     }
 }
+/*
+[
+  {
+    "name": "keywords",
+    "keywords": [
+      {
+        "name": "elusive"
+      }
+    ]
+  },
+  {
+    "name": "bold",
+    "trigger": "action",
+    "actions": {
+      "default": [
+        {
+          "name": "steal",
+          "amount": 1
+        }
+      ]
+    }
+  }
+]
+*/
 
 SpecialAgentFingers.id = 'special-agent-fingers';
 

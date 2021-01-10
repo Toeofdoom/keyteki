@@ -11,6 +11,31 @@ class Curiosity extends Card {
         });
     }
 }
+/*
+[
+  {
+    "name": "bold",
+    "trigger": "play",
+    "actions": {
+      "default": [
+        {
+          "name": "destroy",
+          "target": {
+            "type": "creature",
+            "conditions": [
+              {
+                "name": "trait",
+                "trait": "scientist"
+              }
+            ],
+            "mode": "all"
+          }
+        }
+      ]
+    }
+  }
+]
+*/
 
 Curiosity.id = 'curiosity';
 

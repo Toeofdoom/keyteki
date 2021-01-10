@@ -17,6 +17,46 @@ class TechnoThief extends Card {
         });
     }
 }
+/*
+[
+  {
+    "name": "keywords",
+    "keywords": [
+      {
+        "name": "elusive"
+      }
+    ]
+  },
+  {
+    "name": "bold",
+    "trigger": "reap",
+    "actions": {
+      "targets": [
+        {
+          "controller": "self",
+          "mode": "exactly",
+          "count": 1,
+          "location": "hand",
+          "actions": [
+            {
+              "name": "discard"
+            }
+          ]
+        }
+      ],
+      "then": {
+        "default": [
+          {
+            "name": "draw",
+            "amount": 1,
+            "then": true
+          }
+        ]
+      }
+    }
+  }
+]
+*/
 
 TechnoThief.id = 'techno-thief';
 

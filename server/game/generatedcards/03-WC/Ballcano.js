@@ -14,6 +14,30 @@ class Ballcano extends Card {
         });
     }
 }
+/*
+[
+  {
+    "name": "bold",
+    "trigger": "play",
+    "actions": {
+      "default": [
+        {
+          "name": "dealDamage",
+          "amount": 4,
+          "target": {
+            "type": "creature",
+            "mode": "all"
+          }
+        },
+        {
+          "name": "gainChains",
+          "amount": 2
+        }
+      ]
+    }
+  }
+]
+*/
 
 Ballcano.id = 'ballcano';
 

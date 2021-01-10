@@ -8,6 +8,22 @@ class BloodOfTitans extends Card {
         });
     }
 }
+/*
+[
+  {
+    "name": "persistentEffect",
+    "target": {
+      "mode": "this"
+    },
+    "effects": [
+      {
+        "name": "modifyPower",
+        "amount": 5
+      }
+    ]
+  }
+]
+*/
 
 BloodOfTitans.id = 'blood-of-titans';
 

@@ -17,6 +17,42 @@ class SacroSaurus extends Card {
         });
     }
 }
+/*
+[
+  {
+    "name": "bold",
+    "trigger": "play",
+    "actions": {
+      "optional": true,
+      "default": [
+        {
+          "name": "exalt",
+          "target": {
+            "mode": "self"
+          },
+          "optional": true
+        }
+      ],
+      "then": {
+        "targets": [
+          {
+            "type": "creature",
+            "mode": "exactly",
+            "count": 1,
+            "actions": [
+              {
+                "name": "dealDamage",
+                "amount": 3,
+                "then": true
+              }
+            ]
+          }
+        ]
+      }
+    }
+  }
+]
+*/
 
 SacroSaurus.id = 'sacro-saurus';
 

@@ -13,6 +13,34 @@ class BeastsBane extends Card {
         });
     }
 }
+/*
+[
+  {
+    "name": "bold",
+    "trigger": "play",
+    "actions": {
+      "targets": [
+        {
+          "type": "creature",
+          "conditions": [
+            {
+              "name": "trait",
+              "trait": "beast"
+            }
+          ],
+          "mode": "exactly",
+          "count": 1,
+          "actions": [
+            {
+              "name": "destroy"
+            }
+          ]
+        }
+      ]
+    }
+  }
+]
+*/
 
 BeastsBane.id = 'beasts--bane';
 

@@ -13,6 +13,29 @@ class LibraryOfTheDamned extends Card {
         });
     }
 }
+/*
+[
+  {
+    "name": "bold",
+    "trigger": "action",
+    "actions": {
+      "targets": [
+        {
+          "controller": "self",
+          "mode": "exactly",
+          "count": 1,
+          "location": "hand",
+          "actions": [
+            {
+              "name": "archive"
+            }
+          ]
+        }
+      ]
+    }
+  }
+]
+*/
 
 LibraryOfTheDamned.id = 'library-of-the-damned';
 

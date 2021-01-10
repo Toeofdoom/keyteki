@@ -19,6 +19,57 @@ class KillzordMk9001 extends Card {
         });
     }
 }
+/*
+[
+  {
+    "name": "persistentEffect",
+    "target": {
+      "mode": "this"
+    },
+    "effects": [
+      {
+        "name": "modifyArmor",
+        "amount": 2
+      },
+      {
+        "name": "modifyPower",
+        "amount": 2
+      }
+    ]
+  },
+  {
+    "name": "persistentEffect",
+    "target": {
+      "mode": "this"
+    },
+    "effects": [
+      {
+        "name": "gainKeywords",
+        "keywords": [
+          {
+            "name": "skirmish"
+          }
+        ]
+      },
+      {
+        "name": "gainAbility",
+        "ability": {
+          "name": "bold",
+          "trigger": "fight",
+          "actions": {
+            "default": [
+              {
+                "name": "gainChains",
+                "amount": 1
+              }
+            ]
+          }
+        }
+      }
+    ]
+  }
+]
+*/
 
 KillzordMk9001.id = 'killzord-mk-9001';
 

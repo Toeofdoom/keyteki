@@ -11,6 +11,30 @@ class GuiltyHearts extends Card {
         });
     }
 }
+/*
+[
+  {
+    "name": "bold",
+    "trigger": "play",
+    "actions": {
+      "default": [
+        {
+          "name": "destroy",
+          "target": {
+            "type": "creature",
+            "conditions": [
+              {
+                "name": "hasAmber"
+              }
+            ],
+            "mode": "all"
+          }
+        }
+      ]
+    }
+  }
+]
+*/
 
 GuiltyHearts.id = 'guilty-hearts';
 

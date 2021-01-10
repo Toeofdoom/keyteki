@@ -15,6 +15,38 @@ class ExchangeOfficer extends Card {
         });
     }
 }
+/*
+[
+  {
+    "name": "bold",
+    "trigger": "play",
+    "extraTriggers": [
+      "fight",
+      "reap"
+    ],
+    "actions": {
+      "targets": [
+        {
+          "controller": "self",
+          "conditions": [
+            {
+              "name": "house",
+              "house": "staralliance"
+            }
+          ],
+          "mode": "exactly",
+          "count": 1,
+          "actions": [
+            {
+              "name": "use"
+            }
+          ]
+        }
+      ]
+    }
+  }
+]
+*/
 
 ExchangeOfficer.id = 'exchange-officer';
 

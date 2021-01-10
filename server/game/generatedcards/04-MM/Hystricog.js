@@ -14,6 +14,41 @@ class Hystricog extends Card {
         });
     }
 }
+/*
+[
+  {
+    "name": "keywords",
+    "keywords": [
+      {
+        "name": "enhance"
+      }
+    ]
+  },
+  {
+    "name": "bold",
+    "trigger": "action",
+    "actions": {
+      "targets": [
+        {
+          "type": "creature",
+          "conditions": [
+            {
+              "name": "damaged"
+            }
+          ],
+          "mode": "exactly",
+          "count": 1,
+          "actions": [
+            {
+              "name": "destroy"
+            }
+          ]
+        }
+      ]
+    }
+  }
+]
+*/
 
 Hystricog.id = 'hystricog';
 
