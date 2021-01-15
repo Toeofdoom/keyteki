@@ -88,7 +88,7 @@ Lines = line:Line tail:(NewLine l:Line {return l;})* NewLine? {
 	return flattenArrays([line, ...tail])
 }
 
-Line = ability:(Keywords / BoldAbility / PersistentEffect / GeneralTrigger / ReminderText / _ )
+Line = _ ability:(Keywords / BoldAbility / PersistentEffect / GeneralTrigger / ReminderText / _ )
 	_ unknown:(_ e:UnknownFragment [.;]? _ {return e;})* 
 {
 	if(unknown.length > 0)
