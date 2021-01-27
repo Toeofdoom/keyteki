@@ -5,10 +5,8 @@ class Smith extends Card {
     setupCardAbilities(ability) {
         this.play({
             condition: (context) =>
-                context.game.creaturesInPlay.filter((card) => card.controller === context.player)
-                    .length >
-                context.game.creaturesInPlay.filter((card) => card.controller !== context.player)
-                    .length,
+                context.player.creaturesInPlay.length >
+                context.player.opponent.creaturesInPlay.length,
             gameAction: ability.actions.gainAmber({ amount: 2 })
         });
     }

@@ -7,7 +7,7 @@ class Bulwark extends Card {
             targetController: 'any',
             match: (card, context) =>
                 card.type === 'creature' && context.source.neighbors.includes(card),
-            effect: ability.effects.modifyArmor(2)
+            effect: ability.effects.modifyArmor(() => 2)
         });
     }
 }

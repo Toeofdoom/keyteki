@@ -8,9 +8,7 @@ class BilgumAvalanche extends Card {
                 onForgeKey: (event, context) => event.player === context.player
             },
             gameAction: ability.actions.dealDamage((context) => ({
-                target: context.game.creaturesInPlay.filter(
-                    (card) => card.controller !== context.player
-                ),
+                target: context.player.opponent.creaturesInPlay,
                 amount: 2
             }))
         });

@@ -9,9 +9,7 @@ class HeistNight extends Card {
             gameAction: ability.actions.steal((context) => ({
                 amount:
                     1 *
-                    context.game.creaturesInPlay.filter(
-                        (card) => card.controller === context.player && card.hasTrait('thief')
-                    ).length
+                    context.player.creaturesInPlay.filter((card) => card.hasTrait('thief')).length
             }))
         });
     }

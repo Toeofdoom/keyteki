@@ -131,9 +131,8 @@ BoldTrigger = ("Play" / "Reap" / "Before Fight" / "Fight" / "Destroyed" / "Actio
 
 //Persistent effects. If conditions are required for things like bonesaw
 PersistentEffect = condition:(WhileCondition/IfCondition)? _ 
-pe:(PersistentPlayerEffect/PersistentCardAction)
-_ multiplier:Multiplier? [.;]? _ ReminderText? {
-    return Object.assign({name: 'persistentEffect', multiplier, condition}, pe)
+pe:(PersistentPlayerEffect/PersistentCardEffect) [.;]? _ ReminderText? {
+    return Object.assign({name: 'persistentEffect', condition}, pe)
 }
 
 PersistentPlayerEffect = targetPlayer:PlayerTarget? _ effect:SinglePersistentPlayerEffect {
@@ -143,22 +142,28 @@ PersistentPlayerEffect = targetPlayer:PlayerTarget? _ effect:SinglePersistentPla
 	}
 } / SpecialPersistentPlayerEffect //For effects with more unique formats.
 
-PersistentCardAction = target:GeneralCardTarget? _ effects:PersistentCardActionList [.;]? {
+PersistentCardEffect = target:GeneralCardTarget? _ effects:PersistentCardEffectList [.;]? {
 	return  {
 		target, 
 		effects: flattenArrays(effects).filter(x => x !== null)
 	}
 }
 
-PersistentCardActionList = item:SinglePersistentCardEffect _ items:(_ And _ e:SinglePersistentCardEffect {return e;})* {
+PersistentCardEffectList = item:SinglePersistentCardEffect _ items:(_ And _ e:SinglePersistentCardEffect {return e;})* {
 	return [item, ...items]
 }
 
 //General triggers
-GeneralTrigger = SpontaneousTrigger/GeneralPersistentTrigger/GeneralDurationTrigger/PhaseTrigger
+GeneralTrigger = GeneralPersistentTrigger/GeneralDurationTrigger/PhaseTrigger/SpontaneousTrigger
 
 //Spontaneous means that as soon as a condition is met, a certain effect will occur
-SpontaneousTrigger = IfCondition _ ActionList
+SpontaneousTrigger = condition:IfCondition _ actions:ActionList {
+	return {
+		name: "terminalCondition",
+		condition,
+		actions
+	}
+}
 
 //Persistent effects typically list the trigger, then the effect. Duration effects typically reverse that.
 GeneralPersistentTrigger = ("Each time"i/"After"i) _ trigger:Trigger "," _ actions:SentenceActionList [.;]? {
@@ -216,12 +221,12 @@ CardTriggerType = "is destroyed fighting $this" {return "destroyedFightingThis"}
 	/"reaps" {return "reap"}
 	/"is used" {return "used"}
 	/("fights"/"is used to fight") {return "fight"}
-	/"enters play" {return "entersPlay"}
+	/"enters play" {return "onCardEntersPlay"}
 	/"is discarded" {return "onCardDiscarded"}
 
 //Reminder text
 ReminderText = _ ("(" [^)]+ ")"
-	/"This card is translated"i [^.]* "."?
+	/"This card" _ ("is"/"has been") _ "translated"i [^.]* "."?
 	/"This card is incomplete and subject to change"i "."?) _ {
 	return {name: "reminderText", keywords: [text()]}
 }
@@ -339,9 +344,9 @@ RaiseTide = "Raise"i "s"? _ "the tide" {
 CardAction = StandardFormatCardAction/CardCapturesAction/GiveCounters
 
 StandardFormatCardAction = actions:CardActionList _ target:GeneralCardTarget 
-_ multiplier:Multiplier? _ splash:SplashSuffix?_ noPrevent:UnpreventableSuffix? _ AsIfItWereYours? {
+_ multiplier:Multiplier? _ splash:SplashSuffix?_ ignoreArmor:UnpreventableSuffix? _ AsIfItWereYours? {
 	let action = actions.length === 1 ? actions[0] : {name:"sequential", actions}
-	return Object.assign(action, {target, splash, multiplier, noPrevent})
+	return Object.assign(action, {target, splash, multiplier, ignoreArmor})
 }
 
 CardActionList = item:SingleCardAction items:(_ And _ e:SingleCardAction {return e;})* {
@@ -393,7 +398,7 @@ Fight = "fight with"i {return {name: 'fight'}}
 Destroy = "Destroy"i {return {name: 'destroy'}}
 Sacrifice = "Sacrifice"i {return {name: 'sacrifice'}}
 Purge = "Purge"i {return {name: 'purge'}}
-Exalt = "Exalt"i {return {name: 'exalt'}}
+Exalt = "Exalt"i {return {name: 'exalt', amount:1 }}
 Ward = "Ward"i {return {name: 'ward'}}
 RemoveWard = "Remove a ward from"i {return {name: 'removeWard'}}
 Enrage = "Enrage"i {return {name: 'enrage'}}
@@ -410,7 +415,7 @@ MoveCardAction = name:MoveCardActionType _ target:GeneralCardTarget _
 	endLocation:(("to"/"into"/"on") _ l:SpecificLocation {return l;})? {
     
     //Archiving and discarding default to targetting a card from your hand
-    if (name === "archive" || name == "discard")
+    if ((name === "archive" || name == "discard") && !target.location)
 		location = location || {location: "hand", controller: "self"};
 		
 	if(endLocation != null && endLocation.location === "archives") {
@@ -462,14 +467,17 @@ TimeLimitedEffect = (duration:Duration "," _ effect:(PersistentEffect/GeneralPer
 })
 
 Duration = "For the remainder of the turn"i {return "forRemainderOfTurn"} /
-"during your opponent’s next turn"i {return "lastingEffect"} //TODO: Correct this, lastingEffect also applies during the current turn
+"during your opponent" [’'] "s next turn"i {return "lastingEffect"} //TODO: Correct this, lastingEffect also applies during the current turn
 
 //Persistent effects
 //Persistent player effects
 SinglePersistentPlayerEffect = KeyCost/CantBeStolen
 SpecialPersistentPlayerEffect = ModifyHandSize
 
-KeyCost = "keys cost "i amount:Number ("<A>"/"A") {	return {name: "modifyKeyCost", amount};}
+KeyCost = "keys cost "i amount:Number ("<A>"/"A") _ multiplier:Multiplier? {
+	return {name: "modifyKeyCost", amount, multiplier};
+}
+
 CantBeStolen = "A cannot be stolen" {return {name:"playerCannot", effect:"steal"};}
 
 ModifyHandSize = "During" _ ("your"/"their") _ Quote "draw cards" Quote _ "step,"
@@ -535,8 +543,8 @@ PlayerTarget = ("Your Opponent"i ['’s]* {return "opponent"}
 //Card targetting
 GeneralCardTarget = (DeckCard/NeighborTarget/Self/StandardCardTarget _ "and" _ StandardCardTarget/StandardCardTarget/ItTarget/UpgradedCreature)
 
-DeckCard = "the top"i _ amount:Number? _ "card""s"? " of your deck" {
-	return {mode:"topdeck", amount}
+DeckCard = "the top"i _ numCards:Number? _ "card""s"? " of your deck" {
+	return {mode:"all", numCards: numCards || 1, location:'deck'}
 }
 Self = "$this" {return {mode: "self"}}
 UpgradedCreature = "this creature"i {return {mode: "this"}}
@@ -571,7 +579,7 @@ BaseCardTarget = trait:TraitSpecifier? _ house:HouseSpecifier? _ type:CardType {
 	t:TraitSpecifier {return{conditions:[t], type:"creature"};}
 
 //How many targets?
-CardTargetCount = count:(EachTarget / OneTarget / UpToTargets / NoTargets / AtLeastTargets)? 	{return count || "all";}
+CardTargetCount = count:(EachTarget / OneTarget / UpToTargets / NoTargets / AtLeastTargets / NumberTargets)? 	{return count || {mode: "all"};}
 
 MostPowerful = cardStat:(
 	"most" {return {name: "power"};}
@@ -582,6 +590,7 @@ MostPowerful = cardStat:(
 EachTarget = ("each"i/"all"i) {return {mode: "all"}}
 NoTargets = ("no"i) {return {mode:"exactly", count:0}}
 OneTarget = ("an"i / "a"i / "the"i) {return {mode:"exactly", count:1}}
+NumberTargets = count:Number {return {mode:"exactly", count}}
 UpToTargets = "up to"i _ count:Number {return {mode:"upTo", count}}
 AtLeastTargets = count:Number _ "or more" {return {mode:"atLeast", count}}
 
@@ -610,7 +619,7 @@ HouseSpecifier = negate:"non-"i? house:House {
 }
 
 ControllerSpecifier = (("friendly"i/"your"i) {return "self";}
-	/ ("enemy"i/"opponent’s"i) {return "opponent";})
+	/ ("enemy"i/"opponent" [’'] "s"i) {return "opponent";})
 
 //Conditions after card
 ControlledBySpecifier = "controlled by any player" {return null;}
@@ -619,7 +628,7 @@ NonFlankSpecifier = "that is"? _ "not on a flank"i {
 	return {name: "not", condition: {name: "flank"}}
 }
 
-CenterSpecifier = "in the center of its controller’s battleline."i {
+CenterSpecifier = "in the center of its controller" [’'] "s battleline."i {
 	return {name: "center"}
 }
 
@@ -685,7 +694,7 @@ CardCountComparison = "there are"i _ comparison:NumberComparison _
     })
 }
 
-CardEventCountComparison = comparison:NumberComparison _ card:ConditionalCardTarget _ ("was"/"were"/"has been"/"have been") _ action:"destroyed" _ "this turn,"i{
+CardEventCountComparison = comparison:NumberComparison _ card:ConditionalCardTarget _ ("was"/"were"/"has been"/"have been") _ action:("destroyed" {return "onCardDestroyed"}) _ "this turn,"i{
     return Object.assign(comparison, {
     	a:Object.assign({name:"eventCount", action}, card)
     })
@@ -695,7 +704,7 @@ CardEventCountComparison = comparison:NumberComparison _ card:ConditionalCardTar
     	a:Object.assign({name:"eventCount", eventPlayer, action}, card)
     })
 }
-    /eventPlayer:PlayerTarget _ "have used" _ comparison:NumberComparison _ card:ConditionalCardTarget _ action:("to fight"{return "fight";}) _ "this turn," {
+    /eventPlayer:PlayerTarget _ "have used" _ comparison:NumberComparison _ card:ConditionalCardTarget _ action:("to fight"{return "onFight";}) _ "this turn," {
     return Object.assign(comparison, {
     	a:Object.assign({name:"eventCount", eventPlayer, action}, card)
     })
@@ -705,7 +714,7 @@ NumberComparison = operator:("exactly" {return "===";})? _ amount:Number
 	_ operator2:("or more" {return ">="})? {
 	return {
     	name: "comparison",
-        operator: operator || operator2 || amount == 0 ? "===" : ">=",
+        operator: operator || operator2 || (amount == 0 ? "===" : ">="),
         b: {name:"constant", amount}
     }
 }
@@ -713,8 +722,8 @@ NumberComparison = operator:("exactly" {return "===";})? _ amount:Number
 // Modifiers
 Multiplier = "once"? _ "For"i _ t:(
 	KeyCount
-	/"each A in your pool"
-	/"each neighbor it has" //This is actually just a subset of card counting multipliers
+	/CurrentAmberCount
+	/NeighborCount //This is actually just a subset of card counting multipliers
 	/TriggerMultiplier
 	/CardCount) {
     return t
@@ -731,7 +740,12 @@ KeyCount = "each" _ not:"un"? _"forged key" _ player:PlayerTarget _ ("have"/"has
 		: q
 }
 
+CurrentAmberCount = "each A in" _ player:PlayerTarget _ "pool" {
+	return {name: "amberCount", player};
+}
+
 CardCount = "each"i _ card:ConditionalCardTarget {return Object.assign({name:"cards"}, card);}
+NeighborCount = "each neighbor it has" {return {name:"cards", type: "creature", conditions: [{name: "neighboring"}]};}
 
 //Descriptors
 House = ("brobnar"i / "dis"i / "logos"i / "mars"i / "sanctum"i / "shadows"i / "untamed"i 

@@ -5,7 +5,7 @@ class KillzordMk9001 extends Card {
     //This creature gains skirmish and, “Fight: Gain 1 chain.”
     setupCardAbilities(ability) {
         this.whileAttached({
-            effect: [ability.effects.modifyArmor(2), ability.effects.modifyPower(2)]
+            effect: [ability.effects.modifyArmor(() => 2), ability.effects.modifyPower(() => 2)]
         });
         this.whileAttached({
             effect: [

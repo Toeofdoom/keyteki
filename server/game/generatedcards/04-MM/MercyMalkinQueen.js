@@ -8,7 +8,7 @@ class MercyMalkinQueen extends Card {
         //Keywords: skirmish
         this.reaction({
             when: {
-                entersPlay: (event, context) =>
+                onCardEntersPlay: (event, context) =>
                     event.card.controller === context.player &&
                     event.card.type === 'creature' &&
                     event.card.hasTrait('cat')

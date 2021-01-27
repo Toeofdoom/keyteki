@@ -14,7 +14,7 @@ class Stomp extends Card {
                 target: {
                     cardType: 'creature',
                     controller: 'self',
-                    gameAction: ability.actions.exalt()
+                    gameAction: ability.actions.exalt({ amount: 1 })
                 }
             }
         });

@@ -5,7 +5,9 @@ class MushroomMan extends Card {
     setupCardAbilities(ability) {
         this.persistentEffect({
             targetController: 'any',
-            effect: ability.effects.modifyPower(3)
+            effect: ability.effects.modifyPower(
+                (card, context) => 3 * (3 - context.player.getForgedKeys())
+            )
         });
     }
 }

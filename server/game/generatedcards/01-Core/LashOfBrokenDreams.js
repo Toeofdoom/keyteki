@@ -6,7 +6,7 @@ class LashOfBrokenDreams extends Card {
         this.action({
             gameAction: ability.actions.lastingEffect({
                 targetController: 'any',
-                effect: ability.effects.modifyKeyCost(3)
+                effect: ability.effects.modifyKeyCost(() => 3)
             })
         });
     }

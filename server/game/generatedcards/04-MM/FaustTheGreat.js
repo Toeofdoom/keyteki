@@ -6,14 +6,18 @@ class FaustTheGreat extends Card {
     setupCardAbilities(ability) {
         this.persistentEffect({
             targetController: 'opponent',
-            effect: ability.effects.modifyKeyCost(1)
+            effect: ability.effects.modifyKeyCost(
+                (player, context) =>
+                    1 *
+                    context.player.creaturesInPlay.filter((card) => card.hasToken('amber')).length
+            )
         });
         this.play({
             target: {
                 optional: true,
                 cardType: 'creature',
                 controller: 'self',
-                gameAction: ability.actions.exalt()
+                gameAction: ability.actions.exalt({ amount: 1 })
             }
         });
     }

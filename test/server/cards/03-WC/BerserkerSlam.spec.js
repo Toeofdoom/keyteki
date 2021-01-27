@@ -35,9 +35,6 @@ describe('Berserker Slam', function () {
             expect(this.forgemasterOg.location).toBe('discard');
             expect(this.player1.amber).toBe(4);
             expect(this.player2.amber).toBe(4);
-            expect(this).toHaveRecentChatMessage(
-                'player1 uses Berserker Slam to cause player1 to lose 1 amber'
-            );
         });
 
         it('makes opponent lose 1 amber if destroy opponents flank creature', function () {
@@ -47,9 +44,6 @@ describe('Berserker Slam', function () {
             expect(this.nexus.location).toBe('discard');
             expect(this.player1.amber).toBe(5);
             expect(this.player2.amber).toBe(3);
-            expect(this).toHaveRecentChatMessage(
-                'player1 uses Berserker Slam to cause player2 to lose 1 amber'
-            );
         });
 
         it('doesnt lose our amber if doesnt destroy our flank creature', function () {
@@ -82,9 +76,6 @@ describe('Berserker Slam', function () {
             this.player1.clickCard(this.urchin);
             expect(this.player1.amber).toBe(4);
             expect(this.player2.amber).toBe(5);
-            expect(this).toHaveRecentChatMessage(
-                'player1 uses Berserker Slam to cause player1 to lose 1 amber'
-            );
             expect(this.urchin.location).toBe('discard');
         });
     });

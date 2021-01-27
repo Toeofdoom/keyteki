@@ -30,9 +30,7 @@ class Deusillus extends Card {
                     amount: 1
                 })),
                 ability.actions.dealDamage((context) => ({
-                    target: context.game.creaturesInPlay.filter(
-                        (card) => card.controller !== context.player
-                    ),
+                    target: context.player.opponent.creaturesInPlay,
                     amount: 2
                 }))
             ])

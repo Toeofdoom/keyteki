@@ -50,7 +50,7 @@ targetController: '{{targetController}}',
 {% if ability.condition -%}
 {{- Condition.formatCondition(ability.condition, refs) -}},
 {% endif -%}
-{%- set c = Condition.cardConditionInternal(ability.target, refs) -%}
+{%- set c = Condition.cardConditionInternal(ability.target, refs | filteredController) -%}
 {%- if c.length > 0 -%}
 match: (card{{", context" if c.includes("context") }}) => {{c}},
 {% endif -%}
@@ -157,7 +157,7 @@ ability.actions.sequential([{#Sequential is not always necessary, can sometimes 
 {%- if target.cardStat -%}
 {{j()}}cardStat: (card) => {{Condition.formatQuantity(target.cardStat, refs)}}
 {%- endif -%}
-{%- set c = Condition.cardConditionInternal(target, refs | filteredType(target.type), effect) -%}
+{%- set c = Condition.cardConditionInternal(target, refs | filteredType(target.type) | filteredController, effect) -%}
 {%- if c.length > 0 -%}
 {{j()}}cardCondition: (card{{", context" if c.includes("context") }}) => {{ c }}
 {%- endif -%}
@@ -180,7 +180,7 @@ ability.actions.sequential([
         {%- endfor %}
 ])
     {%- elif ['forRemainderOfTurn', 'lastingEffect'].includes(effect.name) -%}
-        {%- if effect.durationEffect.name == "reaction" or not effect.durationEffect.target -%}
+        {%- if effect.durationEffect.name == "reaction" or not effect.durationEffect.target or effect.durationEffect.target.mode == 'all' -%}
 ability.actions.{{effect.name}}({{formatParams(effect, refs, allowContext=false)}})
         {%- else -%}
 ability.actions.cardLastingEffect({{formatParams(effect.durationEffect, refs)}})
@@ -215,8 +215,10 @@ ability.actions.cardLastingEffect({{formatParams(effect.durationEffect, refs)}})
         {%- endif -%}
     {%- elif ['entersPlayReady', 'entersPlayStunned'].includes(effect.name) -%}
 ability.effects.{{effect.name}}()
-    {%- elif ['modifyPower', 'modifyArmor', 'modifyKeyCost', 'modifyHandSize'].includes(effect.name) -%}
-ability.effects.{{effect.name}}({{effect.amount}})
+    {%- elif ['modifyPower', 'modifyArmor'].includes(effect.name) -%}
+ability.effects.{{effect.name}}({{Condition.provideParameters(['card', 'context'], formatAmount(effect, refs))}})
+    {%- elif ['modifyKeyCost', 'modifyHandSize'].includes(effect.name) -%}
+ability.effects.{{effect.name}}({{Condition.provideParameters(['player', 'context'], formatAmount(effect, refs))}})
     {%- elif ['cardCannot', 'playerCannot'].includes(effect.name) -%}
 ability.effects.{{effect.name}}('{{effect.effect}}')
     {%- elif effect.name == 'unknown' or not effect.name -%}
@@ -278,13 +280,14 @@ onDamageDealt: {{Condition.eventCondition(trigger, refs | check('event.card'))}}
 {%- endif -%}
 {%- if ability.amount == 'all' -%}
 {{j()}}all: true
-{%- elif ability.multiplier != null and ability.amount != null -%}
-{{j()}}amount: {{ability.amount}} * {{Condition.formatQuantity(ability.multiplier, refs)}}
 {%- elif ability.amount != null -%}
-{{j()}}amount: {{ability.amount}}
+{{j()}}amount: {{formatAmount(ability, refs)}}
 {%- endif -%}
 {%- if ability.splash != null -%}
 {{j()}}splash: {{ability.splash}}
+{%- endif -%}
+{%- if ability.ignoreArmor -%}
+{{j()}}ignoreArmor: true
 {%- endif -%}
 {%- if ability.recipient != null -%}
 {{j()}}recipient: {{Condition.formatPlayer(ability.recipient, refs)}}
@@ -308,6 +311,13 @@ onDamageDealt: {{Condition.eventCondition(trigger, refs | check('event.card'))}}
 {%- endif -%}
 {%- endmacro -%}
 
+{% macro formatAmount(ability, refs) %}
+{%- if ability.multiplier != null and ability.amount != null -%}
+{{ability.amount}} * {{Condition.formatQuantity(ability.multiplier, refs)}}
+{%- elif ability.amount != null -%}
+{{ability.amount}}
+{%- endif -%}
+{%- endmacro -%}
 
 {% macro formatPlayer(targetPlayer, refs) %}
 {%- if targetPlayer === 'self' -%}
@@ -338,7 +348,7 @@ when: {
 {%- elif reaction.trigger.trigger == "destroyed" -%}
 {{formatActions(reaction.actions, refs | itIs('context.event.clone'))}}
 {%- else -%}
-{{formatActions(reaction.actions, refs | itIs('context.event.card'))}}
+{{formatActions(reaction.actions, refs | itIs("context.event.card"))}}
 {%- endif-%}
 {%- endmacro -%}
 

@@ -5,9 +5,7 @@ class CityStateInterest extends Card {
     setupCardAbilities(ability) {
         this.play({
             gameAction: ability.actions.capture((context) => ({
-                target: context.game.creaturesInPlay.filter(
-                    (card) => card.controller === context.player
-                ),
+                target: context.player.creaturesInPlay,
                 amount: 1
             }))
         });

@@ -7,12 +7,10 @@ class BrothersInBattle extends Card {
             target: {
                 mode: 'house'
             },
-            gameAction: ability.actions.cardLastingEffect((context) => ({
-                target: context.game.creaturesInPlay.filter(
-                    (card) => card.controller === context.player && card.hasHouse(context.house)
-                ),
+            gameAction: ability.actions.forRemainderOfTurn({
+                match: (card, context) => card.type === 'creature' && card.hasHouse(context.house),
                 effect: ability.effects.mayFight()
-            }))
+            })
         });
     }
 }

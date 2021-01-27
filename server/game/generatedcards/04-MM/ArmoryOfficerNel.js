@@ -7,7 +7,7 @@ class ArmoryOfficerNel extends Card {
         //Keywords: enhance
         this.reaction({
             when: {
-                entersPlay: (event) => event.card.type === 'upgrade'
+                onCardEntersPlay: (event) => event.card.type === 'upgrade'
             },
             gameAction: ability.actions.draw({ amount: 1 })
         });

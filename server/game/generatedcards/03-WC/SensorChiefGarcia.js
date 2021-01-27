@@ -8,7 +8,7 @@ class SensorChiefGarcia extends Card {
             reap: true,
             gameAction: ability.actions.lastingEffect({
                 targetController: 'any',
-                effect: ability.effects.modifyKeyCost(2)
+                effect: ability.effects.modifyKeyCost(() => 2)
             })
         });
     }

@@ -17,7 +17,6 @@ describe('Commander Chan', function () {
             this.player1.reap(this.commanderChan);
             expect(this.player1).toHavePrompt('Commander Chan');
             expect(this.player1).toBeAbleToSelect(this.commanderRemiel);
-            expect(this.player1).not.toBeAbleToSelect(this.lieutenantKhrkhar);
             this.player1.clickCard(this.commanderRemiel);
             this.player1.clickPrompt('Reap with this creature');
             expect(this.player1.amber).toBe(3);
@@ -28,7 +27,6 @@ describe('Commander Chan', function () {
             this.player1.fightWith(this.commanderChan, this.dustPixie);
             expect(this.player1).toHavePrompt('Commander Chan');
             expect(this.player1).toBeAbleToSelect(this.commanderRemiel);
-            expect(this.player1).not.toBeAbleToSelect(this.lieutenantKhrkhar);
             this.player1.clickCard(this.commanderRemiel);
             this.player1.clickPrompt('Reap with this creature');
             expect(this.player1.amber).toBe(2);

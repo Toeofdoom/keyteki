@@ -6,10 +6,17 @@ class GrumpBuggy extends Card {
     setupCardAbilities(ability) {
         this.persistentEffect({
             targetController: 'opponent',
-            effect: ability.effects.modifyKeyCost(1)
+            effect: ability.effects.modifyKeyCost(
+                (player, context) =>
+                    1 * context.player.creaturesInPlay.filter((card) => card.power >= 5).length
+            )
         });
         this.persistentEffect({
-            effect: ability.effects.modifyKeyCost(1)
+            effect: ability.effects.modifyKeyCost(
+                (player, context) =>
+                    1 *
+                    context.player.opponent.creaturesInPlay.filter((card) => card.power >= 5).length
+            )
         });
     }
 }

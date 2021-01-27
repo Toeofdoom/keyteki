@@ -5,10 +5,11 @@ class Ambertracker extends Card {
     setupCardAbilities(ability) {
         this.play({
             gameAction: ability.actions.dealDamage((context) => ({
-                target: context.game.creaturesInPlay.filter(
-                    (card) => card.controller !== context.player && card.hasToken('amber')
+                target: context.player.opponent.creaturesInPlay.filter((card) =>
+                    card.hasToken('amber')
                 ),
-                amount: 2
+                amount: 2,
+                ignoreArmor: true
             }))
         });
     }

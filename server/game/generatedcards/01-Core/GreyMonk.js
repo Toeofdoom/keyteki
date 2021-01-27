@@ -6,7 +6,7 @@ class GreyMonk extends Card {
     setupCardAbilities(ability) {
         this.persistentEffect({
             match: (card) => card.type === 'creature',
-            effect: ability.effects.modifyArmor(1)
+            effect: ability.effects.modifyArmor(() => 1)
         });
         this.reap({
             target: {

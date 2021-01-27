@@ -5,7 +5,7 @@ class BarristerJoya extends Card {
     //
     setupCardAbilities(ability) {
         this.persistentEffect({
-            targetController: 'any',
+            targetController: 'opponent',
             match: (card) => card.type === 'creature',
             effect: ability.effects.cardCannot('reap')
         });

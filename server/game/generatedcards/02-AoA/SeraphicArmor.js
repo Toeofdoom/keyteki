@@ -5,7 +5,7 @@ class SeraphicArmor extends Card {
     //Play: Fully heal this creature.
     setupCardAbilities(ability) {
         this.whileAttached({
-            effect: ability.effects.modifyArmor(1)
+            effect: ability.effects.modifyArmor(() => 1)
         });
         this.play({
             gameAction: ability.actions.heal((context) => ({

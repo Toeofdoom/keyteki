@@ -7,11 +7,8 @@ class Lumilu extends Card {
             gameAction: ability.actions.gainAmber((context) => ({
                 amount:
                     1 *
-                    context.game.creaturesInPlay.filter(
-                        (card) =>
-                            card.controller === context.player &&
-                            card !== context.source &&
-                            card.hasTrait('beast')
+                    context.player.creaturesInPlay.filter(
+                        (card) => card !== context.source && card.hasTrait('beast')
                     ).length
             }))
         });

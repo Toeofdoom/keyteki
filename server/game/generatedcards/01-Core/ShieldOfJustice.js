@@ -4,12 +4,10 @@ class ShieldOfJustice extends Card {
     //Play: For the remainder of the turn, each friendly creature cannot be dealt damage.
     setupCardAbilities(ability) {
         this.play({
-            gameAction: ability.actions.cardLastingEffect((context) => ({
-                target: context.game.creaturesInPlay.filter(
-                    (card) => card.controller === context.player
-                ),
+            gameAction: ability.actions.forRemainderOfTurn({
+                match: (card) => card.type === 'creature',
                 effect: ability.effects.cardCannot('damage')
-            }))
+            })
         });
     }
 }

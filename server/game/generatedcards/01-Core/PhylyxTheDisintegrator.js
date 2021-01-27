@@ -9,11 +9,8 @@ class PhylyxTheDisintegrator extends Card {
             gameAction: ability.actions.loseAmber((context) => ({
                 amount:
                     1 *
-                    context.game.creaturesInPlay.filter(
-                        (card) =>
-                            card.controller === context.player &&
-                            card !== context.source &&
-                            card.hasHouse('mars')
+                    context.player.creaturesInPlay.filter(
+                        (card) => card !== context.source && card.hasHouse('mars')
                     ).length
             }))
         });

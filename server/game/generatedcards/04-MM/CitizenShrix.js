@@ -7,7 +7,8 @@ class CitizenShrix extends Card {
             reap: true,
             gameAction: ability.actions.sequential([
                 ability.actions.exalt((context) => ({
-                    target: context.source
+                    target: context.source,
+                    amount: 1
                 })),
                 ability.actions.steal({ amount: 1 })
             ])

@@ -2,7 +2,7 @@
 {# Card condition requires context if something checks it #}
 {# Card filter already has context #}
 {%- macro cardFilter(target, refs) -%}
-{%- set c = cardConditionInternal(target, refs, null, true) -%}
+{%- set c = cardConditionInternal(target, refs, null) -%}
 {%- if c.length > 0 -%}
 .filter(
     (card) => {{c | indent(4)}}
@@ -10,12 +10,12 @@
 {%- endif -%}
 {%- endmacro -%}
 
-{%- macro cardConditionInternal(target, refs, effect=null, checkController = false) -%}
+{%- macro cardConditionInternal(target, refs, effect=null) -%}
 {% set j = joiner(' && ') -%}
 {%- if effect != null and effect.name == 'use' -%}
 {{j()}}{{refs.check}}.exhausted === false{# Is this required, or inbuilt anyway? #}
 {%- endif -%}
-{%- if target.controller != null and checkController -%}
+{%- if target.controller != null and not refs.filteredController -%}
 {{j()}}{{controllerCondition(target, refs)}}
 {%- endif -%}
 {%- if target.type != null and refs.filteredType != target.type -%}
@@ -105,7 +105,7 @@ condition: {{provideParameters(['context'], singleCondition(condition, refs))}}
 {{j()}}{{singleCondition(c, refs)}}
     {%- endfor -%}
 {%- endif -%}
-{%- set cardCondition = cardConditionInternal(trigger.card, refs, null, true) -%}
+{%- set cardCondition = cardConditionInternal(trigger.card, refs, null) -%}
 {%- if cardCondition.length > 0 -%}
 {{j()}}{{cardCondition}}
 {%- endif -%}
@@ -124,12 +124,14 @@ condition: {{provideParameters(['context'], singleCondition(condition, refs))}}
 {{refs.check}}.power
 {%- elif quantity.name == "eventCount" -%}
 this.{{quantity.action}}Tracker.events.filter(
-    (event) => {{cardConditionInternal(quantity, refs | check('event.card'))}}
+    (event) => {{cardConditionInternal(quantity, refs | check('event.card') | filteredController(false))}}
 ).length
 {%- elif quantity.name == "negative" -%}
 -{{formatQuantity(quantity.quantity, refs)}}
 {%- elif quantity.name == "keyCount" -%}
 {{formatPlayer(quantity.player)}}.getForgedKeys()
+{%- elif quantity.name == "amberCount" -%}
+{{formatPlayer(quantity.player)}}.amber
 {%- elif quantity.name == "cards" -%}
 {{cardsInPlay(quantity, refs)}}.length
 {%- elif quantity.name == "healedThisWay" -%}
@@ -165,6 +167,8 @@ context.player.opponent {# TODO: make this refer to something in refs. #}
 {%- if target.mode == "all" -%}
     {%- if target.location == null or target.location == "play area" -%}
 {{cardsInPlay(target, refs)}}
+    {%- elif target.location == "deck" -%}
+context.player.deck.slice(0, Math.min(context.player.deck.length, {{target.numCards}}))
     {%- elif target.location == "discard" -%}
 {{formatPlayer(target.controller, refs)}}.discard{{cardFilter(target, refs)}}
     {%- else -%}
@@ -183,7 +187,13 @@ context.player.opponent {# TODO: make this refer to something in refs. #}
 
 {%- macro cardsInPlay(target, refs) -%}
 {%- if target.type == "creature" -%}
+    {%- if target.controller == "self" -%}
+{{refs.player}}.creaturesInPlay{{cardFilter(target, refs | filteredType('creature') | filteredController)}}
+    {%- elif target.controller == "opponent" -%}
+{{refs.player}}.opponent.creaturesInPlay{{cardFilter(target, refs | filteredType('creature') | filteredController)}}
+    {%- else -%}
 context.game.creaturesInPlay{{cardFilter(target, refs | filteredType('creature'))}}
+    {%- endif -%}
 {%- elif target.type == "upgrade" -%}
 {#- TODO: Could use a shortcut when finding upgrades on a specific card! -#}
 context.game.creaturesInPlay.flatMap((card) => card.upgrades || []){{cardFilter(target, refs | filteredType('upgrade'))}}

@@ -1,5 +1,8 @@
 {%- import "Ability.njk" as Ability -%}
 const Card = require('../../Card.js');
+{%- if (abilities | findEventListeners).length > 0 %}
+const SimpleEventTracker = require('../../SimpleEventTracker.js');
+{%- endif %}
 
 class {{ name }} extends Card {
 {%- if comments != "none" %}
@@ -9,7 +12,7 @@ class {{ name }} extends Card {
 {%- endif %}
     setupCardAbilities(ability) {
 {%- for eventListener in abilities | findEventListeners %}
-        this.{{eventListener}}Tracker = { events: [] }
+        this.{{eventListener}}Tracker = new SimpleEventTracker(this.game, '{{eventListener}}');
 {%- endfor %}
         {%- for ability in abilities %}
         {{Ability.formatAbility(ability, refs) | indent(8)}}

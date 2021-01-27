@@ -21,14 +21,6 @@ describe('Library of Polliasaurus', function () {
             expect(this.player1).toHavePrompt('Choose a card to play, discard or use');
             expect(this.player1.amber).toBe(1);
         });
-
-        it('should not prompt for any creature, since friendly creature has no.', function () {
-            this.player1.playCreature(this.questorJarta);
-            this.player1.useAction(this.libraryOfPolliasaurus);
-
-            expect(this.player1).toHavePrompt('Choose a card to play, discard or use');
-            expect(this.player1.amber).toBe(1);
-        });
     });
 });
 
@@ -56,7 +48,6 @@ describe("Library of Polliasaurus's ability", function () {
 
         expect(this.player1).toHavePrompt('Choose a creature');
         expect(this.player1).toBeAbleToSelect(this.questorJarta);
-        expect(this.player1).not.toBeAbleToSelect(this.lamindra);
         expect(this.player1).not.toBeAbleToSelect(this.gub);
         expect(this.player1).not.toBeAbleToSelect(this.shooler);
 

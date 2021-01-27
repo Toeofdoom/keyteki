@@ -7,11 +7,8 @@ class Bumblebird extends Card {
         //Keywords: alpha
         this.play({
             gameAction: ability.actions.addPowerCounter((context) => ({
-                target: context.game.creaturesInPlay.filter(
-                    (card) =>
-                        card.controller === context.player &&
-                        card !== context.source &&
-                        card.hasHouse('untamed')
+                target: context.player.creaturesInPlay.filter(
+                    (card) => card !== context.source && card.hasHouse('untamed')
                 ),
                 amount: 2
             }))

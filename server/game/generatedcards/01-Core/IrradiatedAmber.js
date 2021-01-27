@@ -6,9 +6,7 @@ class IrradiatedAmber extends Card {
         this.play({
             condition: (context) => context.player.opponent.amber >= 6,
             gameAction: ability.actions.dealDamage((context) => ({
-                target: context.game.creaturesInPlay.filter(
-                    (card) => card.controller !== context.player
-                ),
+                target: context.player.opponent.creaturesInPlay,
                 amount: 3
             }))
         });

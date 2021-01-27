@@ -6,8 +6,8 @@ class DumaTheMartyr extends Card {
         this.destroyed({
             gameAction: ability.actions.sequential([
                 ability.actions.heal((context) => ({
-                    target: context.game.creaturesInPlay.filter(
-                        (card) => card.controller === context.player && card !== context.source
+                    target: context.player.creaturesInPlay.filter(
+                        (card) => card !== context.source
                     ),
                     fully: true
                 })),

@@ -8,7 +8,7 @@ class Amberheart extends Card {
                 cardType: 'creature',
                 controller: 'self',
                 gameAction: ability.actions.sequential([
-                    ability.actions.exalt(),
+                    ability.actions.exalt({ amount: 1 }),
                     ability.actions.ward(),
                     ability.actions.heal({ fully: true })
                 ])

@@ -5,7 +5,7 @@ class ImperialScutum extends Card {
     setupCardAbilities(ability) {
         this.whileAttached({
             effect: [
-                ability.effects.modifyArmor(2),
+                ability.effects.modifyArmor(() => 2),
                 ability.effects.gainAbility('destroyed', {
                     gameAction: ability.actions.removeAmber((context) => ({
                         target: context.source,

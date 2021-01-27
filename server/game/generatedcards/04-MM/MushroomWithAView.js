@@ -5,9 +5,7 @@ class MushroomWithAView extends Card {
     setupCardAbilities(ability) {
         this.omni({
             gameAction: ability.actions.heal((context) => ({
-                target: context.game.creaturesInPlay.filter(
-                    (card) => card.controller === context.player
-                ),
+                target: context.player.creaturesInPlay,
                 amount: 1
             }))
         });

@@ -6,7 +6,8 @@ class HedonisticIntent extends Card {
     setupCardAbilities(ability) {
         this.play({
             gameAction: ability.actions.exalt((context) => ({
-                target: context.game.creaturesInPlay.filter((card) => card.isOnFlank())
+                target: context.game.creaturesInPlay.filter((card) => card.isOnFlank()),
+                amount: 1
             }))
         });
     }

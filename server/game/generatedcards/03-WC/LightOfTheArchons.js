@@ -4,7 +4,22 @@ class LightOfTheArchons extends Card {
     //This creature gets +1 power and +1 armor for each upgrade attached to it.
     setupCardAbilities(ability) {
         this.whileAttached({
-            effect: [ability.effects.modifyPower(1), ability.effects.modifyArmor(1)]
+            effect: [
+                ability.effects.modifyPower(
+                    (card, context) =>
+                        1 *
+                        context.game.creaturesInPlay
+                            .flatMap((card) => card.upgrades || [])
+                            .filter((card) => context.target.upgrades.includes(card)).length
+                ),
+                ability.effects.modifyArmor(
+                    (card, context) =>
+                        1 *
+                        context.game.creaturesInPlay
+                            .flatMap((card) => card.upgrades || [])
+                            .filter((card) => context.target.upgrades.includes(card)).length
+                )
+            ]
         });
     }
 }

@@ -6,19 +6,17 @@ class Gluttony extends Card {
     setupCardAbilities(ability) {
         this.play({
             gameAction: ability.actions.exalt((context) => ({
-                target: context.source
+                target: context.source,
+                amount:
+                    1 * context.player.creaturesInPlay.filter((card) => card.hasTrait('sin')).length
             }))
         });
         this.reap({
-            target: {
-                mode: '',
-                cardType: 'creature',
-                controller: 'self',
-                gameAction: ability.actions.returnAmber((context) => ({
-                    all: true,
-                    recipient: context.player
-                }))
-            }
+            gameAction: ability.actions.returnAmber((context) => ({
+                target: context.player.creaturesInPlay,
+                all: true,
+                recipient: context.player
+            }))
         });
     }
 }

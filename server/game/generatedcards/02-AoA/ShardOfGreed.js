@@ -7,9 +7,7 @@ class ShardOfGreed extends Card {
             gameAction: ability.actions.gainAmber((context) => ({
                 amount:
                     1 *
-                    context.game.creaturesInPlay.filter(
-                        (card) => card.controller === context.player && card.hasTrait('shard')
-                    ).length
+                    context.player.creaturesInPlay.filter((card) => card.hasTrait('shard')).length
             }))
         });
     }

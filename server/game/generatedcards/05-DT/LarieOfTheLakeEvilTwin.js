@@ -6,7 +6,7 @@ class LarieOfTheLakeEvilTwin extends Card {
         this.persistentEffect({
             targetController: 'any',
             condition: (context) => context.player.isTideHigh(),
-            effect: ability.effects.modifyArmor(5)
+            effect: ability.effects.modifyArmor(() => 5)
         });
     }
 }

@@ -6,7 +6,7 @@ class JammerPack extends Card {
         this.whileAttached({
             effect: ability.effects.gainAbility('persistentEffect', {
                 targetController: 'opponent',
-                effect: ability.effects.modifyKeyCost(2)
+                effect: ability.effects.modifyKeyCost(() => 2)
             })
         });
     }

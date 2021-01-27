@@ -5,9 +5,7 @@ class ClearMind extends Card {
     setupCardAbilities(ability) {
         this.play({
             gameAction: ability.actions.removeStun((context) => ({
-                target: context.game.creaturesInPlay.filter(
-                    (card) => card.controller === context.player
-                )
+                target: context.player.creaturesInPlay
             }))
         });
     }

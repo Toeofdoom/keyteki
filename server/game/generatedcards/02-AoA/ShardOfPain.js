@@ -10,9 +10,8 @@ class ShardOfPain extends Card {
                 gameAction: ability.actions.dealDamage((context) => ({
                     amount:
                         1 *
-                        context.game.creaturesInPlay.filter(
-                            (card) => card.controller === context.player && card.hasTrait('shard')
-                        ).length
+                        context.player.creaturesInPlay.filter((card) => card.hasTrait('shard'))
+                            .length
                 }))
             }
         });

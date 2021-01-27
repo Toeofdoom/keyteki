@@ -5,7 +5,13 @@ class Knoxx extends Card {
     setupCardAbilities(ability) {
         this.persistentEffect({
             targetController: 'any',
-            effect: ability.effects.modifyPower(3)
+            effect: ability.effects.modifyPower(
+                (card, context) =>
+                    3 *
+                    context.game.creaturesInPlay.filter((card) =>
+                        context.source.neighbors.includes(card)
+                    ).length
+            )
         });
     }
 }

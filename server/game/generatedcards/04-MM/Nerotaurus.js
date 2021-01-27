@@ -5,12 +5,16 @@ class Nerotaurus extends Card {
     //Reap: Enemy creatures cannot fight during your opponent’s next turn.
     setupCardAbilities(ability) {
         this.fight({
-            gameAction: ability.actions.cardLastingEffect({
+            gameAction: ability.actions.lastingEffect({
+                targetController: 'opponent',
+                match: (card) => card.type === 'creature',
                 effect: ability.effects.cardCannot('reap')
             })
         });
         this.reap({
-            gameAction: ability.actions.cardLastingEffect({
+            gameAction: ability.actions.lastingEffect({
+                targetController: 'opponent',
+                match: (card) => card.type === 'creature',
                 effect: ability.effects.cardCannot('fight')
             })
         });

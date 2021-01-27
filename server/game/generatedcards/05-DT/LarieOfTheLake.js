@@ -6,7 +6,7 @@ class LarieOfTheLake extends Card {
         this.persistentEffect({
             condition: (context) => context.player.isTideHigh(),
             match: (card) => card.type === 'creature',
-            effect: ability.effects.modifyArmor(2)
+            effect: ability.effects.modifyArmor(() => 2)
         });
     }
 }

@@ -8,7 +8,10 @@ class HadronCollision extends Card {
                 cardType: 'creature',
                 gameAction: ability.actions.sequential([
                     ability.actions.removeWard(),
-                    ability.actions.dealDamage({ amount: 3 })
+                    ability.actions.dealDamage({
+                        amount: 3,
+                        ignoreArmor: true
+                    })
                 ])
             }
         });

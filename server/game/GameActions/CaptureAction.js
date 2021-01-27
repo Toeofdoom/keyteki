@@ -4,6 +4,7 @@ class CaptureAction extends CardAction {
     setDefaultProperties() {
         this.amount = 1;
         this.player = false;
+        this.all = false;
     }
 
     setup() {
@@ -55,7 +56,7 @@ class CaptureAction extends CardAction {
         let params = {
             context: context,
             card: card,
-            amount: Math.min(this.amount, player.amber)
+            amount: this.all ? player.amber : Math.min(this.amount, player.amber)
         };
         return super.createEvent('onCapture', params, (event) => {
             if (!player.anyEffect('captureFromPool')) {

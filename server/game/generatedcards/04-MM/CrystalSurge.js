@@ -6,7 +6,8 @@ class CrystalSurge extends Card {
     setupCardAbilities(ability) {
         this.play({
             gameAction: ability.actions.exalt((context) => ({
-                target: context.game.creaturesInPlay.filter((card) => card.hasTrait('mutant'))
+                target: context.game.creaturesInPlay.filter((card) => card.hasTrait('mutant')),
+                amount: 1
             }))
         });
     }

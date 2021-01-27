@@ -42,7 +42,6 @@ describe("Mug's play ability", function () {
     it('should move 1 amber and deal 2 damages to friendly creature', function () {
         this.player1.play(this.mug);
 
-        expect(this.player1).toHavePrompt('Choose a captured amber to move to your pool.');
         expect(this.player1).toBeAbleToSelect(this.flaxia);
         expect(this.player1).toBeAbleToSelect(this.troll);
         expect(this.player1).toBeAbleToSelect(this.lamindra);
@@ -81,7 +80,6 @@ describe("Mug's play ability", function () {
     it('should deal 2 damages to creature without amber', function () {
         this.player1.play(this.mug);
 
-        expect(this.player1).toHavePrompt('Choose a captured amber to move to your pool.');
         expect(this.player1).toBeAbleToSelect(this.flaxia);
         expect(this.player1).toBeAbleToSelect(this.troll);
         expect(this.player1).toBeAbleToSelect(this.lamindra);

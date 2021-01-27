@@ -5,6 +5,9 @@
 		},
 		{
 			"path": "C:\\dev\\keyteki-json-data"
+		},
+		{
+			"path": "keyteki-json-data"
 		}
 	],
 	"settings": {}

@@ -8,7 +8,10 @@ class AutoEncoder extends Card {
                 onCardDiscarded: (event, context) =>
                     event.location === 'hand' && event.card.controller === context.player
             },
-            gameAction: ability.actions.archive({ location: 'hand' })
+            gameAction: ability.actions.archive((context) => ({
+                target: context.player.deck.slice(0, Math.min(context.player.deck.length, 1)),
+                location: 'deck'
+            }))
         });
     }
 }

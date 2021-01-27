@@ -6,7 +6,7 @@ class MusthicMurmook extends Card {
     setupCardAbilities(ability) {
         this.persistentEffect({
             targetController: 'any',
-            effect: ability.effects.modifyKeyCost(1)
+            effect: ability.effects.modifyKeyCost(() => 1)
         });
         this.play({
             target: {

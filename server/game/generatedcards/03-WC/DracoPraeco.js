@@ -6,7 +6,8 @@ class DracoPraeco extends Card {
         this.reap({
             optional: true,
             gameAction: ability.actions.exalt((context) => ({
-                target: context.source
+                target: context.source,
+                amount: 1
             })),
             then: {
                 target: {

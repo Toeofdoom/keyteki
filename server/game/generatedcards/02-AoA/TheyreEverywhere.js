@@ -6,14 +6,14 @@ class TheyreEverywhere extends Card {
         this.play({
             gameAction: ability.actions.sequential([
                 ability.actions.dealDamage((context) => ({
-                    target: context.game.creaturesInPlay.filter(
-                        (card) => card.controller !== context.player && card.isOnFlank()
+                    target: context.player.opponent.creaturesInPlay.filter((card) =>
+                        card.isOnFlank()
                     ),
                     amount: 2
                 })),
                 ability.actions.dealDamage((context) => ({
-                    target: context.game.creaturesInPlay.filter(
-                        (card) => card.controller !== context.player && !card.isOnFlank()
+                    target: context.player.opponent.creaturesInPlay.filter(
+                        (card) => !card.isOnFlank()
                     ),
                     amount: 1
                 }))

@@ -12,30 +12,34 @@ class DoomSigil extends Card {
             })
         });
         /*{
-          "name": "comparison",
-          "operator": "===",
-          "b": {
-            "name": "constant",
-            "amount": 0
+          "name": "terminalCondition",
+          "condition": {
+            "name": "comparison",
+            "operator": "===",
+            "b": {
+              "name": "constant",
+              "amount": 0
+            },
+            "a": {
+              "name": "cards",
+              "type": "creature",
+              "controller": null,
+              "conditions": []
+            }
           },
-          "a": {
-            "name": "cards",
-            "type": "creature",
-            "controller": null,
-            "conditions": []
-          }
-        }*/
-        /*" "*/
-        /*{
-          "name": "destroy",
-          "target": {
-            "mode": "self"
-          },
-          "splash": null,
-          "multiplier": null,
-          "noPrevent": null,
-          "optional": false,
-          "condition": null
+          "actions": [
+            {
+              "name": "destroy",
+              "target": {
+                "mode": "self"
+              },
+              "splash": null,
+              "multiplier": null,
+              "ignoreArmor": null,
+              "optional": false,
+              "condition": null
+            }
+          ]
         }*/
     }
 }

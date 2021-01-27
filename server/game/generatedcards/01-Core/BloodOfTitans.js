@@ -4,7 +4,7 @@ class BloodOfTitans extends Card {
     //This creature gets +5 power.
     setupCardAbilities(ability) {
         this.whileAttached({
-            effect: ability.effects.modifyPower(5)
+            effect: ability.effects.modifyPower(() => 5)
         });
     }
 }

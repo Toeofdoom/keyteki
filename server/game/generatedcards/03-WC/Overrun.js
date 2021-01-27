@@ -1,13 +1,16 @@
 const Card = require('../../Card.js');
+const SimpleEventTracker = require('../../SimpleEventTracker.js');
 
 class Overrun extends Card {
     //Play: If 3 or more enemy creatures have been destroyed this turn, your opponent loses 2A.
     setupCardAbilities(ability) {
-        this.destroyedTracker = { events: [] };
+        this.onCardDestroyedTracker = new SimpleEventTracker(this.game, 'onCardDestroyed');
         this.play({
-            condition: () =>
-                this.destroyedTracker.events.filter((event) => event.card.type === 'creature')
-                    .length === 3,
+            condition: (context) =>
+                this.onCardDestroyedTracker.events.filter(
+                    (event) =>
+                        event.card.controller !== context.player && event.card.type === 'creature'
+                ).length >= 3,
             gameAction: ability.actions.loseAmber({ amount: 2 })
         });
     }

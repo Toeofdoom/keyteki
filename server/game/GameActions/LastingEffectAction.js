@@ -16,6 +16,7 @@ class LastingEffectAction extends GameAction {
         this.gameAction = null;
         this.message = null;
         this.match = null;
+        this.reactionTarget = null; //Can't just call this "target" as the engine will interpret that as the target of the lasting effect itself
         this.multipleTrigger = true;
     }
 
@@ -27,17 +28,18 @@ class LastingEffectAction extends GameAction {
 
     hasLegalTarget(context) {
         this.update(context);
-        return !!this.effect.length || (this.when && !!this.gameAction);
+        return !!this.effect.length || (this.when && (!!this.gameAction || !!this.reactionTarget));
     }
 
     getEventArray(context) {
-        if (this.when && this.gameAction) {
+        if (this.when && (this.gameAction || this.reactionTarget)) {
             this.effect = [
                 Effects.lastingAbilityTrigger({
                     when: this.when,
                     gameAction: this.gameAction,
                     message: this.message,
                     multipleTrigger: this.multipleTrigger,
+                    target: this.reactionTarget,
                     context: context
                 })
             ];

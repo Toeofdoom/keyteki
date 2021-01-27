@@ -9,8 +9,8 @@ class LongfusedMines extends Card {
                     target: context.source
                 })),
                 ability.actions.dealDamage((context) => ({
-                    target: context.game.creaturesInPlay.filter(
-                        (card) => card.controller !== context.player && !card.isOnFlank()
+                    target: context.player.opponent.creaturesInPlay.filter(
+                        (card) => !card.isOnFlank()
                     ),
                     amount: 3
                 }))

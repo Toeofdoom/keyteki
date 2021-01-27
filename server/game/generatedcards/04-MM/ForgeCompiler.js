@@ -12,9 +12,7 @@ class ForgeCompiler extends Card {
                     target: context.source
                 })),
                 ability.actions.ward((context) => ({
-                    target: context.game.creaturesInPlay.filter(
-                        (card) => card.controller === context.player
-                    )
+                    target: context.player.creaturesInPlay
                 }))
             ])
         });

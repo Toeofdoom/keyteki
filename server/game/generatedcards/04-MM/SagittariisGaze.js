@@ -9,7 +9,7 @@ class SagittariisGaze extends Card {
             target: {
                 cardType: 'creature',
                 cardCondition: (card) => card.hasToken('damage'),
-                gameAction: ability.actions.exalt()
+                gameAction: ability.actions.exalt({ amount: 1 })
             }
         });
     }

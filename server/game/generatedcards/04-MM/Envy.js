@@ -7,9 +7,7 @@ class Envy extends Card {
         //Keywords: elusive
         this.reap({
             condition: (context) =>
-                context.game.creaturesInPlay.filter(
-                    (card) => card.controller === context.player && card.hasTrait('sin')
-                ).length === 2,
+                context.player.creaturesInPlay.filter((card) => card.hasTrait('sin')).length >= 2,
             gameAction: ability.actions.capture({ all: true })
         });
     }

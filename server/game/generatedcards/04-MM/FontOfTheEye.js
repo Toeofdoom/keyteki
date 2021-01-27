@@ -1,13 +1,16 @@
 const Card = require('../../Card.js');
+const SimpleEventTracker = require('../../SimpleEventTracker.js');
 
 class FontOfTheEye extends Card {
     //Omni: If an enemy creature was destroyed this turn, a friendly creature captures 1A.
     setupCardAbilities(ability) {
-        this.destroyedTracker = { events: [] };
+        this.onCardDestroyedTracker = new SimpleEventTracker(this.game, 'onCardDestroyed');
         this.omni({
-            condition: () =>
-                this.destroyedTracker.events.filter((event) => event.card.type === 'creature')
-                    .length >= 1,
+            condition: (context) =>
+                this.onCardDestroyedTracker.events.filter(
+                    (event) =>
+                        event.card.controller !== context.player && event.card.type === 'creature'
+                ).length >= 1,
             target: {
                 cardType: 'creature',
                 controller: 'self',

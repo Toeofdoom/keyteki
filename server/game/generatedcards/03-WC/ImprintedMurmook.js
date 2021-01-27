@@ -6,7 +6,7 @@ class ImprintedMurmook extends Card {
     setupCardAbilities(ability) {
         //Keywords: elusive
         this.persistentEffect({
-            effect: ability.effects.modifyKeyCost(-1)
+            effect: ability.effects.modifyKeyCost(() => -1)
         });
     }
 }

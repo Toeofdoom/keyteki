@@ -5,9 +5,7 @@ class Brammo extends Card {
     setupCardAbilities(ability) {
         this.play({
             gameAction: ability.actions.dealDamage((context) => ({
-                target: context.game.creaturesInPlay.filter(
-                    (card) => card.controller !== context.player && card.isOnFlank()
-                ),
+                target: context.player.opponent.creaturesInPlay.filter((card) => card.isOnFlank()),
                 amount: 2
             }))
         });

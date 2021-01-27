@@ -7,7 +7,7 @@ class CurseOfVanity extends Card {
         this.play({
             target: {
                 mode: '',
-                gameAction: ability.actions.exalt()
+                gameAction: ability.actions.exalt({ amount: 1 })
             }
         });
     }

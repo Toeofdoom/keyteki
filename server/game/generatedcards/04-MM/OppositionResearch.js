@@ -6,7 +6,9 @@ class OppositionResearch extends Card {
     setupCardAbilities(ability) {
         //Keywords: enhance
         this.play({
-            gameAction: ability.actions.cardLastingEffect({
+            gameAction: ability.actions.lastingEffect({
+                targetController: 'opponent',
+                match: (card) => card.type === 'creature',
                 effect: ability.effects.cardCannot('reap')
             })
         });

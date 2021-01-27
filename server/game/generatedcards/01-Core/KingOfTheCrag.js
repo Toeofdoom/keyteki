@@ -6,7 +6,7 @@ class KingOfTheCrag extends Card {
         this.persistentEffect({
             targetController: 'opponent',
             match: (card) => card.type === 'creature' && card.hasHouse('brobnar'),
-            effect: ability.effects.modifyPower(-2)
+            effect: ability.effects.modifyPower(() => -2)
         });
     }
 }

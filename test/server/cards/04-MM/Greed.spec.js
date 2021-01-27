@@ -4,7 +4,7 @@ describe('Greed', function () {
             this.setupTest({
                 player1: {
                     house: 'dis',
-                    inPlay: ['greed', 'gub', 'desire', 'envy', 'pride'],
+                    inPlay: ['greed', 'desire', 'envy', 'pride'],
                     hand: ['shooler', 'shooler', 'shooler', 'shooler'],
                     amber: 1
                 },
@@ -15,7 +15,7 @@ describe('Greed', function () {
             });
         });
 
-        it('should add extra 5 cards to hand', function () {
+        it('should add extra 4 cards to hand', function () {
             this.player1.endTurn();
             expect(this.player1.player.hand.length).toBe(10);
         });

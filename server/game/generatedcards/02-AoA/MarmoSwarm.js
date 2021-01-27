@@ -5,7 +5,7 @@ class MarmoSwarm extends Card {
     setupCardAbilities(ability) {
         this.persistentEffect({
             targetController: 'any',
-            effect: ability.effects.modifyPower(1)
+            effect: ability.effects.modifyPower((card, context) => 1 * context.player.amber)
         });
     }
 }

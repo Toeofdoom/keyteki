@@ -6,7 +6,8 @@ class LegatusRaptor extends Card {
         this.fight({
             optional: true,
             gameAction: ability.actions.exalt((context) => ({
-                target: context.source
+                target: context.source,
+                amount: 1
             })),
             then: {
                 target: {

@@ -8,9 +8,7 @@ class Dharna extends Card {
             gameAction: ability.actions.gainAmber((context) => ({
                 amount:
                     1 *
-                    context.game.creaturesInPlay.filter(
-                        (card) => card.controller === context.player && card.hasToken('damage')
-                    ).length
+                    context.player.creaturesInPlay.filter((card) => card.hasToken('damage')).length
             }))
         });
         this.reap({

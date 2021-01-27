@@ -5,7 +5,10 @@ class Greed extends Card {
     setupCardAbilities(ability) {
         this.persistentEffect({
             targetController: 'any',
-            effect: ability.effects.modifyHandSize(1)
+            effect: ability.effects.modifyHandSize(
+                (player, context) =>
+                    1 * context.player.creaturesInPlay.filter((card) => card.hasTrait('sin')).length
+            )
         });
     }
 }

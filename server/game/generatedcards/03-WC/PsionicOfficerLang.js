@@ -9,7 +9,10 @@ class PsionicOfficerLang extends Card {
                 onReap: (event, context) =>
                     event.card.controller !== context.player && event.card.type === 'creature'
             },
-            gameAction: ability.actions.archive({ location: 'hand' })
+            gameAction: ability.actions.archive((context) => ({
+                target: context.player.deck.slice(0, Math.min(context.player.deck.length, 1)),
+                location: 'deck'
+            }))
         });
     }
 }

@@ -68,11 +68,13 @@ class CardGenerator {
 
         env.addFilter('gainAbility', gainAbility);
         env.addFilter('itIs', itIs);
+        env.addFilter('playerIs', playerIs);
         env.addFilter('eventPlayerIs', eventPlayerIs);
         env.addFilter('check', check);
         env.addFilter('targetted', targetted);
         env.addFilter('then', then);
         env.addFilter('filteredType', filteredType);
+        env.addFilter('filteredController', filteredController);
         env.addFilter('isTargetted', isTargetted);
         env.addFilter('findEventListeners', findEventListeners);
 
@@ -249,13 +251,15 @@ function baseRefs() {
     return {
         this: 'context.source',
         it: 'context.target',
+        player: 'context.player',
         eventPlayer: 'event.player',
         attached: 'context.source.parent',
         check: 'card',
         thenDepth: 1,
         thenContext: null,
         nextThenContext: 'preThenContext',
-        filteredType: null
+        filteredType: null,
+        filteredController: false
     };
 }
 
@@ -265,6 +269,10 @@ function gainAbility(refs) {
 
 function itIs(refs, it) {
     return Object.assign({}, refs, { it });
+}
+
+function playerIs(refs, player) {
+    return Object.assign({}, refs, { player });
 }
 
 function eventPlayerIs(refs, eventPlayer) {
@@ -290,6 +298,10 @@ function targetted(refs, target) {
 
 function filteredType(refs, filteredType) {
     return Object.assign({}, refs, { filteredType });
+}
+
+function filteredController(refs, filteredController = true) {
+    return Object.assign({}, refs, { filteredController });
 }
 
 function findEventListeners(abilities) {

@@ -6,9 +6,7 @@ class RadiantTruth extends Card {
     setupCardAbilities(ability) {
         this.play({
             gameAction: ability.actions.stun((context) => ({
-                target: context.game.creaturesInPlay.filter(
-                    (card) => card.controller !== context.player && !card.isOnFlank()
-                )
+                target: context.player.opponent.creaturesInPlay.filter((card) => !card.isOnFlank())
             }))
         });
     }

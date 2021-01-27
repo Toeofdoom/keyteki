@@ -8,9 +8,7 @@ class ProfessorSutterkin extends Card {
             gameAction: ability.actions.draw((context) => ({
                 amount:
                     1 *
-                    context.game.creaturesInPlay.filter(
-                        (card) => card.controller === context.player && card.hasHouse('logos')
-                    ).length
+                    context.player.creaturesInPlay.filter((card) => card.hasHouse('logos')).length
             }))
         });
     }

@@ -9,7 +9,10 @@ class DirectorOfZYX extends Card {
             when: {
                 onBeginRound: (event, context) => context.player === this.game.activePlayer
             },
-            gameAction: ability.actions.archive({ location: 'hand' })
+            gameAction: ability.actions.archive((context) => ({
+                target: context.player.deck.slice(0, Math.min(context.player.deck.length, 1)),
+                location: 'deck'
+            }))
         });
     }
 }

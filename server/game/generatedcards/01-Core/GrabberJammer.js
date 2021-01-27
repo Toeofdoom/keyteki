@@ -6,7 +6,7 @@ class GrabberJammer extends Card {
     setupCardAbilities(ability) {
         this.persistentEffect({
             targetController: 'opponent',
-            effect: ability.effects.modifyKeyCost(1)
+            effect: ability.effects.modifyKeyCost(() => 1)
         });
         this.fight({
             reap: true,

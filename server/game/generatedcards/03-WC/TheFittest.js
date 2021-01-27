@@ -5,9 +5,7 @@ class TheFittest extends Card {
     setupCardAbilities(ability) {
         this.play({
             gameAction: ability.actions.addPowerCounter((context) => ({
-                target: context.game.creaturesInPlay.filter(
-                    (card) => card.controller === context.player
-                ),
+                target: context.player.creaturesInPlay,
                 amount: 1
             }))
         });
