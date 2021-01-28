@@ -6,7 +6,7 @@ class FollowTheLeader extends Card {
         this.play({
             gameAction: ability.actions.forRemainderOfTurn({
                 match: (card) => card.type === 'creature',
-                effect: ability.effects.mayFight()
+                effect: ability.effects.canFight()
             })
         });
     }

@@ -9,7 +9,7 @@ class BrothersInBattle extends Card {
             },
             gameAction: ability.actions.forRemainderOfTurn({
                 match: (card, context) => card.type === 'creature' && card.hasHouse(context.house),
-                effect: ability.effects.mayFight()
+                effect: ability.effects.canFight()
             })
         });
     }

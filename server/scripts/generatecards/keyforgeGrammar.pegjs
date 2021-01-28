@@ -527,7 +527,7 @@ LimitFightDamage = "only deals" _ amount:Number "D when fighting" {return [{name
 
 //Permission effects - work in progress
 MayBeUsed = e:(MayFight/MayUse) {return [e]}
-MayFight = "may fight" { return {name: 'mayFight'}; }
+MayFight = "may fight" { return {name: 'canFight'}; }
 MayUse = "may use" { return {name: 'mayUse'}; }
 
 //Targetting
