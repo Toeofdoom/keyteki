@@ -54,16 +54,12 @@ class AbilityTargetSelect {
             return false;
         }
 
-        if (this.dependentTarget && !this.dependentTarget.hasLegalTarget(contextCopy)) {
-            return false;
-        }
-
         let choice = this.properties.choices[key];
         if (typeof choice === 'function') {
             return choice(contextCopy);
         }
 
-        return choice.some((gameAction) => gameAction.hasLegalTarget(contextCopy));
+        return true;
     }
 
     getGameAction(context) {
@@ -72,6 +68,7 @@ class AbilityTargetSelect {
         }
 
         let choice = this.properties.choices[context.selects[this.name].choice];
+
         if (typeof choice !== 'function') {
             return choice.filter((gameAction) => gameAction.hasLegalTarget(context));
         }
