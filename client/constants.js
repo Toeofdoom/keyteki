@@ -36,6 +36,7 @@ export const Constants = {
     HouseIconPaths: {},
     HouseBgPaths: {},
     IdBackBlanksPaths: {},
+    IdBackDecals: {},
     IdBackHousePaths: {},
     EnhancementBaseImages: {},
     MaverickHouseImages: {},
@@ -45,6 +46,14 @@ export const Constants = {
         capture: require('./assets/img/enhancements/capture.png'),
         draw: require('./assets/img/enhancements/draw.png'),
         damage: require('./assets/img/enhancements/damage.png')
+    },
+    TideImages: {
+        neutral: require('./assets/img/tide/tide-neutral.png'),
+        low: require('./assets/img/tide/tide-low.png'),
+        high: require('./assets/img/tide/tide.png'),
+        card: {
+            en: require('./assets/img/tide/tide-card-en.png') // TODO DT handle locale dynamically
+        }
     },
     Tokens: {
         ModifiedPower: require('./assets/img/modifiedPower.png'),
@@ -77,6 +86,8 @@ for (let x = 1; x < 8; x++) {
         x
     ] = require(`./assets/img/idbacks/idback_blanks/cardback_${x}.png`);
 }
+
+Constants.IdBackDecals.santa = require(`./assets/img/idbacks/decals/santa.png`);
 
 for (let x = 1; x < 6; x++) {
     Constants.EnhancementBaseImages[x] = require(`./assets/img/enhancements/base-${x}.png`);

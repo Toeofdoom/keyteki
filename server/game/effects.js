@@ -46,7 +46,7 @@ const Effects = {
     removeKeyword: (keyword) => EffectBuilder.card.static('removeKeyword', keyword),
     setArmor: (amount) => EffectBuilder.card.flexible('setArmor', amount),
     setPower: (amount) => EffectBuilder.card.flexible('setPower', amount),
-    takeControl: (player) => EffectBuilder.card.static('takeControl', player),
+    takeControl: (player) => EffectBuilder.card.flexible('takeControl', player),
     entersPlayUnderOpponentsControl: () =>
         EffectBuilder.card.static('entersPlayUnderOpponentsControl'),
     terminalCondition: (properties) =>
@@ -65,7 +65,7 @@ const Effects = {
         EffectBuilder.player.detached('abilityTrigger', {
             apply: (player, context) => {
                 let ability = context.source.triggeredAbility(
-                    'reaction',
+                    properties.triggeredAbilityType || 'reaction',
                     Object.assign({ printedAbility: false, player: player }, properties)
                 );
                 ability.registerEvents();
@@ -112,6 +112,7 @@ const Effects = {
         EffectBuilder.player.static('mayResolveBonusIconsAs', { newIcon: newIcon, icon: icon }),
     modifyKeyCost: (amount) => EffectBuilder.player.flexible('modifyKeyCost', amount),
     modifyHandSize: (amount) => EffectBuilder.player.flexible('modifyHandSize', amount),
+    modifyTideCost: (amount) => EffectBuilder.player.flexible('modifyTideCost', amount),
     noActiveHouseForPlay: () => EffectBuilder.player.static('noActiveHouseForPlay'),
     playerCannot: (type, condition) =>
         EffectBuilder.player.static('abilityRestrictions', new CannotRestriction(type, condition)),

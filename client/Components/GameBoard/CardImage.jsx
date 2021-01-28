@@ -15,14 +15,14 @@ import './CardImage.scss';
  *
  * @param {CardImageProps} props
  */
-const CardImage = ({ card, cardBack, size }) => {
+const CardImage = ({ card, cardBack, size, halfSize }) => {
     let [cardImage, setCardImage] = useState(null);
     const { i18n } = useTranslation();
     const fabricRef = useRef();
 
     const ref = useCallback(
         async (node) => {
-            if (node) {
+            if (node && card) {
                 let canvas;
                 try {
                     canvas = new fabric.StaticCanvas(node);
@@ -34,9 +34,10 @@ const CardImage = ({ card, cardBack, size }) => {
                     fabricRef.current = await buildCard(canvas, {
                         ...card,
                         size,
-                        url: `/img/cards/${i18n.language === 'en' ? '' : i18n.language + '/'}${
-                            card.image
-                        }.png`
+                        halfSize,
+                        url: `/img/${halfSize ? 'halfSize' : 'cards'}/${
+                            i18n.language === 'en' ? '' : i18n.language
+                        }/${card.image}.${halfSize ? 'jpg' : 'png'}`
                     });
                 }
             }
@@ -44,6 +45,7 @@ const CardImage = ({ card, cardBack, size }) => {
         /* eslint-disable react-hooks/exhaustive-deps */
         [
             card.id,
+            card.location,
             card.modifiedPower,
             card.tokens && card.tokens.amber,
             card.tokens && card.tokens.armor,

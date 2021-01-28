@@ -15,9 +15,12 @@ class LastingEffectAction extends GameAction {
         this.when = null;
         this.gameAction = null;
         this.message = null;
+        this.messageArgs = [];
         this.match = null;
         this.reactionTarget = null; //Can't just call this "target" as the engine will interpret that as the target of the lasting effect itself
+        this.preferActionPromptMessage = false;
         this.multipleTrigger = true;
+        this.triggeredAbilityType = null;
     }
 
     setup() {
@@ -38,9 +41,12 @@ class LastingEffectAction extends GameAction {
                     when: this.when,
                     gameAction: this.gameAction,
                     message: this.message,
+                    messageArgs: this.messageArgs,
+                    preferActionPromptMessage: this.preferActionPromptMessage,
                     multipleTrigger: this.multipleTrigger,
                     target: this.reactionTarget,
-                    context: context
+                    context: context,
+                    triggeredAbilityType: this.triggeredAbilityType
                 })
             ];
         }

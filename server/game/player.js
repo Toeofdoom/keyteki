@@ -1,5 +1,6 @@
 const _ = require('underscore');
 
+const Constants = require('../constants');
 const GameObject = require('./GameObject');
 const Deck = require('./deck');
 const ClockSelector = require('./Clocks/ClockSelector');
@@ -415,11 +416,11 @@ class Player extends GameObject {
 
         if (targetLocation !== 'play area' && card.gigantic) {
             let cardIndex = targetPile.indexOf(card);
-            card.playedParts.forEach((part) => {
-                part.location = targetLocation;
-                targetPile.splice(cardIndex, 0, part);
-            });
-            card.playedParts = [];
+            if (card.composedPart) {
+                card.composedPart.location = targetLocation;
+                targetPile.splice(cardIndex, 0, card.composedPart);
+                card.composedPart = null;
+            }
             card.image = card.id;
         }
 
@@ -536,7 +537,7 @@ class Player extends GameObject {
         }, this.houses);
         let stopHouseChoice = this.getEffects('stopHouseChoice');
         let restrictHouseChoice = _.flatten(this.getEffects('restrictHouseChoice')).filter(
-            (house) => !stopHouseChoice.includes(house)
+            (house) => !stopHouseChoice.includes(house) && availableHouses.includes(house)
         );
         if (restrictHouseChoice.length > 0) {
             availableHouses = restrictHouseChoice;
@@ -672,37 +673,32 @@ class Player extends GameObject {
                 choices: this.getKeyOptions(choices),
                 choiceHandler: (key) => {
                     this.game.queueSimpleStep(() => {
-                        this.keys[key.value] = false;
-                        let forgedKeyIndex = this.keysForgedThisRound.findIndex(
-                            (x) => x === key.value
-                        );
-                        if (forgedKeyIndex !== -1) {
-                            this.keysForgedThisRound.splice(forgedKeyIndex, 1);
+                        if (this.keys[key.value]) {
+                            this.game.addMessage(
+                                '{0} unforges {1}{2}{3}',
+                                this.game.activePlayer,
+                                this.game.activePlayer === this ? 'their' : this,
+                                this.game.activePlayer === this ? ' ' : "'s ",
+                                `forgedkey${key.value}`
+                            );
                         }
 
-                        this.game.addMessage(
-                            "{0} unforges {1}'s {2}",
-                            this.game.activePlayer,
-                            this.game.activePlayer.opponent,
-                            `forgedkey${key.value}`
-                        );
+                        this.keys[key.value] = false;
                     });
                 }
             });
         } else {
-            this.keys[choices[0].toLowerCase()] = false;
-            let forgedKeyIndex = this.keysForgedThisRound.findIndex(
-                (x) => x === choices[0].toLowerCase()
-            );
-            if (forgedKeyIndex !== -1) {
-                this.keysForgedThisRound.splice(forgedKeyIndex, 1);
+            if (this.keys[choices[0].toLowerCase()]) {
+                this.game.addMessage(
+                    '{0} unforges {1}{2}{3}',
+                    this.game.activePlayer,
+                    this.game.activePlayer === this ? 'their' : this,
+                    this.game.activePlayer === this ? ' ' : "'s ",
+                    `forgedkey${choices[0].toLowerCase()}`
+                );
             }
 
-            this.game.addMessage(
-                '{0} unforges the {1}',
-                this.game.activePlayer,
-                `forgedkey${choices[0]}`
-            );
+            this.keys[choices[0].toLowerCase()] = false;
         }
     }
 
@@ -738,8 +734,21 @@ class Player extends GameObject {
             chains: this.chains,
             keys: this.keys,
             houses: this.houses,
-            keyCost: this.getCurrentKeyCost()
+            keyCost: this.getCurrentKeyCost(),
+            tide: this.isTideHigh()
+                ? Constants.Tide.HIGH
+                : this.isTideLow()
+                ? Constants.Tide.LOW
+                : Constants.Tide.NEUTRAL
         };
+    }
+
+    isTideHigh() {
+        return this.game.highTide === this;
+    }
+
+    isTideLow() {
+        return this.game.highTide && this.game.highTide !== this;
     }
 
     /**
@@ -762,6 +771,9 @@ class Player extends GameObject {
             cardback: 'cardback',
             disconnected: !!this.disconnectedAt,
             activePlayer: this.game.activePlayer === this,
+            canRaiseTide:
+                !this.isTideHigh() &&
+                this.game.actions.raiseTide().canAffect(this, this.game.getFrameworkContext()),
             houses: this.houses,
             id: this.id,
             left: this.left,

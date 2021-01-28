@@ -25,11 +25,21 @@ const GameConfiguration = ({ optionSettings, onOptionSettingToggle }) => {
                         <Form.Check
                             id='confirmOneClick'
                             name='gameOptions.confirmOneClick'
-                            label={t('Show a prompt when initating 1-click abilities')}
+                            label={t('Show a prompt when initiating 1-click abilities')}
                             type='switch'
                             checked={optionSettings.confirmOneClick}
                             onChange={(event) =>
                                 onOptionSettingToggle('confirmOneClick', event.target.checked)
+                            }
+                        />
+                        <Form.Check
+                            id='useHalfSizedCards'
+                            name='gameOptions.useHalfSizedCards'
+                            label={t('Use half sized card images')}
+                            type='switch'
+                            checked={optionSettings.useHalfSizedCards}
+                            onChange={(event) =>
+                                onOptionSettingToggle('useHalfSizedCards', event.target.checked)
                             }
                         />
                     </Form.Row>

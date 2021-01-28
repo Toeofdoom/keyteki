@@ -15,14 +15,16 @@ class HowToPlay extends React.Component {
             <div className='col-xs-12 full-height'>
                 <Panel title={t('How To Play on The Crucible Online')}>
                     <a
-                        className='btn btn-danger pull-right'
+                        className='btn btn-danger pull-right float-right'
                         target='_blank'
                         href='https://github.com/keyteki/keyteki/issues'
                         rel='noopener noreferrer'
                     >
                         <Trans>Report Problems</Trans>
                     </a>
-
+                    <h3>
+                        <Trans>Introduction</Trans>
+                    </h3>
                     <p>
                         <Trans i18nKey='howtoplay.thisguide'>
                             This guide is aimed at players familiar with Keyforge: the Unique Deck
@@ -221,6 +223,12 @@ class HowToPlay extends React.Component {
                         </li>
                         <li>
                             /unforge - <Trans i18nKey='howtoplay.cmd.unforge'>Unforge a key</Trans>
+                        </li>
+                        <li>
+                            /tide x -{' '}
+                            <Trans i18nKey='howtoplay.cmd.tide'>
+                                Change the tide to level x (high, low or neutral)
+                            </Trans>
                         </li>
                     </ul>
 

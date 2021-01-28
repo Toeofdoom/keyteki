@@ -20,6 +20,7 @@ import Minus from '../../assets/img/Minus.png';
 import Plus from '../../assets/img/Plus.png';
 
 import './PlayerStats.scss';
+import Keys from './Keys';
 
 export class PlayerStats extends React.Component {
     constructor(props) {
@@ -54,7 +55,7 @@ export class PlayerStats extends React.Component {
 
     getButton(stat, name, statToSet = stat) {
         return (
-            <div className='state' title={name}>
+            <div className='state' title={this.props.t(name)}>
                 {this.props.showControls ? (
                     <a
                         href='#'
@@ -114,6 +115,20 @@ export class PlayerStats extends React.Component {
         );
     }
 
+    getTide() {
+        return (
+            <div className='stat-image'>
+                <img
+                    key='tide'
+                    onClick={this.props.onClickTide}
+                    className='img-fluid tide-token'
+                    src={Constants.TideImages[this.props.stats.tide]}
+                    title={this.props.t('Tide')}
+                />
+            </div>
+        );
+    }
+
     writeChatToClipboard(event) {
         event.preventDefault();
         let messagePanel = document.getElementsByClassName('messages panel')[0];
@@ -140,13 +155,13 @@ export class PlayerStats extends React.Component {
         return (
             <div className={statsClass}>
                 {playerAvatar}
-
+                <Keys keys={this.props.stats.keys} manualMode={this.props.manualModeEnabled} />
                 {this.getButton('amber', t('Amber'))}
                 {this.getButton('chains', t('Chains'))}
                 {this.getKeyCost()}
 
                 {this.props.houses ? this.getHouses() : null}
-
+                {this.getTide()}
                 {this.props.activePlayer && (
                     <div className='state first-player-state'>
                         <Trans>Active Player</Trans>
@@ -197,7 +212,7 @@ export class PlayerStats extends React.Component {
                                 </span>
                             </a>
                         </div>
-                        <div>
+                        <div className='state'>
                             <a href='#' onClick={this.props.onMessagesClick} className='pl-1'>
                                 <FontAwesomeIcon icon={faComment}></FontAwesomeIcon>
                                 {this.props.numMessages > 0 && (
@@ -222,6 +237,7 @@ PlayerStats.propTypes = {
     matchRecord: PropTypes.object,
     muteSpectators: PropTypes.bool,
     numMessages: PropTypes.number,
+    onClickTide: PropTypes.func,
     onManualModeClick: PropTypes.func,
     onMessagesClick: PropTypes.func,
     onMuteClick: PropTypes.func,

@@ -8,6 +8,7 @@ import { withTranslation, Trans } from 'react-i18next';
 import ActivePlayerPrompt from './ActivePlayerPrompt';
 import CardBack from '../Decks/CardBack';
 import CardZoom from './CardZoom';
+import { Constants } from '../../constants';
 import Droppable from './Droppable';
 import GameChat from './GameChat';
 import GameConfigurationModal from './GameConfigurationModal';
@@ -56,9 +57,10 @@ export class GameBoard extends React.Component {
         this.onMessagesClick = this.onMessagesClick.bind(this);
         this.onManualModeClick = this.onManualModeClick.bind(this);
         this.onMuteClick = this.onMuteClick.bind(this);
+        this.onClickTide = this.onClickTide.bind(this);
 
         this.state = {
-            cardToZoom: undefined,
+            cardToZoom: null,
             showActionWindowsMenu: false,
             showCardMenu: {},
             showMessages: true,
@@ -81,11 +83,13 @@ export class GameBoard extends React.Component {
     }
 
     onMouseOver(card) {
-        this.props.zoomCard(card);
+        if (card.image) {
+            this.setState({ cardToZoom: card });
+        }
     }
 
     onMouseOut() {
-        this.props.clearZoom();
+        this.setState({ cardToZoom: null });
     }
 
     onCardClick(card) {
@@ -106,6 +110,10 @@ export class GameBoard extends React.Component {
 
     onDragDrop(card, source, target) {
         this.props.sendGameMessage('drop', card.uuid, source, target);
+    }
+
+    onClickTide() {
+        this.props.sendGameMessage('clickTide');
     }
 
     getTimer() {
@@ -394,13 +402,6 @@ export class GameBoard extends React.Component {
         });
 
         let manualMode = this.props.currentGame.manualMode;
-        let cardToZoom;
-
-        if (this.props.cardToZoom && this.props.cards[this.props.cardToZoom.code]) {
-            cardToZoom = this.props.cards[this.props.cardToZoom.code];
-        } else if (this.props.cardToZoom) {
-            cardToZoom = this.props.cardToZoom;
-        }
 
         return (
             <div className={boardClass}>
@@ -422,14 +423,23 @@ export class GameBoard extends React.Component {
                 </div>
                 <div className='main-window'>
                     {this.renderBoard(thisPlayer, otherPlayer)}
-                    {cardToZoom && (
-                        <CardZoom
-                            cardName={cardToZoom ? cardToZoom.name : null}
-                            card={cardToZoom}
-                        />
-                    )}
+                    {this.state.cardToZoom && <CardZoom card={this.state.cardToZoom} />}
                     <div className='right-side'>
                         <div className='prompt-area'>
+                            <div className='tide-pane'>
+                                <img
+                                    key='tide-card'
+                                    onClick={this.onClickTide}
+                                    className={`img-fluid tide-card tide-${thisPlayer.stats.tide}
+                                        ${
+                                            thisPlayer.activeHouse && thisPlayer.canRaiseTide
+                                                ? 'can-raise-tide'
+                                                : ''
+                                        }`}
+                                    src={Constants.TideImages.card['en']}
+                                    title='Tide'
+                                />
+                            </div>
                             <div className='inset-pane'>
                                 <ActivePlayerPrompt
                                     cards={this.props.cards}
@@ -438,6 +448,7 @@ export class GameBoard extends React.Component {
                                     promptText={thisPlayer.menuTitle}
                                     promptTitle={thisPlayer.promptTitle}
                                     onButtonClick={this.onCommand}
+                                    onClickTide={this.onClickTide}
                                     onMouseOver={this.onMouseOver}
                                     onMouseOut={this.onMouseOut}
                                     user={this.props.user}
@@ -489,9 +500,7 @@ export class GameBoard extends React.Component {
 
 GameBoard.displayName = 'GameBoard';
 GameBoard.propTypes = {
-    cardToZoom: PropTypes.object,
     cards: PropTypes.object,
-    clearZoom: PropTypes.func,
     closeGameSocket: PropTypes.func,
     currentGame: PropTypes.object,
     dispatch: PropTypes.func,
@@ -502,13 +511,11 @@ GameBoard.propTypes = {
     sendGameMessage: PropTypes.func,
     socket: PropTypes.object,
     t: PropTypes.func,
-    user: PropTypes.object,
-    zoomCard: PropTypes.func
+    user: PropTypes.object
 };
 
 function mapStateToProps(state) {
     return {
-        cardToZoom: state.cards.zoomCard,
         cards: state.cards.cards,
         currentGame: state.lobby.currentGame,
         packs: state.cards.packs,

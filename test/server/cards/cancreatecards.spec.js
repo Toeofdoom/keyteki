@@ -22,7 +22,9 @@ const player = {
     creaturesInPlay: [card],
     cardsInPlay: [card],
     activeHouse: 'brobnar',
-    checkRestrictions: () => true
+    checkRestrictions: () => true,
+    isTideHigh: () => true,
+    isTideLow: () => false
 };
 player.opponent = player;
 card.controller = player;
@@ -134,12 +136,12 @@ describe('All Cards:', function () {
             // No explicit assertion - if this throws an exception it will fail
             // and give us a better stacktrace than the expect().not.toThrow()
             // assertion.
-            new cardClass(this.playerSpy, {});
+            new cardClass(this.playerSpy, { id: 'id' });
         });
 
         describe("Actions for '" + cardClass.name + "'", function () {
             beforeEach(function () {
-                this.card = new cardClass(this.playerSpy, {});
+                this.card = new cardClass(this.playerSpy, { id: 'id' });
                 this.actionSpy = spyOn(this.card, 'action');
                 this.card.setupCardAbilities(AbilityDsl);
                 this.calls = _.flatten(this.actionSpy.calls.allArgs());
@@ -234,7 +236,7 @@ describe('All Cards:', function () {
 
         describe("Reactions and Interrupts for '" + cardClass.name + "'", function () {
             beforeEach(function () {
-                this.card = new cardClass(this.playerSpy, {});
+                this.card = new cardClass(this.playerSpy, { id: 'id' });
                 //this.forcedReactionSpy = spyOn(this.card, 'forcedReaction');
                 this.reactionSpy = spyOn(this.card, 'reaction');
                 //this.forcedInterruptSpy = spyOn(this.card, 'forcedInterrupt');

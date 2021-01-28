@@ -26,7 +26,7 @@ class Card extends EffectSource {
         this.setDefaultController(owner);
 
         this.printedType = cardData.type;
-
+        this.composedPart = null;
         this.tokens = {};
 
         this.abilities = {
@@ -84,11 +84,9 @@ class Card extends EffectSource {
             { command: 'remPower', text: 'Remove 1 power token', menu: 'tokens' },
             { command: 'addAmber', text: 'Add 1 amber', menu: 'tokens' },
             { command: 'remAmber', text: 'Remove 1 amber', menu: 'tokens' },
-            { command: 'addEnrage', text: 'Add 1 enrage', menu: 'tokens' },
-            { command: 'remEnrage', text: 'Remove 1 enrage', menu: 'tokens' },
             { command: 'stun', text: 'Stun/Remove Stun', menu: 'tokens' },
-            { command: 'addWard', text: 'Add 1 ward', menu: 'tokens' },
-            { command: 'remWard', text: 'Remove 1 ward', menu: 'tokens' }
+            { command: 'ward', text: 'Ward/Remove Ward', menu: 'tokens' },
+            { command: 'enrage', text: 'Enrage/Remove Enrage', menu: 'tokens' }
         ];
 
         this.endRound();
@@ -182,10 +180,19 @@ class Card extends EffectSource {
             return this.mostRecentEffect('modifyBonusIcons');
         }
 
-        let result = this.cardPrintedAmber
-            ? Array.from(Array(this.cardPrintedAmber), () => 'amber')
-            : [];
-        return this.cardData.enhancements ? result.concat(this.cardData.enhancements) : result;
+        let printedAmber = this.cardPrintedAmber;
+        let enhancements = this.enhancements;
+        if (this.composedPart) {
+            if (this.composedPart.cardPrintedAmber) {
+                printedAmber = this.composedPart.cardPrintedAmber;
+            }
+            if (this.composedPart.enhancements && this.composedPart.enhancements.length > 0) {
+                enhancements = this.composedPart.enhancements;
+            }
+        }
+
+        let result = printedAmber ? Array.from(Array(printedAmber), () => 'amber') : [];
+        return enhancements ? result.concat(enhancements) : result;
     }
 
     setupAbilities() {
@@ -435,7 +442,11 @@ class Card extends EffectSource {
 
     getTraits() {
         let copyEffect = this.mostRecentEffect('copyCard');
-        let traits = copyEffect ? copyEffect.traits : this.traits;
+        let traits = copyEffect
+            ? copyEffect.traits
+            : this.composedPart
+            ? this.composedPart.traits.concat(this.traits)
+            : this.traits;
         return _.uniq(traits.concat(this.getEffects('addTrait')));
     }
 
@@ -494,6 +505,7 @@ class Card extends EffectSource {
         this.new = false;
         this.tokens = {};
         this.setDefaultController(this.owner);
+        this.updateEffectContexts();
         this.endRound();
     }
 
@@ -672,8 +684,13 @@ class Card extends EffectSource {
     }
 
     getPower(printed = false) {
+        const printedPower =
+            this.composedPart && this.composedPart.printedPower
+                ? this.composedPart.printedPower
+                : this.printedPower;
+
         if (printed) {
-            return this.printedPower;
+            return printedPower;
         }
 
         if (this.anyEffect('setPower')) {
@@ -681,9 +698,10 @@ class Card extends EffectSource {
         }
 
         const copyEffect = this.mostRecentEffect('copyCard');
-        const printedPower = copyEffect ? copyEffect.printedPower : this.printedPower;
+
+        const basePower = copyEffect ? copyEffect.printedPower : printedPower;
         return (
-            printedPower +
+            basePower +
             this.sumEffects('modifyPower') +
             (this.hasToken('power') ? this.tokens.power : 0)
         );
@@ -699,8 +717,13 @@ class Card extends EffectSource {
     }
 
     getArmor(printed = false) {
+        const printedArmor =
+            this.composedPart && this.composedPart.printedArmor
+                ? this.composedPart.printedArmor
+                : this.printedArmor;
+
         if (printed) {
-            return this.printedArmor;
+            return printedArmor;
         }
 
         if (this.anyEffect('setArmor')) {
@@ -708,8 +731,8 @@ class Card extends EffectSource {
         }
 
         const copyEffect = this.mostRecentEffect('copyCard');
-        const printedArmor = copyEffect ? copyEffect.printedArmor : this.printedArmor;
-        return printedArmor + this.sumEffects('modifyArmor');
+        const baseArmor = copyEffect ? copyEffect.printedArmor : printedArmor;
+        return baseArmor + this.sumEffects('modifyArmor');
     }
 
     get amber() {
@@ -834,11 +857,15 @@ class Card extends EffectSource {
     }
 
     getLegalActions(player, ignoreHouse = false) {
+        return this.getActionsIgnoringRequirements(player, ignoreHouse ? ['house'] : []);
+    }
+
+    getActionsIgnoringRequirements(player, ignoredRequirements) {
         let actions = this.getActions();
         actions = actions.filter((action) => {
             let context = action.createContext(player);
-            context.ignoreHouse = ignoreHouse;
-            return !action.meetsRequirements(context);
+            context.ignoreHouse = ignoredRequirements.includes('house');
+            return !action.meetsRequirements(context, ignoredRequirements);
         });
         let canFight =
             actions.findIndex((action) => action.title === 'Fight with this creature') >= 0;
@@ -849,9 +876,10 @@ class Card extends EffectSource {
         return actions;
     }
 
-    getFightAction() {
+    getFightAction(cardCondition = null, postHandler = null) {
         return this.action({
             title: 'Fight with this creature',
+            fight: true,
             condition: (context) =>
                 this.checkRestrictions('fight', context) && this.type === 'creature',
             printedAbility: false,
@@ -859,7 +887,11 @@ class Card extends EffectSource {
                 activePromptTitle: 'Choose a creature to attack',
                 cardType: 'creature',
                 controller: 'opponent',
-                gameAction: new ResolveFightAction({ attacker: this })
+                cardCondition: cardCondition,
+                gameAction: new ResolveFightAction({
+                    attacker: this,
+                    postHandler: postHandler
+                })
             }
         });
     }
@@ -867,6 +899,7 @@ class Card extends EffectSource {
     getReapAction() {
         return this.action({
             title: 'Reap with this creature',
+            reap: true,
             condition: (context) =>
                 this.checkRestrictions('reap', context) && this.type === 'creature',
             printedAbility: false,

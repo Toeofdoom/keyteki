@@ -36,6 +36,7 @@ import './Profile.scss';
  * @typedef {Object} GameOptionsDetails
  * @property {boolean} orderForcedAbilities Whether or not to order forced abilities
  * @property {boolean} confirmOneClick Force a prompt for one click abilities
+ * @property {boolean} useHalfSizedCards Use halfSize card images
  */
 
 /**
@@ -70,7 +71,8 @@ const initialValues = {
     },
     gameOptions: {
         confirmOneClick: false,
-        orderForcedAbilities: false
+        orderForcedAbilities: false,
+        useHalfSizedCards: false
     }
 };
 
@@ -94,9 +96,10 @@ const Profile = ({ onSubmit, isLoading }) => {
     ];
 
     for (let i = 0; i < Constants.Houses.length; ++i) {
+        const label = t(Constants.Houses[i]);
         backgrounds.push({
             name: Constants.HousesNames[i],
-            label: t(Constants.Houses[i]),
+            label: label[0].toUpperCase() + label.slice(1),
             imageUrl: Constants.HouseBgPaths[Constants.Houses[i]]
         });
     }
