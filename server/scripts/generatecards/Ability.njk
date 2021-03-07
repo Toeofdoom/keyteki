@@ -200,6 +200,10 @@ ability.effects.gainAbility('{{effect.ability.trigger}}', {{ boldAbility(effect.
 ability.effects.gainAbility('persistentEffect', {
     {{ persistentEffect(effect.ability, refs | gainAbility) | indent(4) }}
 })
+        {%- elif effect.ability.name == 'reaction' -%}
+ability.effects.gainAbility('reaction', {
+    {{ formatReaction(effect.ability, refs | gainAbility) | indent(4) }}
+})
         {%- endif -%}
     {%- elif effect.name == 'terminalCondition' -%}
 ability.effects.terminalCondition({ 

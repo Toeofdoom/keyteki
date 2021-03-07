@@ -1,6 +1,6 @@
 const Card = require('../../Card.js');
 
-class B4Th05 extends Card {
+class D1V3 extends Card {
     //While the tide is high, this creature gains skirmish.
     //While the tide is low, this creature gains elusive.
     //This card has been translated from Polish and is subject to change.
@@ -26,6 +26,6 @@ class B4Th05 extends Card {
     }
 }
 
-B4Th05.id = 'b4-th05';
+D1V3.id = 'd1-v3';
 
-module.exports = B4Th05;
+module.exports = D1V3;

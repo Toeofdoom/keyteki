@@ -58,6 +58,8 @@
 context.source.neighbors.includes({{refs.check}})
     {%- elif condition.name == "other" -%}
 {{refs.check}} !== context.source
+    {%- elif condition.name == "different" -%}
+{{refs.check}} !== {{refs.thenContext}}.target
     {%- elif condition.name == "chosenHouse" -%}
 {{refs.check}}.hasHouse(context.house)
     {%- elif condition.name == "center" -%}
@@ -71,7 +73,9 @@ event.location === '{{condition.location}}'
     {%- elif condition.name == "controller" -%}
 {{controllerCondition(condition, refs)}}
     {%- elif condition.name == "turn" -%}
+        {%- if condition.player != "any" -%}
 {{formatPlayer(condition.player, refs)}} === this.game.activePlayer
+        {%- endif -%}
     {%- elif condition.name == "isTideHigh" -%}
 context.player.isTideHigh()
     {%- elif condition.name == "isTideLow" -%}
@@ -95,7 +99,7 @@ condition: {{provideParameters(['context'], singleCondition(condition, refs))}}
 {%- endmacro -%}
 
 {%- macro eventCondition(trigger, refs, eventCheck=null) -%}
-{{provideParameters(["event", "context"], eventConditionInternal(trigger, refs, eventCheck))}}
+{{provideParameters(["event", "context"], eventConditionInternal(trigger, refs, eventCheck)+ "" or "true")}}
 {%- endmacro -%}
 
 {%- macro eventConditionInternal(trigger, refs, eventCheck) -%}
@@ -112,7 +116,7 @@ condition: {{provideParameters(['context'], singleCondition(condition, refs))}}
     event.destroyEvent &&
     event.destroyEvent.resolved
 {%- endif -%}
-{%- if trigger.eventPlayer != null -%}
+{%- if trigger.eventPlayer != null and trigger.eventPlayer != "any" -%}
 {{j()}}{{refs.eventPlayer}} {{ '===' if trigger.eventPlayer === 'self' else '!==' }} context.player
 {%- endif -%}
 {%- if trigger.conditions -%}
@@ -139,7 +143,7 @@ condition: {{provideParameters(['context'], singleCondition(condition, refs))}}
 {{refs.check}}.power
 {%- elif quantity.name == "eventCount" -%}
 this.{{quantity.action}}Tracker.events.filter(
-    (event) => {{cardConditionInternal(quantity, refs | check('event.card') | filteredController(false))}}
+    (event) => {{eventConditionInternal(quantity, refs | check('event.card') | filteredController(false)) + "" or "true"}}
 ).length
 {%- elif quantity.name == "negative" -%}
 -{{formatQuantity(quantity.quantity, refs)}}
@@ -172,7 +176,7 @@ context.player.opponent
 {%- elif targetPlayer === 'controllerOpponent' -%}
 {{refs.it}}.controller.opponent
 {%- elif targetPlayer === 'they' -%}
-context.player.opponent {# TODO: make this refer to something in refs. #}
+context.event.player{# TODO: make this refer to something in refs. #}
 {%- else -%}
 /* {{targetPlayer | dump}} */
 {%- endif -%}
@@ -183,7 +187,7 @@ context.player.opponent {# TODO: make this refer to something in refs. #}
     {%- if target.location == null or target.location == "play area" -%}
 {{cardsInPlay(target, refs)}}
     {%- elif target.location == "deck" -%}
-context.player.deck.slice(0, Math.min(context.player.deck.length, {{target.numCards}}))
+{{formatPlayer(target.controller, refs)}}.deck.slice(0, Math.min({{formatPlayer(target.controller, refs)}}.deck.length, {{target.numCards}}))
     {%- elif target.location == "discard" -%}
 {{formatPlayer(target.controller, refs)}}.discard{{cardFilter(target, refs)}}
     {%- else -%}

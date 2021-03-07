@@ -7,9 +7,10 @@ class MegaAlaka extends Card {
         this.onFightTracker = new SimpleEventTracker(this.game, 'onFight');
         this.persistentEffect({
             location: 'any',
-            condition: () =>
-                this.onFightTracker.events.filter((event) => event.card.type === 'creature')
-                    .length >= 1,
+            condition: (context) =>
+                this.onFightTracker.events.filter(
+                    (event) => event.player === context.player && event.card.type === 'creature'
+                ).length >= 1,
             effect: ability.effects.entersPlayReady()
         });
     }
