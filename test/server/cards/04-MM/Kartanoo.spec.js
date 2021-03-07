@@ -29,14 +29,16 @@ describe('Kartanoo', function () {
             expect(this.troll.tokens.damage).toBe(2);
         });
 
-        it('should not allow using exhausted artifact', function () {
+        it('should to allow selecting exhausted artifact, but it will do nothing', function () {
             this.player1.useAction(this.transporterPlatform);
             this.player1.clickCard(this.medicIngram);
             expect(this.transporterPlatform.exhausted).toBe(true);
             this.player1.reap(this.kartanoo);
             expect(this.player1).toBeAbleToSelect(this.hologrammophone);
-            expect(this.player1).not.toBeAbleToSelect(this.transporterPlatform);
+            expect(this.player1).toBeAbleToSelect(this.transporterPlatform);
             expect(this.player1).toBeAbleToSelect(this.cannon);
+            this.player1.clickCard(this.transporterPlatform);
+            expect(this.player1).not.toBeAbleToSelect(this.kartanoo);
         });
     });
 });

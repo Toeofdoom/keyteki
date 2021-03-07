@@ -146,7 +146,7 @@ describe('Bonerot Venom', function () {
             this.player2.endTurn();
             this.player1.clickPrompt('brobnar');
             this.player1.play(this.gangerChieftain);
-            expect(this.player1).toBeAbleToSelect(this.gangerChieftain);
+            //expect(this.player1).toBeAbleToSelect(this.gangerChieftain);
             this.player1.clickCard(this.gangerChieftain);
             expect(this.player1).toHavePrompt('Ganger Chieftain');
             expect(this.player1).toBeAbleToSelect(this.umbra);
@@ -168,7 +168,7 @@ describe('Bonerot Venom', function () {
             this.player2.endTurn();
             this.player1.clickPrompt('brobnar');
             this.player1.play(this.gangerChieftain);
-            expect(this.player1).toBeAbleToSelect(this.gangerChieftain);
+            //expect(this.player1).toBeAbleToSelect(this.gangerChieftain);
             this.player1.clickCard(this.gangerChieftain);
             expect(this.player1).toHavePrompt('Ganger Chieftain');
             expect(this.player1).toBeAbleToSelect(this.umbra);
@@ -198,7 +198,7 @@ describe('Bonerot Venom', function () {
             this.player2.endTurn();
             this.player1.clickPrompt('brobnar');
             this.player1.play(this.gangerChieftain);
-            expect(this.player1).toBeAbleToSelect(this.gangerChieftain);
+            //expect(this.player1).toBeAbleToSelect(this.gangerChieftain);
             this.player1.clickCard(this.gangerChieftain);
             expect(this.player1).toHavePrompt('Ganger Chieftain');
             expect(this.player1).toBeAbleToSelect(this.mackTheKnife);

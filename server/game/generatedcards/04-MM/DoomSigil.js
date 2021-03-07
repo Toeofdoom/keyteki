@@ -11,36 +11,15 @@ class DoomSigil extends Card {
                 poison: 1
             })
         });
-        /*{
-          "name": "terminalCondition",
-          "condition": {
-            "name": "comparison",
-            "operator": "===",
-            "b": {
-              "name": "constant",
-              "amount": 0
-            },
-            "a": {
-              "name": "cards",
-              "type": "creature",
-              "controller": null,
-              "conditions": []
-            }
-          },
-          "actions": [
-            {
-              "name": "destroy",
-              "target": {
-                "mode": "self"
-              },
-              "splash": null,
-              "multiplier": null,
-              "ignoreArmor": null,
-              "optional": false,
-              "condition": null
-            }
-          ]
-        }*/
+        this.persistentEffect({
+            targetController: 'any',
+            effect: ability.effects.terminalCondition({
+                condition: (context) => context.game.creaturesInPlay.length === 0,
+                gameAction: ability.actions.destroy((context) => ({
+                    target: context.source
+                }))
+            })
+        });
     }
 }
 

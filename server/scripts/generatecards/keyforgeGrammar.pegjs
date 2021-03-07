@@ -131,8 +131,12 @@ BoldTrigger = ("Play" / "Reap" / "Before Fight" / "Fight" / "Destroyed" / "Actio
 
 //Persistent effects. If conditions are required for things like bonesaw
 PersistentEffect = condition:(WhileCondition/IfCondition)? _ 
-pe:(PersistentPlayerEffect/PersistentCardEffect) [.;]? _ ReminderText? {
+pe:(PersistentPlayerEffect/PersistentCardEffect/Gigantic) [.;]? _ ReminderText? {
     return Object.assign({name: 'persistentEffect', condition}, pe)
+}
+
+Gigantic = "(Play only with the other half of $this.)" {
+	return {name:"unknown", text:text()}
 }
 
 PersistentPlayerEffect = targetPlayer:PlayerTarget? _ effect:SinglePersistentPlayerEffect {
@@ -159,9 +163,11 @@ GeneralTrigger = GeneralPersistentTrigger/GeneralDurationTrigger/PhaseTrigger/Sp
 //Spontaneous means that as soon as a condition is met, a certain effect will occur
 SpontaneousTrigger = condition:IfCondition _ actions:ActionList {
 	return {
-		name: "terminalCondition",
-		condition,
-		actions
+		name: "persistentEffect",
+		effects: [{
+			name: "terminalCondition",
+			actions: Object.assign(sortActions(actions), {condition})
+		}]
 	}
 }
 
@@ -541,7 +547,27 @@ PlayerTarget = ("Your Opponent"i ['’s]* {return "opponent"}
 	/ "its opponent" ['’s]* {return "controllerOpponent"})
 
 //Card targetting
-GeneralCardTarget = (DeckCard/NeighborTarget/Self/StandardCardTarget _ "and" _ StandardCardTarget/StandardCardTarget/ItTarget/UpgradedCreature)
+GeneralCardTarget = (DeckCard/NeighborTarget/Self
+/target1:StandardCardTarget _ "and" _ target2:StandardCardTarget {
+	if(target1.mode == "all" && target2.mode == "all")
+	{
+		return {
+			mode: "all",
+			type: target1.type,
+			conditions: [
+				{
+					name: "or",
+					conditions:[
+						{name: "and", conditions: target1.conditions},
+						{name: "and", conditions: target2.conditions}
+					]
+				}
+			]
+		}
+	}
+	return {name: "unknown", target1, target2}
+}
+/StandardCardTarget/ItTarget/UpgradedCreature)
 
 DeckCard = "the top"i _ numCards:Number? _ "card""s"? " of your deck" {
 	return {mode:"all", numCards: numCards || 1, location:'deck'}
@@ -576,7 +602,7 @@ ConditionalCardTarget = other:OtherSpecifier?
 
 //The core card target - need to at least specify a card type or a trait that implies a card type
 BaseCardTarget = trait:TraitSpecifier? _ house:HouseSpecifier? _ type:CardType {return{type, conditions:[trait, house]};} /
-	t:TraitSpecifier {return{conditions:[t], type:"creature"};}
+	t:TraitSpecifier {return{conditions:[t], type:null};}
 
 //How many targets?
 CardTargetCount = count:(EachTarget / OneTarget / UpToTargets / NoTargets / AtLeastTargets / NumberTargets)? 	{return count || {mode: "all"};}

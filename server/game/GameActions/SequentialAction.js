@@ -11,6 +11,11 @@ class SequentialAction extends GameAction {
         this.effectMsg = 'do several things';
     }
 
+    setDefaultProperties() {
+        if (this.gameActions)
+            for (let gameAction of this.gameActions) gameAction.setDefaultProperties();
+    }
+
     update(context) {
         for (let gameAction of this.gameActions) {
             gameAction.update(context);

@@ -36,12 +36,5 @@ describe('teleporter-chief-tink', function () {
             expect(this.player1.player.cardsInPlay[1]).toBe(this.umbra);
             expect(this.player1.player.cardsInPlay[2]).toBe(this.teleporterChiefTink);
         });
-
-        it('it should not prompt if there is only 1 creature in play', function () {
-            this.player1.moveCard(this.troll, 'deck');
-            this.player1.moveCard(this.umbra, 'deck');
-            this.player1.clickCard(this.teleporterChiefTink);
-            expect(this.player1).not.toHavePromptButton("Use this card's Action ability");
-        });
     });
 });

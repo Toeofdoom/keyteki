@@ -7,7 +7,7 @@ this.{{ability.trigger}}({{boldAbility(ability, refs)}});
 {%- elif (ability.name == 'persistentEffect') -%}
     {%- if ability.target.mode == "this"-%}
 this.whileAttached({
-    {{persistentEffect(ability, refs, false) | indent(4)}}
+    {{persistentEffect(ability, refs | itIs('this.parent'), false) | indent(4)}}
 });
     {%- else -%}
 this.persistentEffect({
@@ -201,6 +201,10 @@ ability.effects.gainAbility('persistentEffect', {
     {{ persistentEffect(effect.ability, refs | gainAbility) | indent(4) }}
 })
         {%- endif -%}
+    {%- elif effect.name == 'terminalCondition' -%}
+ability.effects.terminalCondition({ 
+    {{formatActions(effect.actions, refs) | indent(4)}} 
+})
     {%- elif effect.name == 'gainKeywords' -%}
 ability.effects.addKeyword({ 
         {%- for keyword in effect.keywords %}
@@ -250,7 +254,7 @@ onReap: {{Condition.eventCondition(trigger, refs | check('event.card'))}}
 {%- elif trigger.trigger == "play" -%}
 onCardPlayed: {{Condition.eventCondition(trigger, refs | check('event.card'))}}
 {%- elif trigger.trigger == "fight" -%}
-onFight: {{Condition.eventCondition(trigger, refs | check('event.attacker'))}}
+onUseCard: {{Condition.eventCondition(trigger, refs | check('event.fightEvent.attackerClone'), 'event.fightEvent')}}
 {%- elif trigger.trigger == "destroyed" -%}
 onCardDestroyed: {{Condition.eventCondition(trigger, refs | check('event.clone'))}}
 {%- elif trigger.trigger == "forges" -%}

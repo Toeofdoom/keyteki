@@ -7,7 +7,6 @@ class WarGrumpus extends Card {
         this.fight({
             reap: true,
             target: {
-                cardType: 'creature',
                 cardCondition: (card, context) =>
                     context.source.neighbors.includes(card) && card.hasTrait('giant'),
                 gameAction: ability.actions.sequential([

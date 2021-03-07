@@ -10,14 +10,14 @@ class LightOfTheArchons extends Card {
                         1 *
                         context.game.creaturesInPlay
                             .flatMap((card) => card.upgrades || [])
-                            .filter((card) => context.target.upgrades.includes(card)).length
+                            .filter((card) => this.parent.upgrades.includes(card)).length
                 ),
                 ability.effects.modifyArmor(
                     (card, context) =>
                         1 *
                         context.game.creaturesInPlay
                             .flatMap((card) => card.upgrades || [])
-                            .filter((card) => context.target.upgrades.includes(card)).length
+                            .filter((card) => this.parent.upgrades.includes(card)).length
                 )
             ]
         });

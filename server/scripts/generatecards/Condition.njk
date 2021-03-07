@@ -30,6 +30,18 @@
 {%- macro singleCondition(condition, refs) -%}
     {%- if condition.name == "not" -%}
 !({{singleCondition(condition.condition, refs)}})
+    {%- elif condition.name == "or" -%}
+(
+{%- for c in condition.conditions -%}
+{{singleCondition(c, refs)}}{{ ' || ' if not loop.last }}
+{%- endfor -%}
+)
+    {%- elif condition.name == "and" -%}
+(
+{%- for c in condition.conditions -%}
+{{singleCondition(c, refs)}}{{ ' && ' if not loop.last }}
+{%- endfor -%}
+)
     {%- elif condition.name == "comparison" -%}
 ({{formatQuantity(condition.a, refs)}} {{condition.operator}} {{formatQuantity(condition.b, refs)}})
     {%- elif condition.name == "trait" -%}
@@ -82,12 +94,15 @@ context.preThenEvent.destroyEvent && context.preThenEvent.destroyEvent.resolved
 condition: {{provideParameters(['context'], singleCondition(condition, refs))}}
 {%- endmacro -%}
 
-{%- macro eventCondition(trigger, refs) -%}
-{{provideParameters(["event", "context"], eventConditionInternal(trigger, refs))}}
+{%- macro eventCondition(trigger, refs, eventCheck=null) -%}
+{{provideParameters(["event", "context"], eventConditionInternal(trigger, refs, eventCheck))}}
 {%- endmacro -%}
 
-{%- macro eventConditionInternal(trigger, refs) -%}
+{%- macro eventConditionInternal(trigger, refs, eventCheck) -%}
 {%- set j = joiner(' && ') -%}
+{%- if eventCheck -%}
+{{j()}}{{eventCheck}}
+{%- endif -%}
 {%- if trigger.trigger == "use" -%}
 {{j()}}event.context.ability.isAction() &&
     !event.context.ability.isCardPlayed()

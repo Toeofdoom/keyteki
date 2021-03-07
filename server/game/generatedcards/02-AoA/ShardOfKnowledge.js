@@ -8,7 +8,9 @@ class ShardOfKnowledge extends Card {
             gameAction: ability.actions.draw((context) => ({
                 amount:
                     1 *
-                    context.player.creaturesInPlay.filter((card) => card.hasTrait('shard')).length
+                    context.game.cardsInPlay.filter(
+                        (card) => card.controller === context.player && card.hasTrait('shard')
+                    ).length
             }))
         });
     }

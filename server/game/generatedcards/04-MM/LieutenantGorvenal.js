@@ -5,8 +5,10 @@ class LieutenantGorvenal extends Card {
     setupCardAbilities(ability) {
         this.reaction({
             when: {
-                onFight: (event, context) =>
-                    event.player === context.player && event.attacker.type === 'creature'
+                onUseCard: (event, context) =>
+                    event.fightEvent &&
+                    event.player === context.player &&
+                    event.fightEvent.attackerClone.type === 'creature'
             },
             gameAction: ability.actions.capture((context) => ({
                 target: context.source,

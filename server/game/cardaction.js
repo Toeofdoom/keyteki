@@ -57,6 +57,7 @@ class CardAction extends CardAbility {
         } else if (!ignoredRequirements.includes('location') && !this.isInValidLocation(context)) {
             return 'location';
         } else if (
+            (this.reap || this.fight) &&
             !ignoredRequirements.includes('condition') &&
             this.condition &&
             !this.condition(context)
@@ -70,6 +71,8 @@ class CardAction extends CardAbility {
     }
 
     executeHandler(context) {
+        if (!(this.reap || this.fight) && this.condition && !this.condition(context)) return;
+
         super.executeHandler(context);
         if (!this.reap && !this.fight) {
             context.game.raiseEvent(

@@ -113,6 +113,18 @@
             "program": "${workspaceRoot}/server/scripts/generatecards.js",
             "cwd": "${workspaceRoot}",
             "outFiles": []
-        }
+        },
+        {
+            "name": "Debug Jasmine Tests",
+            "type": "pwa-node",
+            "request": "attach",
+            "port": 9229,
+            "continueOnAttach": true,
+            "autoAttachChildProcesses": false,
+            "skipFiles": [
+              "<node_internals>/**"
+            ],            
+            "outFiles": []
+          }
     ]
 }

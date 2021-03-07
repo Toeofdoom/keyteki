@@ -6,9 +6,10 @@ class TakeHostages extends Card {
         this.play({
             gameAction: ability.actions.forRemainderOfTurn({
                 when: {
-                    onFight: (event, context) =>
-                        event.attacker.controller === context.player &&
-                        event.attacker.type === 'creature'
+                    onUseCard: (event, context) =>
+                        event.fightEvent &&
+                        event.fightEvent.attackerClone.controller === context.player &&
+                        event.fightEvent.attackerClone.type === 'creature'
                 },
                 gameAction: ability.actions.capture((context) => ({
                     target: context.event.attacker,
