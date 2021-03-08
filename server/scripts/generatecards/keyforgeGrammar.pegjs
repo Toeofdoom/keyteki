@@ -78,7 +78,7 @@ function isDamageEffect(effect) {
 }
 function usesEventMultiplier(effect) {
     if (effect === null) return false;
-    if (effect.name === 'healedThisWay') return true;
+    if (effect.name === 'healedThisWay' || effect.name === 'destroyedThisWay' || effect.name === 'exhaustedThisWay') return true;
     return typeof effect === 'object' && Object.values(effect).some(usesEventMultiplier);
 }
 }
@@ -249,7 +249,7 @@ UnknownFragment = _ ([^\n\r\u000b.;“] / QuotedSection)+ {
 }
 
 //Actions
-ActionList = item:SingleAction items:(_ ([.;]/And)? _ u:SingleSubsequentAction  {return u;})* [.;]? {
+ActionList = item:SingleAction items:(_ ([.;]/And)? _ u:SingleSubsequentAction  {return u;})* _ ReminderText? [.;]? {
 	return flattenArrays([item, ...items].map((action) => {
 		if(action.targetPlayer === 'any') //Player actions that affect all players get split into 1 per player
 			return [ //This doesn't deep copy, not sure if that will be a problem.
@@ -285,7 +285,7 @@ condition2:IfCondition? {
 }
 
 ChooseTarget = "Choose a house"i {return {"target": {"mode": "house"}}}
-	/"Choose"i _ target:StandardCardTarget {return target}
+	/"Choose"i _ target:StandardCardTarget {return {target}}
 
 SingleSubsequentAction = then:ThenCondition? _ effect:SingleAction {
     return Object.assign(effect, then)
@@ -502,7 +502,7 @@ _ "hand to" _ amount:Number  _ "card" "s"? _ multiplier:Multiplier? {
 }
 
 //Persistent card effects, including upgrades
-SinglePersistentCardEffect = GetsStats/GainsAbility/EntersPlayAbility/MayBeUsed/CannotEffect/LimitFightDamage
+SinglePersistentCardEffect = GetsStats/GainsAbility/EntersPlayAbility/MayBeUsed/PlayRestriction/CannotEffect/LimitFightDamage
 
 //Gets stats
 GetsStats = "gets" _ statChanges:StatChangeList _ multiplier:Multiplier? {
@@ -535,6 +535,9 @@ CardStateList = items:(i:CardState _ And _ {return i;})* _ item:CardState {
 CardState = ("stunned"i/"ready"i/"enraged"i/"exhausted"i)
 
 //Other persistent card effects
+PlayRestriction = "You can only play this card" _ condition:IfCondition {
+	return {name: "cardCannot", effect:"play", condition:{name:"not", condition}}
+}
 CannotEffect = "cannot" _ effect:("reap"/"fight"/"ready"/"be used" {return "use"}/"be dealt damage" {return "damage"}) {return [{name:"cardCannot", effect}];}
 LimitFightDamage = "only deals" _ amount:Number "D when fighting" {return [{name:"limitFightDamage", amount}];}
 
@@ -558,9 +561,17 @@ GeneralCardTarget = (DeckCard/NeighborTarget/Self
 /target1:StandardCardTarget _ "and" _ target2:StandardCardTarget {
 	if(target1.mode == "all" && target2.mode == "all")
 	{
+    	var type = target1.type
+        if(type != target2.type)
+        {
+        	target1.conditions.push({name:'type', type:target1.type})
+            target2.conditions.push({name:'type', type:target2.type})
+            type = null
+        }
 		return {
 			mode: "all",
-			type: target1.type,
+            controller: target1.controller,
+			type,
 			conditions: [
 				{
 					name: "or",
@@ -692,24 +703,24 @@ AttachedToSpecifier = ("attached to"/"on") _ target:GeneralCardTarget  {
 ChosenHouseSpecifier = "of that house" {return {name: "chosenHouse"};}
 
 //Conditions
-IfCondition = "If"i _ c:Condition {return c;}/"if you played exactly one card this turn,"
-WhileCondition = "While"i _ c:Condition {return c;}
+IfCondition = "If"i _ c:Condition ","? {return c;}
+WhileCondition = "While"i _ c:Condition ","? {return c;}
 
 Condition = c:(
 	AmberComparison /
 	CreatureComparison /
-	"it is not your turn,"i {return {name:"activePlayer", player:"opponent"}} /
+	"it is not your turn"i {return {name:"activePlayer", player:"opponent"}} /
 	CardEventCountComparison /
-	"it is your turn,"i {return {name:"activePlayer", player:"self"}}/
-	"the tide is high,"i {return {name:"isTideHigh"}}/
-	"the tide is low,"i {return {name:"isTideLow"}}/
+	"it is your turn"i {return {name:"activePlayer", player:"self"}}/
+	"the tide is high"i {return {name:"isTideHigh"}}/
+	"the tide is low"i {return {name:"isTideLow"}}/
 	CardCountComparison /
-	card:GeneralCardTarget _ "is in the center of your battleline,"i 
+	card:GeneralCardTarget _ "is in the center of your battleline"i 
 	{return {name:"check", card, condition:{name:"center"}}})
 	{return c;}
     
 AmberComparison = player:PlayerTarget _ ("has"i/"have"i) _ amount:Number ("A"/"<A>")_ 
-"or" _ comparison:("more"/"less")"," {
+"or" _ comparison:("more"/"less") {
 	return {
     	name: "comparison",
         operator: ">=",
@@ -734,17 +745,17 @@ CardCountComparison = "there are"i _ comparison:NumberComparison _
     })
 }
 
-CardEventCountComparison = comparison:NumberComparison _ card:ConditionalCardTarget _ ("was"/"were"/"has been"/"have been") _ action:("destroyed" {return "onCardDestroyed"}) _ "this turn,"i{
+CardEventCountComparison = comparison:NumberComparison _ card:ConditionalCardTarget _ ("was"/"were"/"has been"/"have been") _ action:("destroyed" {return "onCardDestroyed"}) _ "this turn"i{
     return Object.assign(comparison, {
     	a:{name:"eventCount", action, card}
     })
 }
-	/eventPlayer:PlayerTarget _ action:("played" {return "play";}) _ comparison:NumberComparison _ card:ConditionalCardTarget _ "this turn" "," {
+	/eventPlayer:PlayerTarget _ action:("played" {return "play";}) _ comparison:NumberComparison _ card:ConditionalCardTarget _ "this turn" {
     return Object.assign(comparison, {
     	a:{name:"eventCount", eventPlayer, action, card}
     })
 }
-    /eventPlayer:PlayerTarget _ "have used" _ comparison:NumberComparison _ card:ConditionalCardTarget _ action:("to fight"{return "onFight";}) _ "this turn," {
+    /eventPlayer:PlayerTarget _ "have used" _ comparison:NumberComparison _ card:ConditionalCardTarget _ action:("to fight"{return "onFight";}) _ "this turn" {
     return Object.assign(comparison, {
     	a:{name:"eventCount", eventPlayer, action, card}
     })
@@ -774,8 +785,11 @@ Multiplier = "once"? _ "For"i _ t:(
     return t
 }
 
-TriggerMultiplier = "each" _ card:ConditionalCardTarget _ trigger:("healed this way") {
-	return {name:"healedThisWay", card}
+TriggerMultiplier = "each" _ card:ConditionalCardTarget _ trigger:(
+	"healed this way" {return "healedThisWay"}
+	/"destroyed this way" {return "destroyedThisWay"}
+	/"exhausted this way" {return "exhaustedThisWay"}) {
+	return {name:trigger, card}
 }
 
 KeyCount = "each" _ not:"un"? _"forged key" _ player:PlayerTarget _ ("have"/"has") {
@@ -802,7 +816,7 @@ House = ("brobnar"i / "dis"i / "logos"i / "mars"i / "sanctum"i / "shadows"i / "u
 //Creature traits only - split if artifact traits are needed.
 Trait = "mutant"i / "shard"i / "cat"i / "beast"i / "agent"i / "human"i / "scientist"i 
 	/ "giant"i / "demon"i / "knight"i / "dinosaur"i / "thief"i / "martian"i / "robot"i 
-	/ "sin"i / "horseman"i {return text().toLowerCase();}
+	/ "sin"i / "aquan"i / "horseman"i {return text().toLowerCase();}
 
 CardType = "action"i _ "card"? "s"? {return "action";}
 	/ "artifact"i _ "card"? "s"? {return "artifact";}

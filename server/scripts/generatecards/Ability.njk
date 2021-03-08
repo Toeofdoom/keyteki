@@ -42,7 +42,7 @@ this.{{'interrupt' if ['onRoundEnded'].includes(ability.trigger.trigger) else 'r
 {%- set targetController = (ability.target.controller or 'any')
     if (ability.target and ability.target.mode == 'all')
     else (ability.targetPlayer or 'any') -%}
-{%- if ability.effects[0].name.includes("entersPlay") -%}
+{%- if ability.effects[0].name.includes("entersPlay") or (ability.effects[0].name == "cardCannot" and ability.effects[0].effect == 'play') -%}
 location: 'any',
 {% elif targetController != 'self' and controllable -%}
 targetController: '{{targetController}}',
@@ -228,7 +228,11 @@ ability.effects.{{effect.name}}({{Condition.provideParameters(['card', 'context'
     {%- elif ['modifyKeyCost', 'modifyHandSize'].includes(effect.name) -%}
 ability.effects.{{effect.name}}({{Condition.provideParameters(['player', 'context'], formatAmount(effect, refs))}})
     {%- elif ['cardCannot', 'playerCannot'].includes(effect.name) -%}
-ability.effects.{{effect.name}}('{{effect.effect}}')
+ability.effects.{{effect.name}}('{{effect.effect}}'
+        {%- if effect.condition -%}
+        , {{Condition.provideParameters(['context'], Condition.singleCondition(effect.condition, refs))}}
+        {%- endif -%}
+)
     {%- elif effect.name == 'unknown' or not effect.name -%}
 /*{{effect | dump(2) }}*/
     {%- else -%}

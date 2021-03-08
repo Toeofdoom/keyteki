@@ -48,6 +48,8 @@
 {{refs.check}}.hasTrait('{{condition.trait}}')
     {%- elif condition.name == "house" -%}
 {{refs.check}}.hasHouse('{{condition.house}}')
+    {%- elif condition.name == "type" -%}
+{{refs.check}}.type === '{{condition.type}}'
     {%- elif condition.name == "flank" -%}
 {{refs.check}}.isOnFlank()
     {%- elif condition.name == "hasAmber" -%}
@@ -157,6 +159,12 @@ this.{{quantity.action}}Tracker.events.filter(
 context.preThenEvents.filter(
     (event) => !event.cancelled && event.amount > 0
 ).length
+{%- elif quantity.name == "destroyedThisWay" -%}
+context.preThenEvents.filter(
+    (event) => event.name === 'onCardDestroyed' && !event.cancelled
+).length
+{%- elif quantity.name == "exhaustedThisWay" -%}
+context.preThenEvents.filter((event) => !event.cancelled).length
 {%- else -%}
 /* {{ quantity | dump(2)}} */
 {%- endif -%}
