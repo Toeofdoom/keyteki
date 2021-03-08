@@ -6,7 +6,6 @@ class Daughter extends Card {
     setupCardAbilities(ability) {
         //Keywords: elusive
         this.persistentEffect({
-            targetController: 'any',
             effect: ability.effects.modifyHandSize(() => 1)
         });
     }

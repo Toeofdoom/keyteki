@@ -82,6 +82,10 @@ class CardGenerator {
 
         let allAbilities = {};
         for (let card of cards) {
+            if (card.id === '') {
+                card.id = `${card.packCode}-${card.number}`;
+                card.name = `${card.packCode}${card.number}`;
+            }
             let baseName = card.name.replace(/ *\(Evil Twin\)/, '');
             let simplifiedText = card.text.split(baseName).join('$this');
             let abilities = this.parseAbilities(simplifiedText);

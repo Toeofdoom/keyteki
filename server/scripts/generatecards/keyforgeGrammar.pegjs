@@ -383,7 +383,7 @@ GiveCounters = "give"i _ target:GeneralCardTarget _ amount:Number _ "+1 power co
 }
 
 //Standard formats
-SingleCardAction = DealDamage / Ready / Use / Fight / Destroy / Sacrifice / Purge 
+SingleCardAction = DealDamage / Ready / Use / Fight / Reap / Destroy / Sacrifice / Purge 
 	/ Exalt / Ward / RemoveWard / Enrage / Stun / Unstun / Exhaust / ArchiveTarget 
 	/ Heal / FullyHeal / MayFight / PutCounters / RemoveCounters
 
@@ -404,6 +404,7 @@ RemoveCounters = "Remove"i _ amount:Number _ "+1 power counter" "s"? _ "from" {
 
 Ready = "Ready"i {return {name: 'ready'}}
 Fight = "fight with"i {return {name: 'fight'}}
+Reap = "reap with"i {return {name: 'reap'}}
 Destroy = "Destroy"i {return {name: 'destroy'}}
 Sacrifice = "Sacrifice"i {return {name: 'sacrifice'}}
 Purge = "Purge"i {return {name: 'purge'}}
@@ -496,7 +497,7 @@ ModifyHandSize = "During" _ ("your"/"their") _ Quote "draw cards" Quote _ "step,
 _ target:("refill your"{return "self"}/t:PlayerTarget _ "refills their" {return t;}) 
 _ "hand to" _ amount:Number  _ "card" "s"? _ multiplier:Multiplier? {
 	return {
-    	target: {controller:target || "any"}, 
+    	targetPlayer:target || "any", 
         effects:[{name: "modifyHandSize", amount, multiplier}]
     };
 }
