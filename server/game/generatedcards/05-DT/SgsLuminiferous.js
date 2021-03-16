@@ -33,6 +33,6 @@ class SgsLuminiferous extends Card {
     }
 }
 
-SgsLuminiferous.id = 'sgs-luminiferous-';
+SgsLuminiferous.id = 'sgs-luminiferous';
 
 module.exports = SgsLuminiferous;

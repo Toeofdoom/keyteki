@@ -13,6 +13,6 @@ class Bubbles extends Card {
     }
 }
 
-Bubbles.id = '"bubbles"';
+Bubbles.id = 'bubbles';
 
 module.exports = Bubbles;

@@ -1,7 +1,8 @@
 const Card = require('../../Card.js');
 
 class UnlockedGateway extends Card {
-    //Omega. (After you play this card, end this step.)
+    //Omega. (After you play this card,
+    //end this step.)
     //Play: Destroy each creature.
     //
     setupCardAbilities(ability) {

@@ -85,9 +85,16 @@ class CardGenerator {
             if (card.id === '') {
                 card.id = `${card.packCode}-${card.number}`;
                 card.name = `${card.packCode}${card.number}`;
+            } else if (this.camelCase(card.name) === '') {
+                card.name = card.id;
             }
             let baseName = card.name.replace(/ *\(Evil Twin\)/, '');
-            let simplifiedText = card.text.split(baseName).join('$this');
+            let simplifiedText = card.text
+                .split(baseName)
+                .join('$this')
+                //.replace(/[\f\v\u00a0\u1680\u2000-\u200a\u2028\u2029\u202f\u205f\u3000\ufeff]/g, '\n')
+                .replace(/[\u202f\ufeff]/g, ' ')
+                .replace(/[\v]/g, '\n');
             let abilities = this.parseAbilities(simplifiedText);
             let data = {
                 name: this.camelCase(card.name),

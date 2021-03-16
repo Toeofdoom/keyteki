@@ -1,8 +1,7 @@
 const Card = require('../../Card.js');
 
-class Hammergram extends Card {
+class HammerGram extends Card {
     //Play: Deal 3D to a creature and stun it.
-    //This card has been translated from Chinese and is subject to change.
     setupCardAbilities(ability) {
         this.play({
             target: {
@@ -13,15 +12,9 @@ class Hammergram extends Card {
                 ])
             }
         });
-        /*{
-          "name": "reminderText",
-          "keywords": [
-            "This card has been translated from Chinese and is subject to change."
-          ]
-        }*/
     }
 }
 
-Hammergram.id = 'hammergram';
+HammerGram.id = 'hammer-gram';
 
-module.exports = Hammergram;
+module.exports = HammerGram;

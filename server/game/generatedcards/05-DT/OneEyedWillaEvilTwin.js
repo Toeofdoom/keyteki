@@ -1,17 +1,14 @@
 const Card = require('../../Card.js');
 
-class Lex extends Card {
-    //Play/Fight: If the tide is high, you may exalt a creature.
+class OneEyedWillaEvilTwin extends Card {
+    //Elusive. Skirmish.
+    //Fight: If the tide is high, your opponent loses 2A.
     //This card has been translated from Chinese and is subject to change.
     setupCardAbilities(ability) {
-        this.play({
-            fight: true,
+        //Keywords: elusive, skirmish
+        this.fight({
             condition: (context) => context.player.isTideHigh(),
-            target: {
-                optional: true,
-                cardType: 'creature',
-                gameAction: ability.actions.exalt({ amount: 1 })
-            }
+            gameAction: ability.actions.loseAmber({ amount: 2 })
         });
         /*{
           "name": "reminderText",
@@ -22,6 +19,6 @@ class Lex extends Card {
     }
 }
 
-Lex.id = 'lex';
+OneEyedWillaEvilTwin.id = 'one-eyed-willa-evil-twin';
 
-module.exports = Lex;
+module.exports = OneEyedWillaEvilTwin;

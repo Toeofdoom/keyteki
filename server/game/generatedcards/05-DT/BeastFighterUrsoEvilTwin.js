@@ -1,15 +1,14 @@
 const Card = require('../../Card.js');
 
-class SaurianDeny extends Card {
-    //Play: Destroy an enemy creature with A on it.
+class BeastFighterUrsoEvilTwin extends Card {
+    //Play/Fight: Stun a creature.
     //This card has been translated from Chinese and is subject to change.
     setupCardAbilities(ability) {
         this.play({
+            fight: true,
             target: {
                 cardType: 'creature',
-                controller: 'opponent',
-                cardCondition: (card) => card.hasToken('amber'),
-                gameAction: ability.actions.destroy()
+                gameAction: ability.actions.stun()
             }
         });
         /*{
@@ -21,6 +20,6 @@ class SaurianDeny extends Card {
     }
 }
 
-SaurianDeny.id = 'saurian-deny';
+BeastFighterUrsoEvilTwin.id = 'beast-fighter-urso-evil-twin';
 
-module.exports = SaurianDeny;
+module.exports = BeastFighterUrsoEvilTwin;

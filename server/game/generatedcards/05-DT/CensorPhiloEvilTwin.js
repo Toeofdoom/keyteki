@@ -1,15 +1,14 @@
 const Card = require('../../Card.js');
 
-class SaurianDeny extends Card {
-    //Play: Destroy an enemy creature with A on it.
+class CensorPhiloEvilTwin extends Card {
+    //Play: Deal 5D to a creature with A on it.
     //This card has been translated from Chinese and is subject to change.
     setupCardAbilities(ability) {
         this.play({
             target: {
                 cardType: 'creature',
-                controller: 'opponent',
                 cardCondition: (card) => card.hasToken('amber'),
-                gameAction: ability.actions.destroy()
+                gameAction: ability.actions.dealDamage({ amount: 5 })
             }
         });
         /*{
@@ -21,6 +20,6 @@ class SaurianDeny extends Card {
     }
 }
 
-SaurianDeny.id = 'saurian-deny';
+CensorPhiloEvilTwin.id = 'censor-philo-evil-twin';
 
-module.exports = SaurianDeny;
+module.exports = CensorPhiloEvilTwin;

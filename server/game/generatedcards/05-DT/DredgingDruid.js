@@ -26,6 +26,6 @@ class DredgingDruid extends Card {
     }
 }
 
-DredgingDruid.id = 'dredging-druid-';
+DredgingDruid.id = 'dredging-druid';
 
 module.exports = DredgingDruid;

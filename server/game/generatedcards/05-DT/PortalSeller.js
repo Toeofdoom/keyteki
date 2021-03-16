@@ -18,6 +18,6 @@ class PortalSeller extends Card {
     }
 }
 
-PortalSeller.id = 'portal-seller-';
+PortalSeller.id = 'portal-seller';
 
 module.exports = PortalSeller;

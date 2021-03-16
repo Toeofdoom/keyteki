@@ -3,7 +3,6 @@ const Card = require('../../Card.js');
 class Ch337a extends Card {
     //Elusive.
     //While the tide is high, each of $this's neighbors gains elusive.
-    //This card has been translated from Chinese and is subject to change.
     setupCardAbilities(ability) {
         //Keywords: elusive
         this.persistentEffect({
@@ -15,12 +14,6 @@ class Ch337a extends Card {
                 elusive: 1
             })
         });
-        /*{
-          "name": "reminderText",
-          "keywords": [
-            "This card has been translated from Chinese and is subject to change."
-          ]
-        }*/
     }
 }
 

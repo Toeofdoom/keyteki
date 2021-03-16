@@ -1,15 +1,16 @@
 const Card = require('../../Card.js');
 
-class SaurianDeny extends Card {
-    //Play: Destroy an enemy creature with A on it.
+class LexEvilTwin extends Card {
+    //Play/Fight: If the tide is low, you may exalt a creature.
     //This card has been translated from Chinese and is subject to change.
     setupCardAbilities(ability) {
         this.play({
+            fight: true,
+            condition: (context) => context.player.isTideLow(),
             target: {
+                optional: true,
                 cardType: 'creature',
-                controller: 'opponent',
-                cardCondition: (card) => card.hasToken('amber'),
-                gameAction: ability.actions.destroy()
+                gameAction: ability.actions.exalt({ amount: 1 })
             }
         });
         /*{
@@ -21,6 +22,6 @@ class SaurianDeny extends Card {
     }
 }
 
-SaurianDeny.id = 'saurian-deny';
+LexEvilTwin.id = 'lex-evil-twin';
 
-module.exports = SaurianDeny;
+module.exports = LexEvilTwin;

@@ -26,6 +26,6 @@ class AbyssalPriest extends Card {
     }
 }
 
-AbyssalPriest.id = 'abyssal-priest-';
+AbyssalPriest.id = 'abyssal-priest';
 
 module.exports = AbyssalPriest;
